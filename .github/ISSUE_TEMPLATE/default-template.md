@@ -9,9 +9,9 @@ assignees: ''
 
 ## Description
 
-*이슈 내용*
+<!-- 이슈 내용 -->
 
-*버그 시 문제 발생 사진도 추가*
+<!-- 버그 시 문제 발생 사진도 추가 -->
 
 ## Tasks
 
@@ -21,6 +21,9 @@ assignees: ''
 
 ## References
 
-- *없으면 비워 둘 것*
+- reference 1
+- reference 2
 
-> Please choose correct `Labels` and `Milestone`
+<!-- 없으면 비워둘 것 -->
+
+<!-- Please choose correct `Labels` and `Milestone` -->
