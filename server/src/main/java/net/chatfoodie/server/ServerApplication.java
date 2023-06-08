@@ -39,7 +39,7 @@ public class ServerApplication {
         try {
             output = new FileOutputStream(propertiesFile);
 
-            prop.setProperty("spring.datasource.url", "jdbc:mysql://localhost:3306/chatfoodie?jdbc:mysql://localhost:3306/chatfoodie?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul");
+            prop.setProperty("spring.datasource.url", "jdbc:mysql://localhost:3306/chatfoodie?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul");
             prop.setProperty("spring.datasource.username", "${your username}");
             prop.setProperty("spring.datasource.password", "${your password}");
 
