@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### setting file ###
+application-settings.properties
