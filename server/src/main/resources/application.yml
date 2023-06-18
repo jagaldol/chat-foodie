@@ -7,11 +7,17 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
     open-in-view: false
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        ddl-auto: none
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
 
 logging:
   level:
