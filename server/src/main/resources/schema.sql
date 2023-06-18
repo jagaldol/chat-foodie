@@ -1,5 +1,3 @@
-# table schema
-
 CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT,
     login_id VARCHAR(40) NOT NULL,
