@@ -18,3 +18,19 @@ CREATE TABLE IF NOT EXISTS admin (
     created_at TIMESTAMP DEFAULT now(),
     CONSTRAINT admin_id_uindex PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS chatroom (
+    id INT AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT now(),
+    CONSTRAINT chatroom_id_uindex PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS message (
+    id INT AUTO_INCREMENT,
+    chatroom_id INT NOT NULL,
+    from_user_id INT NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT now(),
+    CONSTRAINT message_id_uindex PRIMARY KEY (id)
+);
