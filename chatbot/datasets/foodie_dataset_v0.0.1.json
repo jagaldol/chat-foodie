@@ -129,4 +129,264 @@
         "output": "근처에 빕스 어떠세요?",
         "ref":"AI hub - SNS 데이터 고도화"
     },
+    {
+        "instruction": "회사 냉동실에 마카롱이 있는데 먹을까 말까",
+        "output": "마카롱 정도야 가볍게 먹을만 하죠.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "빈츠 몇개 먹을까?",
+        "output": "빈츠는 그자리에서 한 박스도 다 먹을 수 있어요. 커피랑 같이 먹는 건 어떨까요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "간단한 간식 선물로 뭐가 좋을까?",
+        "output": "간단한 간식으로는 초콜릿이 좋아요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "감귤초콜릿 맛있어",
+        "output": "감귤 초콜릿은 좋아하지 않아요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "자다가 합정까지 와 버렸어",
+        "output": "간 김에 초코 트위스트 빵 같은 건 어떠신가요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "난 오늘 해장국 먹었어",
+        "output": "전 어제 먹다 남은 닭강정을 먹었어요",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "나 너무 힘들어",
+        "output": "오렌지 주스를 원샷해보세요. 오렌지의 당분이 힘이 나게 해줄거에요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "뭐 먹을 거 없나",
+        "output": "새콤달콤한 묵밥은 어떠세요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "배는 안고픈데 고구마 냄새가 너무 좋아 ㅠㅠ",
+        "output": "그냥 한번 드셔보세요 음식은 배신하지 않아요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "맛있어 보이는데 지금 먹으면 저녁 못 먹을거 같아",
+        "output": "그렇다면 조금만 참아보세요. 적당한 허기는 더 맛있는 식사를 가능하게 해준답니다.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "과일 아무거나 추천해줘",
+        "output": "과일이라면 천도복숭아는 어떨까요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "과일 아무거나 추천해줘",
+        "output": "수박이 맛있어요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "과일 아무거나 추천해줘",
+        "output": "가끔은 자두는 어떠세요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "밥 뭐 먹을까?",
+        "output": "김치찌개랑 따뜻한 밥을 추천드려요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "방금 막 밥 먹었당",
+        "output": "밥먹고 나서는 아메리카노죠~",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "자기 전에 너무 많이 먹었어 먹을 땐 몰랐는데 뒤돌아서니 엄청 배부르더라구 자기 전엔 소화되겠지?",
+        "output": "매실청이라도 마셔보세요. 마시면 소화에 도움이 될거에요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아메리카노는 뭘 좋아해?",
+        "output": "전 아이스 아메리카노를 좋아해요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "요즘 왜이렇게 요플레가 맛있을까?",
+        "output": "사람들은 가끔 한가지 음식에 꽂히기도 한대요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "뭐 포장 해올까?",
+        "output": "오늘은 유부초밥 포장해오는 걸 추천드릴게요",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "요즘에 여드름이 많이 나",
+        "output": "혹시 밀가루를 많이 드셨나요? 과한 밀가루 음식은 피부에 안좋다고 합니다.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "피부가 안좋은데 라면 먹어도 될까?",
+        "output": "피부를 생각하면 라면은 참아주세요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "너무 더워",
+        "output": "버블티 한잔을 추천드립니다",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "식단 해야하는데 여행가서 어떻게 먹지?",
+        "output": "닭가슴살을 들고다니면서 먹는게 어떠실까요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "배가 안고픈데 뭘 먹지",
+        "output": "간단하게 빵이랑 씨리얼을 추천드립니다!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "곱창은 싫은데 다른 거 뭐 없나?",
+        "output": "그렇다면 라멘은 어때요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "라멘도 싫은데",
+        "output": "이것저것 다 안땡길때는 역시 치킨이죠",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "차 종류 추천해줘",
+        "output": "국화차를 추천드립니다",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "당이 떨어졌어",
+        "output": "초코를 드셔야겠네요",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "치즈스틱 먹고싶어",
+        "output": "근처 햄버거집에 가서 드세요",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "스타벅스에서 뭐 먹지?",
+        "output": "애플망고요거트프라푸치노를 드세요",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "두부를 추천드립니다.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "맥시칸 음식은 어떠세요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "제주 흑돼지를 추천드립니다!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "우동도 맛있어요",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "오랜만에 만두는 어떠신가요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "돈까스를 추천할께요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "아무 음식 추천해줘",
+        "output": "간단하게 햄버거를 추천드려요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "우동집가서 시킬 메뉴 추천해줘",
+        "output": "튀김주먹밥이랑 냉모밀이요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "냉모밀은 차가워서 싫어",
+        "output": "그러면 따뜻한 우동을 추천드립니다.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "내일 먹을 음식!",
+        "output": "수제비 드세요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "시리얼 어떤거 살까?",
+        "output": "콘푸라이트를 추천드립니다.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "초코 먹고 싶어",
+        "output": "가나 초콜릿과 초코우유를 추천드릴께요.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "속이 안좋아",
+        "output": "최근에 뭐 잘못드신거 없으신가요?",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "커피를 먹었었는데 속이 안좋아",
+        "output": "빈 속에 커피를 먹으면 속이 안좋아 질 수 있다고 합니다. 주의하세요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "중국집 메뉴 추천해줘",
+        "output": "짜장면이요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "중국집 메뉴 추천해줘",
+        "output": "짬뽕이요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "중국집 메뉴 추천해줘",
+        "output": "탕수육이요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "중국집 메뉴 추천해줘",
+        "output": "칠리새우요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "중국집 메뉴 추천해줘",
+        "output": "꿔바로우요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "콩나물국 먹을거야",
+        "output": "좋은 선택이에요! 국 먹고 남은 건 꼭 냉장고에 넣어두세요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "무슨 볶음밥 해먹을까?",
+        "output": "김치햄참치 볶음밥이요!",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
+    {
+        "instruction": "복날이 뭐야?",
+        "output": "한국에서 '복날'이라고 하면 일반적으로 한자로 '복(伏)날'이라고 쓰며, 날씨가 가장 더운 여름 3개날을 가리키는 표현입니다. 보통 7월 13일부터 15일까지를 가리킵니다.\n복날에는 더운 여름철에 체력 소모가 큰 몸을 보호하고 힘을 보충하기 위해 닭고기를 먹는 전통이 있습니다. 이때 주로 먹는 음식 중 하나가 삼계탕입니다. 삼계탕은 닭고기와 약재를 함께 끓여서 만든 건강식으로, 전통적으로 복날에 먹는 음식으로 유명합니다. 삼계탕은 영양가가 높고 체력 회복에 도움을 주는 것으로 알려져 있습니다.",
+        "ref":"AI hub - SNS 데이터 고도화"
+    },
 ]
