@@ -205,7 +205,7 @@ if __name__ == "__main__":
         results = make_requests(
             model=args.model,
             messages=batch_inputs, 
-            max_tokens=1800, 
+            max_tokens=2048, 
             temperature=1, 
             top_p=1,
             n=1, 
