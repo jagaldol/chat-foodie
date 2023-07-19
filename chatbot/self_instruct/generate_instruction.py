@@ -15,7 +15,7 @@ from gpt3_api import make_requests
 
 def encode_prompt(prompt_instructions):
     """Encode multiple prompt instructions into a single string."""
-    prompt = open("./chatbot/self_instruct/prompt.txt").read() + "\n"
+    prompt = open("./prompt.txt").read() + "\n"
 
     for idx, task_dict in enumerate(prompt_instructions):
         (instruction, input, output) = task_dict["instruction"], task_dict["input"], task_dict["output"]
