@@ -6,6 +6,8 @@ generate_instruction.py 파이썬 파일을 통해 gpt3.5 turbo 모델을 활용
 * 사용 예시
   ```shell
   python generate_instruction.py --out_dir "생성된 데이터를 저장할 directory" --seed_tasks_path "seed 데이터(json) 위치" --num_instructions_to_generate 1000 --api_key "openAI API-KEY"
+
+  python generate_instruction.py --out_dir "../datasets/gpt3_generations/" --seed_tasks_path "../datasets/seed_tasks.jsonl" --num_instructions_to_generate 10000 --api_key "~~~"
   ```
 
 ### parameters
