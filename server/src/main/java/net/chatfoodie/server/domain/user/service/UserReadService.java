@@ -19,7 +19,7 @@ public class UserReadService {
     private UserDto toDto(User user) {
         return new UserDto(
                 user.getId(),
-                user.getLogin_id(),
+                user.getLoginId(),
                 user.getName(),
                 user.getGender(),
                 user.getBirth(),
