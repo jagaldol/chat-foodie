@@ -1,23 +1,34 @@
 package net.chatfoodie.server.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server.domain.user.dto.UserDto;
-import net.chatfoodie.server.domain.user.service.UserReadService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import net.chatfoodie.server.domain.user.dto.UserRequest;
+import net.chatfoodie.server.domain.user.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
 public class UserController {
 
-    final private UserReadService userReadService;
+    final private UserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping("users/{id}")
     public UserDto getUser(@PathVariable Long id) {
 
-        return userReadService.getUserById(id);
+        return userService.getUserById(id);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<String> join(@RequestBody UserRequest.JoinDto requestDto) {
+        userService.join(requestDto);
+        return ResponseEntity.ok().body("success");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UserRequest.LoginDto requestDto) {
+        String jwt = userService.issueJwtByLogin(requestDto);
+        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("성공");
     }
 }
