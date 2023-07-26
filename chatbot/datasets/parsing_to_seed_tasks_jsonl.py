@@ -5,7 +5,7 @@ if __name__ == '__main__':
     FILE_DIR = os.path.dirname(os.path.abspath(__file__))
     
     # PATH 세팅
-    INPUT_PATH = os.path.join(FILE_DIR, "foodie_dataset_v0.0.1.json")
+    INPUT_PATH = os.path.join(FILE_DIR, "foodie_dataset_v0.0.2.json")
     OUTPUT_PATH = os.path.join(FILE_DIR, "seed_tasks.jsonl")
 
     # 파일 오픈
