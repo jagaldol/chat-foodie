@@ -12,6 +12,8 @@ prompt 는 Alpaca 모델의 prompt를 참고하여 작성하였습니다.
   python generate_instruction.py --out_dir "../datasets/gpt3_generations/" --seed_tasks_path "../datasets/seed_tasks.jsonl" --num_instructions_to_generate 10000 --api_key "KEY"
   ```
 
+> gpt-3.5-turbo (\$0.0002/1K token)을 사용하여 한국어 데이터(instruction, input, output) 약 8000개를 생성하는 데 소모된 비용은 `$6.01` 입니다.
+
 ### parameters
 --out_dir
 * 생성된 데이터를 저장할 directory path
