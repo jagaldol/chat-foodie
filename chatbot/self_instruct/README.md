@@ -1,13 +1,15 @@
 # self-instruct
 
 ## description
-generate_instruction.py 파이썬 파일을 통해 gpt3.5 turbo 모델을 활용하여 데이터를 생성한다. 
+generate_instruction.py 파일을 통해 OpenAI사의 API를 사용해 gpt3.5 turbo 모델로 데이터를 생성합니다. 데이터에는 instruction, input, output이 포함됩니다.
+
+prompt 는 Alpaca 모델의 prompt를 참고하여 작성하였습니다.
 
 * 사용 예시
   ```shell
-  python generate_instruction.py --out_dir "생성된 데이터를 저장할 directory" --seed_tasks_path "seed 데이터(json) 위치" --num_instructions_to_generate 1000 --api_key "openAI API-KEY"
+  python generate_instruction.py --out_dir "생성된 데이터를 저장할 directory" --seed_tasks_path "seed 데이터(json) 위치" --num_instructions_to_generate 10000 --api_key "openAI API-KEY"
 
-  python generate_instruction.py --out_dir "../datasets/gpt3_generations/" --seed_tasks_path "../datasets/seed_tasks.jsonl" --num_instructions_to_generate 10000 --api_key "~~~"
+  python generate_instruction.py --out_dir "../datasets/gpt3_generations/" --seed_tasks_path "../datasets/seed_tasks.jsonl" --num_instructions_to_generate 10000 --api_key "KEY"
   ```
 
 ### parameters
@@ -42,7 +44,7 @@ generate_instruction.py 파이썬 파일을 통해 gpt3.5 turbo 모델을 활용
 * apenAI에 등록된 기관
 
 ## Citation
-다음 을 참고하여 코드를 작성하였음.
+다음을 참고하여 코드를 작성하였음.
 ```bibtex
 @misc{selfinstruct,
   title={Self-Instruct: Aligning Language Model with Self Generated Instructions},
