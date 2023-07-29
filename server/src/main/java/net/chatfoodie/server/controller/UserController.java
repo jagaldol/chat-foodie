@@ -2,6 +2,7 @@ package net.chatfoodie.server.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.JwtProvider;
+import net.chatfoodie.server._core.utils.ApiUtils;
 import net.chatfoodie.server.domain.user.dto.UserDto;
 import net.chatfoodie.server.domain.user.dto.UserRequest;
 import net.chatfoodie.server.domain.user.service.UserService;
@@ -21,14 +22,16 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody UserRequest.JoinDto requestDto) {
+    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDto requestDto) {
         userService.join(requestDto);
-        return ResponseEntity.ok().body("success");
+        ApiUtils.Response<?> response = ApiUtils.success("성공");
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserRequest.LoginDto requestDto) {
+    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto requestDto) {
         String jwt = userService.issueJwtByLogin(requestDto);
-        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("성공");
+        ApiUtils.Response<?> response = ApiUtils.success("성공");
+        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
 }

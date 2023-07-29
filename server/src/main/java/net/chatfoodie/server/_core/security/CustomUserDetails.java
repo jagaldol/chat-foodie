@@ -12,7 +12,7 @@ public record CustomUserDetails(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<GrantedAuthority> auth = new ArrayList<GrantedAuthority>();
+        ArrayList<GrantedAuthority> auth = new ArrayList<>();
         auth.add(new SimpleGrantedAuthority("USER"));
         return auth;
     }
