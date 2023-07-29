@@ -3,7 +3,6 @@ package net.chatfoodie.server.user.controller;
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.ApiUtils;
-import net.chatfoodie.server.user.dto.UserDto;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,9 @@ public class UserController {
     final private UserService userService;
 
     @GetMapping("users/{id}")
-    public UserDto getUser(@PathVariable Long id) {
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
 
-        return userService.getUserById(id);
+        return ResponseEntity.ok().body(id + "의 정보");
     }
 
     @PostMapping("/join")
