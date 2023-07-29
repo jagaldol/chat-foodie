@@ -1,7 +1,7 @@
 # fine-tune 방식 모델 학습
 
 * QLoRA로 KoAlpaca-Polyglot-ko 5.8B 모델 chatfoodie v1.0 학습 with 4bit
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jagaldol/chat-foodie/blob/feature/fine-tuning/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb)
 
 * 8200개 (99.8%)샘플로 학습한 모델 생성결과 예시
 ```
