@@ -36,7 +36,7 @@ public class User {
     @ColumnDefault("'2000-01-01'")
     private LocalDate birth;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
     @ColumnDefault("now()")
