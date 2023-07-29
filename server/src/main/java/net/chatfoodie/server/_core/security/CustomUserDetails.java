@@ -1,6 +1,6 @@
 package net.chatfoodie.server._core.security;
 
-import net.chatfoodie.server.domain.user.entity.User;
+import net.chatfoodie.server.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

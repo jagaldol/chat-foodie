@@ -1,4 +1,4 @@
-package net.chatfoodie.server.domain.user.entity;
+package net.chatfoodie.server.user;
 
 import jakarta.persistence.*;
 import lombok.Builder;

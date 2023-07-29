@@ -1,11 +1,11 @@
-package net.chatfoodie.server.controller;
+package net.chatfoodie.server.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.ApiUtils;
-import net.chatfoodie.server.domain.user.dto.UserDto;
-import net.chatfoodie.server.domain.user.dto.UserRequest;
-import net.chatfoodie.server.domain.user.service.UserService;
+import net.chatfoodie.server.user.dto.UserDto;
+import net.chatfoodie.server.user.dto.UserRequest;
+import net.chatfoodie.server.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,12 +1,12 @@
-package net.chatfoodie.server.domain.user.service;
+package net.chatfoodie.server.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.security.JwtProvider;
-import net.chatfoodie.server.domain.user.dto.UserDto;
-import net.chatfoodie.server.domain.user.dto.UserRequest;
-import net.chatfoodie.server.domain.user.entity.User;
-import net.chatfoodie.server.domain.user.repository.UserRepository;
+import net.chatfoodie.server.user.dto.UserDto;
+import net.chatfoodie.server.user.dto.UserRequest;
+import net.chatfoodie.server.user.User;
+import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
