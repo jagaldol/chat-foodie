@@ -1,9 +1,11 @@
-# fine-tune 방식 모델 학습
+# Fine-tuning Model Training
 
-* QLoRA로 KoAlpaca-Polyglot-ko 5.8B 모델 chatfoodie v1.0 학습 with 4bit
+The ChatFoodie model was fine-tuned using the QLoRA method on the KoAlpaca-Polyglot-ko 5.8B model with 4-bit precision. 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb)
 
-* 8200개 (99.8%)샘플로 학습한 모델 생성결과 예시
+The model was trained with 8200 samples. 
+
+## Examples of generated result
 ```
 ### 질문: 매운 음식 추천해줘
 
@@ -16,8 +18,8 @@
 ### 답변: 삼겹살과 김치를 함께 구워보세요! 삼겹살과 김치의 맛과 풍미가 조화로운 조합입니다. 저녁으로는 고기를 구워 먹는 것이 가장 좋고, 김치의 상큼한 맛과 삼겹살의 기름 맛이 잘 어울립니다. 삼겹살과 김치를 함께 먹어보세요! 맛있는 식사를 즐겨보세요.
 ```
 
-## ChatFoodie(ChatFoodie KoAlpaca Polyglot-ko-5.8B-v1.0) 모델 학습
+## ChatFoodie(ChatFoodie KoAlpaca Polyglot-ko-5.8B-v1.0) Model Training
 
-ChatFoodie 모델은 Colab 무료 버전 (T4 16GB 1대)로 학습을 진행하였습니다. 학습에 소요된 시간은 약 79분입니다.
+The training of the ChatFoodie model was conducted on the free version of Colab (T4). The training process took approximately 79 minutes.
 
 ![Training Loss](./images/train-loss-1epoch.png)
