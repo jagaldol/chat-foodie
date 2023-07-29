@@ -25,6 +25,7 @@ public class UserRequest {
                     .name(name)
                     .gender(gender)
                     .birth(birth)
+                    .email(email)
                     .build();
         }
     }
