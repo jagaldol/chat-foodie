@@ -48,7 +48,7 @@ $ python download-model.py sm136599/chatfoodie-koalpaca-polyglot-5_8b-2050step-4
 
 ### Example of Deploy with Google Colab
 
-<a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/feature%2Frun-chatbot-server/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+<a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 Deploy_chatbot_server_as_public_with_colab.ipynb
 
