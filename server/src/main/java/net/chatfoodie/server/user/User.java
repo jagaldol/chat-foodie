@@ -40,7 +40,7 @@ public class User {
     private String email;
 
     @ColumnDefault("now()")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Builder
     public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, LocalDateTime created_at) {
@@ -51,6 +51,6 @@ public class User {
         this.gender = gender;
         this.birth = birth;
         this.email = email;
-        this.created_at = created_at;
+        this.createdAt = created_at;
     }
 }
