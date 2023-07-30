@@ -3,6 +3,7 @@ package net.chatfoodie.server.user.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.user.User;
 
 public class UserRequest {
@@ -13,7 +14,7 @@ public class UserRequest {
 
     public record JoinDto(
        @NotEmpty @Size(min = 8, max = 40, message = "8자에서 40자 이내여야 합니다.")
-       @Pattern(regexp = "^[\\w.]+$", message = "영문, 숫자, _, . 만 가능합니다.")
+       @Pattern(regexp = "^[\\w.]+$", message = "영문/숫자/_/. 만 가능합니다.")
        String loginId,
        @NotEmpty @Size(min = 8, max = 64, message = "8자에서 64자 이내여야 합니다.")
        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[\\d@#$%^&!])[a-zA-Z\\d@#$%^&!]{8,}$", message = "영문, 숫자, 특수문자 중 최소 2종류를 포함해야 합니다.")
@@ -35,7 +36,7 @@ public class UserRequest {
                     .password(EncodedPassword)
                     .name(name)
                     .gender(gender)
-//                    .birth(birth)
+                    .birth(birth == null ? null : Utils.convertStringToDate(birth))
                     .email(email)
                     .build();
         }
