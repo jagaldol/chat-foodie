@@ -20,6 +20,6 @@ The model was trained with 8200 samples.
 
 ## ChatFoodie(ChatFoodie KoAlpaca Polyglot-ko-5.8B-v1.0) Model Training
 
-The training of the ChatFoodie model was conducted on the free version of Colab (T4). The training process took approximately 79 minutes.
+The training of the ChatFoodie model was conducted on the free version of Colab (T4). The training process took approximately 261 minutes.
 
-![Training Loss](./images/train-loss-1epoch.png)
+![Training Loss](./images/train-loss-5epoch.png)
