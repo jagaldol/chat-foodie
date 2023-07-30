@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
@@ -22,20 +23,28 @@ public class Food {
     @Column(length = 50, nullable = false)
     private String name;
 
+    @Column(length = 100, nullable = false)
     private String imageUrl;
 
+    @Column(length = 50, nullable = false)
     private String country;
 
+    @Column(length = 50, nullable = false)
     private String flavor;
 
+    @Column(length = 50, nullable = false)
     private String temperature;
 
+    @Column(length = 50, nullable = false)
     private String ingredient;
 
+    @Column(nullable = false)
     private int spicy;
 
+    @Column(length = 50, nullable = false)
     private String oily;
 
+    @ColumnDefault("now()")
     private LocalDateTime createdAt;
 
     @Builder
