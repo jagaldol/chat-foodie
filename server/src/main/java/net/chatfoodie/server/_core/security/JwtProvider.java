@@ -4,7 +4,7 @@ package net.chatfoodie.server._core.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import net.chatfoodie.server.domain.user.entity.User;
+import net.chatfoodie.server.user.User;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

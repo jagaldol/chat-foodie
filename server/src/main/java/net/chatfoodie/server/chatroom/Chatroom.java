@@ -1,4 +1,4 @@
-package net.chatfoodie.server.domain.message.entity;
+package net.chatfoodie.server.chatroom;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,16 +11,12 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Message {
+public class Chatroom {
     @Id
     @GeneratedValue
-    Long id;
+    private Long id;
 
-    Long chatroom_id;
+    private Long user_id;
 
-    Long from_user_id;
-
-    String content;
-
-    LocalDateTime created_at;
+    private LocalDateTime created_at;
 }

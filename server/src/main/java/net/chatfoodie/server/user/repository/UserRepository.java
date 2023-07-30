@@ -1,7 +1,7 @@
-package net.chatfoodie.server.domain.user.repository;
+package net.chatfoodie.server.user.repository;
 
 
-import net.chatfoodie.server.domain.user.entity.User;
+import net.chatfoodie.server.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

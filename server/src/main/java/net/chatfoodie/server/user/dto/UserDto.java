@@ -1,4 +1,4 @@
-package net.chatfoodie.server.domain.user.dto;
+package net.chatfoodie.server.user.dto;
 
 import java.time.LocalDate;
 
