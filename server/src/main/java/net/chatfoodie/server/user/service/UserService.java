@@ -27,10 +27,7 @@ public class UserService {
 
     @Transactional
     public void join(UserRequest.JoinDto requestDto) {
-        var loginId = requestDto.loginId();
-        var email = requestDto.email();
-
-
+        
         if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
             throw new Exception400("이미 존재하는 아이디입니다");
         }
