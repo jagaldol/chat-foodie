@@ -3,10 +3,12 @@ package net.chatfoodie.server.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
+import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
+import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,4 +59,11 @@ public class UserService {
         return JwtProvider.create(user);
     }
 
+
+    @Transactional
+    public UserResponse.getUserDto getUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
+
+        return new UserResponse.getUserDto(user);
+    }
 }
