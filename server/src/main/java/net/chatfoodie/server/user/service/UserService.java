@@ -39,8 +39,10 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(requestDto.password());
 
+        var user = requestDto.createUser(encodedPassword);
+
         try {
-            userRepository.save(requestDto.createUser(encodedPassword));
+            userRepository.save(user);
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
