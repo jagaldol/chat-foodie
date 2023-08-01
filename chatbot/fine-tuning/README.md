@@ -1,7 +1,8 @@
 # Fine-tuning Model Training
 
 The ChatFoodie model was fine-tuned using the QLoRA method on the KoAlpaca-Polyglot-ko 5.8B model with 4-bit precision. 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb)
+
+<a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 The model was trained with 8200 samples. 
 
