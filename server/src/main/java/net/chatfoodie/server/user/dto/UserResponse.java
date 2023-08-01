@@ -1,9 +1,5 @@
 package net.chatfoodie.server.user.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.user.User;
 
 public class UserResponse {
