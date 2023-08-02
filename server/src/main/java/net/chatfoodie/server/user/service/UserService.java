@@ -60,8 +60,7 @@ public class UserService {
         }
         return JwtProvider.create(user);
     }
-
-    @Transactional
+    
     public UserResponse.getUserDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
 
