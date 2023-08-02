@@ -24,8 +24,6 @@ public class UserService {
 
     final private PasswordEncoder passwordEncoder;
 
-
-    @Transactional
     public void join(UserRequest.JoinDto requestDto) {
         
         if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
@@ -48,14 +46,14 @@ public class UserService {
     }
 
     public String issueJwtByLogin(UserRequest.LoginDto requestDto) {
-        User user = userRepository.findByLoginId(requestDto.loginId()).orElseThrow();
+        User user = userRepository.findByLoginId(requestDto.loginId()).orElseThrow(() ->
+                new Exception400("아이디 혹은 비밀번호가 틀렸습니다."));
 
         if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
-            throw new RuntimeException("비밀번호가 틀렸습니다.");
+            throw new Exception400("아이디 혹은 비밀번호가 틀렸습니다.");
         }
         return JwtProvider.create(user);
     }
-
 
     @Transactional
     public UserResponse.getUserDto getUser(Long id) {
