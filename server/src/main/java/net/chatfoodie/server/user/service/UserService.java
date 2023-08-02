@@ -6,6 +6,8 @@ import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.JwtProvider;
+import net.chatfoodie.server.favor.Favor;
+import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.dto.UserResponse;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
+import java.util.List;
+
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -23,6 +27,8 @@ import java.util.Objects;
 public class UserService {
 
     final private UserRepository userRepository;
+
+    final private FavorRepository favorRepository;
 
     final private PasswordEncoder passwordEncoder;
 
@@ -64,6 +70,8 @@ public class UserService {
     public UserResponse.getUserDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
 
-        return new UserResponse.getUserDto(user);
+        List<Favor> favors = favorRepository.findByUserId(id);
+
+        return new UserResponse.getUserDto(user, favors);
     }
 }
