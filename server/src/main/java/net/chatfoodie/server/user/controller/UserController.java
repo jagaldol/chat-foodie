@@ -3,6 +3,8 @@ package net.chatfoodie.server.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.errors.exception.Exception400;
+import net.chatfoodie.server._core.errors.exception.Exception403;
+import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.ApiUtils;
 import net.chatfoodie.server._core.utils.Utils;
@@ -10,11 +12,13 @@ import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,8 +27,11 @@ public class UserController {
     final private UserService userService;
 
     @GetMapping("users/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
-        UserResponse.getUserDto getUserDto = userService.getUser(id);
+    public ResponseEntity<?> getUser(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (!Objects.equals(userDetails.getId(), id)) {
+            throw new Exception403("권한이 없습니다.");
+        }
+        UserResponse.GetUserDto getUserDto = userService.getUser(id);
         ApiUtils.Response<?> response = ApiUtils.success(getUserDto);
         return ResponseEntity.ok().body(response);
     }
