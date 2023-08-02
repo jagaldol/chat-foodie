@@ -6,7 +6,7 @@ import net.chatfoodie.server.user.User;
 import java.util.List;
 
 public class UserResponse {
-    public record getUserDto(
+    public record GetUserDto(
         Long id,
         String loginId,
         String name,
@@ -15,7 +15,7 @@ public class UserResponse {
         String email,
         List<FavorDto> favors
     ){
-        public getUserDto(User user, List<Favor> favors) {
+        public GetUserDto(User user, List<Favor> favors) {
             this(
                     user.getId(),
                     user.getLoginId(),

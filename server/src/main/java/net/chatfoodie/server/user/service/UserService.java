@@ -67,11 +67,11 @@ public class UserService {
         return JwtProvider.create(user);
     }
     
-    public UserResponse.getUserDto getUser(Long id) {
+    public UserResponse.GetUserDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
 
         List<Favor> favors = favorRepository.findByUserId(id);
 
-        return new UserResponse.getUserDto(user, favors);
+        return new UserResponse.GetUserDto(user, favors);
     }
 }
