@@ -94,3 +94,45 @@ server of chatFoodie.
     }
     ```
 
+### Food
+
+#### GET /foods/random?size=30
+
+음식 목록을 랜덤하게 리턴
+
+* Query String
+
+| Param | Description    |
+|-------|----------------|
+| size  | 음식 개수(기본 값 30) |
+
+* Response Body
+
+```json
+{
+  "foods": [
+    {
+      "id": 22,
+      "name": "찜닭",
+      "imageUrl": "/images/찜닭.jpg"
+    },
+    {
+      "id": 11,
+      "name": "양꼬치",
+      "imageUrl": "/images/양꼬치.jpg"
+    },
+    {
+      "id": 58,
+      "name": "탕수육",
+      "imageUrl": "/images/탕수육.jpg"
+    },
+    
+    ...
+    
+  ]
+}
+
+```
+
+#### 
+
