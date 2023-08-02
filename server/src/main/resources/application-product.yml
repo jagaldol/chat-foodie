@@ -15,7 +15,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -28,5 +27,4 @@ spring:
 
 logging:
   level:
-    '[net.chatfoodie.server]': INFO
-    '[org.hibernate.type]': TRACE
+    net.chatfoodie.server: INFO
