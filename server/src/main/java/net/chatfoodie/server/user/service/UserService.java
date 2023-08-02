@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,6 +27,10 @@ public class UserService {
     final private PasswordEncoder passwordEncoder;
 
     public void join(UserRequest.JoinDto requestDto) {
+
+        if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
+            throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
+        }
         
         if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
             throw new Exception400("이미 존재하는 아이디입니다");
