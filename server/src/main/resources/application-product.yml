@@ -24,6 +24,7 @@ spring:
   sql:
     init:
       mode: never
+      encoding: utf-8
 
 logging:
   level:
