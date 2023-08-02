@@ -28,13 +28,13 @@ public class Favor {
     private Food food;
 
     @ColumnDefault("1")
-    private int likeScore;
+    private Integer likeScore;
 
     @ColumnDefault("now()")
     private LocalDateTime createdAt;
 
     @Builder
-    public Favor(Long id, User user, Food food, int likeScore, LocalDateTime created_at) {
+    public Favor(Long id, User user, Food food, Integer likeScore, LocalDateTime created_at) {
         this.id = id;
         this.user = user;
         this.food = food;
