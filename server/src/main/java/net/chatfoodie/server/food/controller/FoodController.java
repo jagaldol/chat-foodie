@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.utils.ApiUtils;
 import net.chatfoodie.server.food.Food;
 import net.chatfoodie.server.food.dto.FoodRequest;
+import net.chatfoodie.server.food.dto.FoodResponse;
 import net.chatfoodie.server.food.repository.FoodRepository;
 import net.chatfoodie.server.food.service.FoodService;
 import org.springframework.http.HttpStatus;
@@ -18,18 +19,17 @@ import java.util.List;
 public class FoodController {
 
     final private FoodService foodService;
-    public FoodController(FoodRepository foodRepository) {
-        this.foodRepository = foodRepository;
+
+    @GetMapping("foods/random")
+    public ResponseEntity<FoodResponse.FindAllDto> getRandomFoods(@RequestParam(value = "size",defaultValue = "30")
+                                                                  Integer size) {
+        FoodResponse.FindAllDto responseDto = foodService.getRandomFoods(size);
+        return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("foods/getRandomFoods")
-    public List<foods> getRandomFoods() {
-
-    }
-    @PostMapping("/saveUserFoodPreference")
-    public ResponseEntity<String> saveUserFoodPreference
-            (@RequestBody FoodRequest.SaveUserFoodPreferenceDto requestDto) {
+    @PostMapping("foods/saveUserFoodPreference")
+    public ResponseEntity<String> saveUserFoodPreference(@RequestBody FoodRequest.SaveUserFoodPreferenceDto requestDto) {
         foodService.saveUserFoodPreference(requestDto);
-        return null;
+        return ResponseEntity.ok("ok");
     }
 }

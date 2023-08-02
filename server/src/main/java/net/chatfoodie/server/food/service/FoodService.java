@@ -25,16 +25,16 @@ public class FoodService {
     final private FoodRepository foodRepository;
 
     @Transactional
-    public FoodResponse.FindAllDto getRandomFoods() {
+    public FoodResponse.FindAllDto getRandomFoods(Integer size) {
         List<Food> allFoods = foodRepository.findAll();
 
         Collections.shuffle(allFoods);
-        List<Food> randomFoods = allFoods.subList(0, Math.min(30, allFoods.size()));
+        List<Food> randomFoods = allFoods.subList(0, Math.min(size, allFoods.size()));
 
         return FoodResponse.FindAllDto.of(randomFoods);
     }
 
     public void saveUserFoodPreference(FoodRequest.SaveUserFoodPreferenceDto requestDto){
-        foodRepository.save(requestDto.SaveUserFoodPreferenceDto());
+        foodRepository.save(requestDto.savepreference());
     }
 }
