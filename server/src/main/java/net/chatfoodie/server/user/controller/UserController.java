@@ -38,14 +38,14 @@ public class UserController {
             throw new Exception400("올바른 날짜가 아닙니다.(형식: 0000-00-00)");
         }
         userService.join(requestDto);
-        ApiUtils.Response<?> response = ApiUtils.success(null);
+        ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDto requestDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto requestDto, Errors errors) {
         String jwt = userService.issueJwtByLogin(requestDto);
-        ApiUtils.Response<?> response = ApiUtils.success("성공");
+        ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
 }
