@@ -1,26 +1,27 @@
 package net.chatfoodie.server.message;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.chatfoodie.server.chatroom.Chatroom;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "message_tb")
 public class Message {
     @Id
-    @GeneratedValue
-    Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    Long chatroom_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Chatroom chatroom;
 
-    Long from_user_id;
+    private boolean isFromChatbot;
 
-    String content;
+    private String content;
 
-    LocalDateTime created_at;
+    private LocalDateTime created_at;
 }
