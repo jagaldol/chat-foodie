@@ -30,8 +30,14 @@ public class UserResponse {
         }
 
         public record FavorDto(
-                Favor favor
-        ) { }
+                Long id,
+                String foodName,
+                Integer likeScore
+        ) {
+            public FavorDto(Favor favor) {
+                this(favor.getId(), favor.getFood().getName(), favor.getLikeScore());
+            }
+        }
     }
 
 }
