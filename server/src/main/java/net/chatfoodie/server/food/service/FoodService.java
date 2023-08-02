@@ -21,6 +21,7 @@ public class FoodService {
 
     @Transactional
     public FoodResponse.FindAllDto getRandomFoods(Integer size) {
+        // TODO: 음식이 많아졌을 때 처음부터 랜덤하게 30개만 db에서 들고 오도록 개선 필요
         List<Food> allFoods = foodRepository.findAll();
 
         Collections.shuffle(allFoods);
