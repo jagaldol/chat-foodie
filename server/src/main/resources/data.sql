@@ -69,3 +69,8 @@ VALUES ('쌀국수', '/images/쌀국수.jpg', '외국 음식', '신맛', '뜨거
        ('죽', '/images/죽.jpg', '한식', '단맛', '뜨거움', '밥', 0, '담백함'),
        ('카츠산도', '/images/카츠산도.jpg', '일식', '단맛', '차가움', '밀가루', 0, '느끼함'),
        ('멘보샤', '/images/멘보샤.jpg', '중식', '단맛', '뜨거움', '밀가루', 0, '느끼함');
+
+
+-- 비밀번호 test1234
+INSERT INTO user_tb (login_id, password, name, email)
+VALUES ('test', '{bcrypt}$2a$10$iRfOSldsM6yVzqGfsQNF5u1Fq8g85xFt.k/DPldr1jVk3rds/fkea', 'test회원', 'test@test.com')

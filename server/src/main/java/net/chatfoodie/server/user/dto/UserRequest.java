@@ -8,14 +8,14 @@ import net.chatfoodie.server.user.User;
 
 public class UserRequest {
     public record LoginDto(
-        @NotEmpty @Size(min = 8, max = 40, message = "8자에서 40자 이내여야 합니다.")
+        @NotEmpty @Size(max = 40, message = "최대 40자까지 입력 가능합니다.")
         String loginId,
-        @NotEmpty @Size(min = 8, max = 64, message = "8자에서 64자 이내여야 합니다.")
+        @NotEmpty @Size(max = 64, message = "최대 64자까지 입력 가능합니다.")
         String password
     ) {}
 
     public record JoinDto(
-        @NotEmpty @Size(min = 8, max = 40, message = "8자에서 40자 이내여야 합니다.")
+        @NotEmpty @Size(min = 4, max = 40, message = "4자에서 40자 이내여야 합니다.")
         @Pattern(regexp = "^[\\w.]+$", message = "영문/숫자/_/. 만 가능합니다.")
         String loginId,
         @NotEmpty @Size(min = 8, max = 64, message = "8자에서 64자 이내여야 합니다.")
