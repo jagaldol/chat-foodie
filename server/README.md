@@ -168,6 +168,34 @@ server of chatFoodie.
       "errorMessage": null
     }
     ```
+  
+### Favor
 
-#### POST /foods/saveUserFoodPreference
+#### POST /favors
 
+유저의 음식 선호도 저장
+
+* Request Body
+  ```json
+  {
+    "userId": 1,
+    "favors": [
+      {
+        "id": 1
+      }, 
+      {
+        "id": 15
+      }, 
+      ...
+    ]
+  }
+  ```
+  
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
