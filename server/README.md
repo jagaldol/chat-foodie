@@ -33,9 +33,9 @@ server of chatFoodie.
 * Response Body  
     ```json
     {
-        "status": 200,
-        "response": null,
-        "errorMessage": null
+      "status": 200,
+      "response": null,
+      "errorMessage": null
     }
     ```
 
@@ -58,19 +58,19 @@ server of chatFoodie.
 * Response Body  
     ```json
     {
-        "status": 200,
-        "response": null,
-        "errorMessage": null
+      "status": 200,
+      "response": null,
+      "errorMessage": null
     }
     ```
 
 #### GET /users/{id}
 
 * Response Body  
-    ```
+    ```json
     {
-    "status": 200,
-    "response": {
+      "status": 200,
+      "response": {
         "id": 1,
         "loginId": "test",
         "name": "test회원",
@@ -78,21 +78,55 @@ server of chatFoodie.
         "birth": "2000-01-01",
         "email": "test@test.com",
         "favors": [
-            {
-                "id": 1,
-                "foodName": "쌀국수",
-                "likeScore": 1
-            },
-            {
-                "id": 2,
-                "foodName": "카레",
-                "likeScore": 1
-            }
+          {
+            "id": 1,
+            "foodName": "쌀국수",
+            "likeScore": 1
+          },
+          {
+            "id": 2,
+            "foodName": "카레",
+            "likeScore": 1
+          }
         ]
-    },
-    "errorMessage": null
+      },
+      "errorMessage": null
     }
     ```
+
+#### PUT /users/{id}
+
+* Request Body
+  ```json
+  {
+    "loginId": "changedId",
+    "password": "changedPassword",
+    "name": "changedName",
+    "gender": true (or false),
+    "birth": "changedBirth(2000-01-01)"
+  }
+  ```
+  * 변경 가능한 개인 정보
+    * 아이디
+    * 비밀번호
+    * 이름
+    * 성별
+    * 생년월일
+  
+* Response Header
+  ```
+  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiaWQiOjEsImV4cCI6MTY5MTEzMzc2NH0.lC2RxRr_NHm23JCsccAIucBcIW21Dew-JgSLdKRRfd6hkSw3CyD_8r6D7kpcBkTtMjjDV8ptU5Blafqu3HIVGQ
+  ```
+  * JWT 토큰 헤더로 전달
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
 
 ### Food
 
@@ -108,31 +142,32 @@ server of chatFoodie.
 
 * Response Body
 
-```json
-{
-  "foods": [
+    ```json
     {
-      "id": 22,
-      "name": "찜닭",
-      "imageUrl": "/images/찜닭.jpg"
-    },
-    {
-      "id": 11,
-      "name": "양꼬치",
-      "imageUrl": "/images/양꼬치.jpg"
-    },
-    {
-      "id": 58,
-      "name": "탕수육",
-      "imageUrl": "/images/탕수육.jpg"
-    },
-    
-    ...
-    
-  ]
-}
+      "status": 200,
+      "response": {
+        "foods": [
+          {
+            "id": 29,
+            "name": "불고기",
+            "imageUrl": "/images/불고기.jpg"
+          },
+          {
+            "id": 6,
+            "name": "스테이크",
+            "imageUrl": "/images/스테이크.jpg"
+          },
+          ...
+          {
+            "id": 13,
+            "name": "돈카츠",
+            "imageUrl": "/images/돈카츠.jpg"
+          }
+        ]
+      },
+      "errorMessage": null
+    }
+    ```
 
-```
-
-#### 
+#### POST /foods/saveUserFoodPreference
 
