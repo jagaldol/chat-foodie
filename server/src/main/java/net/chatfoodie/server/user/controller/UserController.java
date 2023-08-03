@@ -58,4 +58,26 @@ public class UserController {
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails,
+                                        @RequestBody @Valid UserRequest.UpdateDto requestDto,
+                                        Errors errors) {
+        if (!Objects.equals(userDetails.getId(), id)) {
+            throw new Exception403("권한이 없습니다.");
+        }
+
+        if (requestDto.birth() != null) {
+            List<Integer> birthSplit = Arrays.stream(requestDto.birth().split("-"))
+                    .map(Integer::parseInt)
+                    .toList();
+            if (!Utils.validateDayOfDateString(birthSplit.get(0), birthSplit.get(1), birthSplit.get(2)))
+                throw new Exception400("올바른 날짜가 아닙니다.(형식: 0000-00-00)");
+        }
+
+        userService.updateUser(id, requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,10 +1,7 @@
 package net.chatfoodie.server.user;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -52,5 +49,21 @@ public class User {
         this.birth = birth;
         this.email = email;
         this.createdAt = created_at;
+    }
+
+    public void updateLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+    public void updateName(String name) {
+        this.name = name;
+    }
+    public void updateGender(Boolean gender) {
+        this.gender = gender;
+    }
+    public void updateBirth(LocalDate birth) {
+        this.birth = birth;
     }
 }

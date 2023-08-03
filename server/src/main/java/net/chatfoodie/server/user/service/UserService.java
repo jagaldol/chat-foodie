@@ -7,6 +7,7 @@ import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
+import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.user.dto.UserRequest;
@@ -75,5 +76,40 @@ public class UserService {
         List<Favor> favors = favorRepository.findByUserId(id);
 
         return new UserResponse.GetUserDto(user, favors);
+    }
+
+    @Transactional
+    public void updateUser(Long id, UserRequest.UpdateDto requestDto) {
+        var user = userRepository.findById(id).orElseThrow(() -> new Exception500("개인 정보 변경 중 오류가 발생했습니다. 다시 시도해주세요."));
+
+        // loginId 존재 시
+        if (requestDto.loginId() != null) {
+            if (!Objects.equals(user.getLoginId(), requestDto.loginId())) {
+                if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
+                    throw new Exception400("이미 존재하는 아이디입니다");
+                }
+                user.updateLoginId(requestDto.loginId());
+            }
+        }
+        // password 존재 시
+        if (requestDto.password() != null) {
+            if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
+                throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
+            }
+            String encodedPassword = passwordEncoder.encode(requestDto.password());
+            user.updatePassword(encodedPassword);
+        }
+
+        if (requestDto.name() != null) {
+            user.updateName(requestDto.name());
+        }
+
+        if (requestDto.gender() != null) {
+            user.updateGender(requestDto.gender());
+        }
+
+        if (requestDto.birth() != null) {
+            user.updateBirth(Utils.convertStringToDate(requestDto.birth()));
+        }
     }
 }
