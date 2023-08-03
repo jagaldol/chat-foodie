@@ -27,18 +27,14 @@ public class Favor {
     @ManyToOne(fetch = FetchType.LAZY)
     private Food food;
 
-    @ColumnDefault("1")
-    private Integer likeScore;
-
     @ColumnDefault("now()")
     private LocalDateTime createdAt;
 
     @Builder
-    public Favor(Long id, User user, Food food, Integer likeScore, LocalDateTime created_at) {
+    public Favor(Long id, User user, Food food, LocalDateTime created_at) {
         this.id = id;
         this.user = user;
         this.food = food;
-        this.likeScore = likeScore;
         this.createdAt = created_at;
     }
 }

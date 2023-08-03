@@ -22,11 +22,12 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
     final private UserService userService;
 
-    @GetMapping("users/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (!Objects.equals(userDetails.getId(), id)) {
             throw new Exception403("권한이 없습니다.");

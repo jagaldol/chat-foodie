@@ -76,6 +76,6 @@ INSERT INTO user_tb (login_id, password, name, email)
 VALUES ('test', '{bcrypt}$2a$10$iRfOSldsM6yVzqGfsQNF5u1Fq8g85xFt.k/DPldr1jVk3rds/fkea', 'test회원', 'test@test.com');
 
 
-INSERT INTO favor_tb (user_id, food_id, like_score)
-VALUES (1, 1, 1),
-       (1, 2, 1);
+INSERT INTO favor_tb (user_id, food_id)
+VALUES (1, 1),
+       (1, 2);

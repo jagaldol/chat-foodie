@@ -1,4 +1,4 @@
-# chat-foodie(Work In Progress)
+# Chat foodie
 
 <p align="left">
     <img src="docs/chatfoodie_logo.png" width="80%"/>

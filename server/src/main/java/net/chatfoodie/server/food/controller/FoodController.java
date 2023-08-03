@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class FoodController {
 
     final private FoodService foodService;
 
-    @GetMapping("foods/random")
+    @GetMapping("/foods/random")
     public ResponseEntity<?> getRandomFoods(@RequestParam(value = "size",defaultValue = "30")
                                                                   Integer size) {
         FoodResponse.FindAllDto responseDto = foodService.getRandomFoods(size);
@@ -22,7 +23,7 @@ public class FoodController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("foods/saveUserFoodPreference")
+    @PostMapping("/foods/saveUserFoodPreference")
     public ResponseEntity<?> saveUserFoodPreference(@RequestBody FoodRequest.SaveUserFoodPreferenceDto requestDto) {
         foodService.saveUserFoodPreference(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
