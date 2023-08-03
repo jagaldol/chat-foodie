@@ -11,7 +11,7 @@ server of chatFoodie.
 
 ### User
 
-#### POST /join
+#### POST /api/join
 
 * Request Body  
     ```json
@@ -39,7 +39,7 @@ server of chatFoodie.
     }
     ```
 
-#### POST /login
+#### POST /api/login
 
 * Request Body  
     ```json
@@ -64,7 +64,7 @@ server of chatFoodie.
     }
     ```
 
-#### GET /users/{id}
+#### GET /api/users/{id}
 
 * Response Body  
     ```json
@@ -92,7 +92,7 @@ server of chatFoodie.
     }
     ```
 
-#### PUT /users/{id}
+#### PUT /api/users/{id}
 
 * Request Body
   ```json
@@ -131,7 +131,7 @@ server of chatFoodie.
 
 ### Food
 
-#### GET /foods/random?size=30
+#### GET /api/foods/random?size=30
 
 음식 목록을 랜덤하게 리턴
 
@@ -172,7 +172,7 @@ server of chatFoodie.
   
 ### Favor
 
-#### POST /favors
+#### POST /api/favors
 
 유저의 음식 선호도 저장
 * 기존 선호도 존재 시 삭제 후 요청 받은 값으로 저장
