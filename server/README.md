@@ -201,3 +201,46 @@ server of chatFoodie.
     "errorMessage": null
   }
   ```
+
+### Email-Verification
+
+#### POST /api/email-validations
+
+이메일 인증 코드 전송
+
+* Request Body
+  ```json
+  {
+    "userId": "user@example.com"
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+  
+#### POST /api/email-validations/confirm
+
+이메일 인증 코드 확인
+
+* Request Body
+  ```json
+  {
+    "userId": "user@example.com",
+    "verificationCode": "123456"
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
