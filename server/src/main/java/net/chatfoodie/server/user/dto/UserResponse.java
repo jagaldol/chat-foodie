@@ -31,11 +31,10 @@ public class UserResponse {
 
         public record FavorDto(
                 Long id,
-                String foodName,
-                Integer likeScore
+                String foodName
         ) {
             public FavorDto(Favor favor) {
-                this(favor.getId(), favor.getFood().getName(), favor.getLikeScore());
+                this(favor.getId(), favor.getFood().getName());
             }
         }
     }

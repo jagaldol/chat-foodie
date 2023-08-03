@@ -39,13 +39,7 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDto requestDto, Errors errors) {
-        if (requestDto.birth() != null) {
-            List<Integer> birthSplit = Arrays.stream(requestDto.birth().split("-"))
-                    .map(Integer::parseInt)
-                    .toList();
-            if (!Utils.validateDayOfDateString(birthSplit.get(0), birthSplit.get(1), birthSplit.get(2)))
-                throw new Exception400("올바른 날짜가 아닙니다.(형식: 0000-00-00)");
-        }
+        validateBirthForm(requestDto.birth());
 
         userService.join(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
@@ -57,5 +51,31 @@ public class UserController {
         String jwt = userService.issueJwtByLogin(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails,
+                                        @RequestBody @Valid UserRequest.UpdateDto requestDto,
+                                        Errors errors) {
+        if (!Objects.equals(userDetails.getId(), id)) {
+            throw new Exception403("권한이 없습니다.");
+        }
+
+        validateBirthForm(requestDto.birth());
+
+        userService.updateUser(id, requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
+    }
+
+    private static void validateBirthForm(String birth) {
+        if (birth != null) {
+            List<Integer> birthSplit = Arrays.stream(birth.split("-"))
+                    .map(Integer::parseInt)
+                    .toList();
+            if (!Utils.validateDayOfDateString(birthSplit.get(0), birthSplit.get(1), birthSplit.get(2)))
+                throw new Exception400("올바른 날짜가 아닙니다.(형식: 0000-00-00)");
+        }
     }
 }
