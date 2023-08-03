@@ -80,13 +80,11 @@ server of chatFoodie.
         "favors": [
           {
             "id": 1,
-            "foodName": "쌀국수",
-            "likeScore": 1
+            "foodName": "쌀국수"
           },
           {
             "id": 2,
-            "foodName": "카레",
-            "likeScore": 1
+            "foodName": "카레"
           }
         ]
       },
@@ -101,6 +99,7 @@ server of chatFoodie.
   {
     "loginId": "changedId",
     "password": "changedPassword",
+    "passwordCheck": "changedPassword",
     "name": "changedName",
     "gender": true (or false),
     "birth": "changedBirth(2000-01-01)"
@@ -113,6 +112,8 @@ server of chatFoodie.
     * 성별
     * 생년월일
   
+  * 보내진 정보 중 비어 있지 않은 정보에 대한 업데이트
+
 * Response Header
   ```
   Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiaWQiOjEsImV4cCI6MTY5MTEzMzc2NH0.lC2RxRr_NHm23JCsccAIucBcIW21Dew-JgSLdKRRfd6hkSw3CyD_8r6D7kpcBkTtMjjDV8ptU5Blafqu3HIVGQ
@@ -174,6 +175,7 @@ server of chatFoodie.
 #### POST /favors
 
 유저의 음식 선호도 저장
+* 기존 선호도 존재 시 삭제 후 요청 받은 값으로 저장
 
 * Request Body
   ```json
@@ -181,10 +183,10 @@ server of chatFoodie.
     "userId": 1,
     "favors": [
       {
-        "id": 1
+        "foodId": 1
       }, 
       {
-        "id": 15
+        "foodId": 15
       }, 
       ...
     ]
