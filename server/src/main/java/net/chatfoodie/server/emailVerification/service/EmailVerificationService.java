@@ -7,6 +7,7 @@ import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.repository.EmailVerificationRepository;
+import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.Random;
 public class EmailVerificationService {
     final private EmailVerificationRepository emailVerificationRepository;
 
+    final private UserRepository userRepository;
+
     final private JavaMailSender javaMailSender;
     @Transactional
     public void sendVerificationCode(EmailVerificationRequest.VerificationDto requestDto) {
@@ -30,6 +33,10 @@ public class EmailVerificationService {
         var existEmailCnt = emailVerificationRepository.countByEmailAndCreatedAtBetween(requestDto.email(), LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
         if (existEmailCnt >= 5) throw new Exception400("하루 최대 5번까지 인증번호 메일을 요청할 수 있습니다.");
+
+        if (userRepository.findByEmail(requestDto.email()).isPresent()) {
+            throw new Exception400("이미 존재하는 이메일입니다.");
+        }
 
         var verificationCode = makeCode();
         var emailVerification = requestDto.createVerification(verificationCode);
