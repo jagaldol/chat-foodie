@@ -39,12 +39,11 @@ public class ChatHandler extends TextWebSocketHandler {
         log.info("받은 메시지 : " + payload);
 
         String chatRoomId = userChatRooms.get(session);
-        for (WebSocketSession s : userChatRooms.keySet()) {
-            if (userChatRooms.get(s).equals(chatRoomId)) {
-                TextMessage textMessage = new TextMessage("사용자 " + session.getId() + " : " + payload);
-                s.sendMessage(textMessage);
-            }
-        }
+        var users = userChatRooms.keySet().stream()
+                .filter(s -> userChatRooms.get(s).equals(chatRoomId))
+                .toList();
+
+        chatService.requestToFoodie(payload, users);
 
         // TODO: 응답 이후 일정 시간 후 자동 Connection Close??
     }
