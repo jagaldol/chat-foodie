@@ -43,12 +43,12 @@ public class EmailVerificationService {
         }
     }
 
-    public String makeCode() {
+    private String makeCode() {
         Random random = new Random();
         return String.valueOf(random.nextInt(888888) + 111111);
     }
 
-    public void sendEmail(String email, String code) {
+    private void sendEmail(String email, String code) {
         String subject = "chatfoodie 회원가입 인증번호입니다.";
         String text = "회원가입을 위한 인증번호는 " + code + "입니다. </br>";
 
