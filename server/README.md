@@ -204,7 +204,7 @@ server of chatFoodie.
 
 ### Email-Verification
 
-#### POST /api/email-validations
+#### POST /api/email-verifications
 
 이메일 인증 코드 전송
 
@@ -224,7 +224,7 @@ server of chatFoodie.
   }
   ```
   
-#### POST /api/email-validations/confirm
+#### POST /api/email-verifications/confirm
 
 이메일 인증 코드 확인
 
