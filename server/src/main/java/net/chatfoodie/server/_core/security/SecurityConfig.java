@@ -77,7 +77,7 @@ public class SecurityConfig {
 
         // 10. 인증, 권한 필터 설정
         http.authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/messages/**", "/users/**").authenticated()
+                        authorize.requestMatchers("/api/messages/**", "/api/users/**").authenticated()
                         .anyRequest().permitAll()
         );
 
