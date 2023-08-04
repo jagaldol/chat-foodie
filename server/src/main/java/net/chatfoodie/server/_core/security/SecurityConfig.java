@@ -2,6 +2,7 @@ package net.chatfoodie.server._core.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import net.chatfoodie.server._core.config.Configs;
 import net.chatfoodie.server._core.errors.exception.Exception401;
 import net.chatfoodie.server._core.errors.exception.Exception403;
 import org.springframework.context.annotation.Bean;
@@ -88,7 +89,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)
-        configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용 (프론트 앤드 IP만 허용 react)
+        configuration.setAllowedOrigins(Configs.CORS);
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
         configuration.addExposedHeader("Authorization"); // 헤더로 Authorization
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
