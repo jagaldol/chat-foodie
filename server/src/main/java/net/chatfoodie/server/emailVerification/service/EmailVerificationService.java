@@ -28,19 +28,18 @@ public class EmailVerificationService {
     public void sendVerificationCode(EmailVerificationRequest.VerificationDto requestDto) {
 
         var existEmailCnt = emailVerificationRepository.countByEmailAndCreatedAtBetween(requestDto.email(), LocalDate.now().atStartOfDay(), LocalDateTime.now());
-        if (existEmailCnt < 5) {
-            var verificationCode = makeCode();
-            var emailVerification = requestDto.createVerification(verificationCode);
 
-            sendEmail(requestDto.email(), verificationCode);
-            try {
-                emailVerificationRepository.save(emailVerification);
-            } catch (Exception e) {
-                throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
-            }
-        }
-        else {
-            throw new Exception400("이메일 인증번호 전송 한도를 초과하였습니다.");
+        if (existEmailCnt >= 5) throw new Exception400("이메일 인증번호 전송 한도를 초과하였습니다.");
+
+        var verificationCode = makeCode();
+        var emailVerification = requestDto.createVerification(verificationCode);
+
+        sendEmail(requestDto.email(), verificationCode);
+
+        try {
+            emailVerificationRepository.save(emailVerification);
+        } catch (Exception e) {
+            throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
     }
 
