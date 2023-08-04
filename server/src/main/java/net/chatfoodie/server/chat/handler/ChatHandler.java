@@ -1,20 +1,23 @@
-package net.chatfoodie.server.message.handler;
+package net.chatfoodie.server.chat.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server.chat.service.ChatService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class ChatHandler extends TextWebSocketHandler {
+
+    private final ChatService chatService;
 
     private final Map<WebSocketSession, String> userChatRooms = new ConcurrentHashMap<>();
 
@@ -30,6 +33,8 @@ public class ChatHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        // TODO: pulbic-chat의 경우 하루 요청가능 횟수 제한 필요
+
         String payload = message.getPayload();
         log.info("받은 메시지 : " + payload);
 
@@ -40,6 +45,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 s.sendMessage(textMessage);
             }
         }
+
         // TODO: 응답 이후 일정 시간 후 자동 Connection Close??
     }
 
