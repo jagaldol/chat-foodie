@@ -29,7 +29,7 @@ public class EmailVerificationService {
 
         var existEmailCnt = emailVerificationRepository.countByEmailAndCreatedAtBetween(requestDto.email(), LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
-        if (existEmailCnt >= 5) throw new Exception400("이메일 인증번호 전송 한도를 초과하였습니다.");
+        if (existEmailCnt >= 5) throw new Exception400("하루 최대 5번까지 인증번호 메일을 요청할 수 있습니다.");
 
         var verificationCode = makeCode();
         var emailVerification = requestDto.createVerification(verificationCode);
@@ -39,7 +39,7 @@ public class EmailVerificationService {
         try {
             emailVerificationRepository.save(emailVerification);
         } catch (Exception e) {
-            throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
+            throw new Exception500("인증 번호 생성 중 오류가 발생했습니다.");
         }
     }
 
@@ -60,7 +60,7 @@ public class EmailVerificationService {
             helper.setText(text, true);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
-            throw new Exception500("메일 전송이 한도 초과되었습니다. 내일 다시 시도해주세요.");
+            throw new Exception500("서버 이메일 전송 한도가 초과되었습니다. 내일 다시 시도해주세요.");
         }
     }
 }
