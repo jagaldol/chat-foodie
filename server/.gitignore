@@ -38,3 +38,4 @@ out/
 
 ### setting file ###
 application-settings.yml
+application-mail.yml
