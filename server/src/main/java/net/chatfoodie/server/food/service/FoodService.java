@@ -3,7 +3,6 @@ package net.chatfoodie.server.food.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server.food.Food;
-import net.chatfoodie.server.food.dto.FoodRequest;
 import net.chatfoodie.server.food.dto.FoodResponse;
 import net.chatfoodie.server.food.repository.FoodRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,4 @@ public class FoodService {
         return FoodResponse.FindAllDto.of(randomFoods);
     }
 
-    public void saveUserFoodPreference(FoodRequest.SaveUserFoodPreferenceDto requestDto){
-        foodRepository.save(requestDto.savepreference());
-    }
 }
