@@ -2,7 +2,7 @@ package net.chatfoodie.server.chat.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.chatfoodie.server.chat.service.ChatService;
+import net.chatfoodie.server.chat.service.UserWebSocketService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class ChatHandler extends TextWebSocketHandler {
+public class UserWebSocketHandler extends TextWebSocketHandler {
 
-    private final ChatService chatService;
+    private final UserWebSocketService userWebSocketService;
 
     private final Map<WebSocketSession, String> userChatRooms = new ConcurrentHashMap<>();
 
@@ -43,7 +43,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 .filter(s -> userChatRooms.get(s).equals(chatRoomId))
                 .toList();
 
-        chatService.requestToFoodie(payload, users);
+        userWebSocketService.requestToFoodie(payload, users);
 
         // TODO: 응답 이후 일정 시간 후 자동 Connection Close??
     }

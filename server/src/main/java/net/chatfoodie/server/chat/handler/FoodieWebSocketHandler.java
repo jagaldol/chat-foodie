@@ -8,11 +8,10 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Component
-public class MyWebSocketHandler extends TextWebSocketHandler {
+public class FoodieWebSocketHandler extends TextWebSocketHandler {
 
     private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
 

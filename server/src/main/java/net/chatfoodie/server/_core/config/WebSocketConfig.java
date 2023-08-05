@@ -1,7 +1,7 @@
 package net.chatfoodie.server._core.config;
 
 import lombok.RequiredArgsConstructor;
-import net.chatfoodie.server.chat.handler.ChatHandler;
+import net.chatfoodie.server.chat.handler.UserWebSocketHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -12,12 +12,12 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final ChatHandler chatHandler;
+    private final UserWebSocketHandler userWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatHandler, "/api/chat")
-                .addHandler(chatHandler, "/api/public-chat")
+        registry.addHandler(userWebSocketHandler, "/api/chat")
+                .addHandler(userWebSocketHandler, "/api/public-chat")
                 .setAllowedOrigins(Configs.CORS.toArray(new String[0])); // CORS 허용
     }
 }
