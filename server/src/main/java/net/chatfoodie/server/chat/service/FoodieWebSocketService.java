@@ -2,7 +2,7 @@ package net.chatfoodie.server.chat.service;
 
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server.chat.handler.FoodieWebSocketHandler;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -12,14 +12,17 @@ import java.io.IOException;
 import java.util.List;
 
 
-@Service
 public class FoodieWebSocketService {
 
     final private WebSocketClient webSocketClient = new StandardWebSocketClient();
 
-    final private String serverUri = "wss://microsoft-ncaa-stocks-arbitrary.trycloudflare.com/api/v1/chat-stream";
+    private final String serverUri;
 
     final private FoodieWebSocketHandler foodieWebSocketHandler = new FoodieWebSocketHandler();
+
+    public FoodieWebSocketService(String serverUri) {
+        this.serverUri = serverUri;
+    }
 
 
     public void sendMessage(String message) {

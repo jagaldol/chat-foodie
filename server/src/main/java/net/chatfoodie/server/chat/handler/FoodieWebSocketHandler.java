@@ -3,7 +3,6 @@ package net.chatfoodie.server.chat.handler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.chatfoodie.server._core.errors.exception.Exception500;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -11,7 +10,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-@Component
 public class FoodieWebSocketHandler extends TextWebSocketHandler {
 
     private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
