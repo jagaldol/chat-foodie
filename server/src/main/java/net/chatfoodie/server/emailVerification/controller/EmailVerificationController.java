@@ -25,4 +25,12 @@ public class EmailVerificationController {
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
+
+    @PostMapping("/email-verifications/confirm")
+    public ResponseEntity<?> verifyVerificationCode(@RequestBody @Valid EmailVerificationRequest.VerificationCodeDto requestDto,
+                                                    Errors errors) {
+        emailVerificationService.verifyVerificationCode(requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok().body(response);
+    }
 }

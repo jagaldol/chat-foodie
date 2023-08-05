@@ -4,6 +4,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
+import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.repository.EmailVerificationRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -68,6 +70,15 @@ public class EmailVerificationService {
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new Exception500("서버 이메일 전송 한도가 초과되었습니다. 내일 다시 시도해주세요.");
+        }
+    }
+
+    public void verifyVerificationCode(EmailVerificationRequest.VerificationCodeDto requestDto) {
+        var emailVerification = emailVerificationRepository.findFirstByEmailOrderByCreatedAtDesc(requestDto.email())
+                .orElseThrow(() -> new Exception404("존재하지 않은 이메일 입니다."));
+
+        if (!Objects.equals(emailVerification.getVerificationCode(), requestDto.verificationCode())) {
+            throw new Exception400("인증코드가 일치하지 않습니다.");
         }
     }
 }
