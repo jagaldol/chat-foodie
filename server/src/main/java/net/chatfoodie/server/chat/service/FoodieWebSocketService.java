@@ -1,6 +1,5 @@
 package net.chatfoodie.server.chat.service;
 
-import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server.chat.handler.FoodieWebSocketHandler;
 import org.springframework.stereotype.Service;
@@ -10,8 +9,6 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 

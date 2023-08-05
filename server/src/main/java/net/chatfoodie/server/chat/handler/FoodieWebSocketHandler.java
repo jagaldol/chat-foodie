@@ -2,6 +2,7 @@ package net.chatfoodie.server.chat.handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.chatfoodie.server._core.errors.exception.Exception500;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -24,11 +25,11 @@ public class FoodieWebSocketHandler extends TextWebSocketHandler {
                 try {
                     session.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new Exception500("챗봇과의 연결을 종료할 수 없습니다.");
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new Exception500("챗봇 메시지 처리 중 오류가 발생했습니다");
         }
     }
 
@@ -45,7 +46,7 @@ public class FoodieWebSocketHandler extends TextWebSocketHandler {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception500("챗봇 응답 오류 입니다.");
         }
         return false;
     }
