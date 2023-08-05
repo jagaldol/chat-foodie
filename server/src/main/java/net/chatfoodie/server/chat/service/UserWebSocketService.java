@@ -9,15 +9,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-@Slf4j
-@RequiredArgsConstructor
 @Service
 public class UserWebSocketService {
 
-    final private FoodieWebSocketService foodieWebSocketService;
-
     public void requestToFoodie(String messageToSend, List<WebSocketSession> users) {
         // 메시지를 보내고 응답을 받습니다.
+
+        FoodieWebSocketService foodieWebSocketService = new FoodieWebSocketService();
         foodieWebSocketService.sendMessage(messageToSend);
         foodieWebSocketService.listenForMessages(users);
     }

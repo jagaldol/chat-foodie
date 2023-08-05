@@ -15,7 +15,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 
-@RequiredArgsConstructor
 @Service
 public class FoodieWebSocketService {
 
@@ -23,7 +22,7 @@ public class FoodieWebSocketService {
 
     final private String serverUri = "wss://microsoft-ncaa-stocks-arbitrary.trycloudflare.com/api/v1/chat-stream";
 
-    final private FoodieWebSocketHandler foodieWebSocketHandler;
+    final private FoodieWebSocketHandler foodieWebSocketHandler = new FoodieWebSocketHandler();
 
 
     public void sendMessage(String message) {
