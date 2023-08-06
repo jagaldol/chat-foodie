@@ -230,11 +230,86 @@ server of chatFoodie.
   }
   ```
 
-### Message
+### Chatroom
+
+#### POST /api/chatrooms
+
+새로운 대화방 생성
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+
+#### GET /api/chatrooms
+
+회원의 채팅방 목록 조회
+
+최근에 만든 채팅방이 제일 앞에 있음 채팅방 제목은 `2023-08-06 09:31 생성`의 형태로 현재 시간에 따라 자동 부여 된다.
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": [
+      {
+        "id": 3,
+        "title": "저녁 메뉴 추천",
+      },
+      {
+        "id": 2,
+        "isFromChatbot" : true,
+        "title": "2023-08-06 09:31 생성"
+      },
+      {
+        "id": 1,
+        "title" : "2023-08-06 21:30 생성"
+      }
+    ],
+    "errorMessage": null
+  }
+  ```
+
+#### PUT /api/chatrooms/{chatroomID}
+
+채팅방 제목 변경
+
+* Request Body
+  ```json
+  {
+    "title": "오늘의 저녁 메뉴"
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+
+#### DELETE /api/chatrooms/{chatroomID}
+
+채팅방 삭제 및 채팅방에 존재하던 대화내역(message)도 함께 삭제
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
 
 #### GET /api/chatrooms/{chatroomId}/messages
 
-저장된 대화 기록 조회
+대화 기록 조회
 
 * Response Body
   ```json
@@ -266,19 +341,6 @@ server of chatFoodie.
         "created_at": "2023-08-01T12:36:24"
       }
     ],
-    "errorMessage": null
-  }
-  ```
-
-#### POST /api/chatrooms
-
-새로운 대화방 생성
-
-* Response Body
-  ```json
-  {
-    "status": 200,
-    "response": null,
     "errorMessage": null
   }
   ```
