@@ -172,7 +172,7 @@ server of chatFoodie.
   
 ### Favor
 
-#### POST /api/favor/saveUserFoodPreference
+#### POST /api/favors/saveUserFoodPreference
 
 유저의 음식 선호도 저장
 * 기존 선호도 존재 시 삭제 후 요청 받은 값으로 저장
