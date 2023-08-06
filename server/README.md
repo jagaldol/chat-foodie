@@ -172,7 +172,7 @@ server of chatFoodie.
   
 ### Favor
 
-#### POST /api/favors/saveUserFoodPreference
+#### POST /api/favors
 
 유저의 음식 선호도 저장
 * 기존 선호도 존재 시 삭제 후 요청 받은 값으로 저장
@@ -180,8 +180,7 @@ server of chatFoodie.
 * Request Body
   ```json
   {
-    "userId": 1,
-    "favorIds": [ 1, 15, ... ]
+    "foodIds": [ 1, 15, ... ]
   }
   ```
   
@@ -203,7 +202,7 @@ server of chatFoodie.
 * Request Body
   ```json
   {
-    "userId": "user@example.com"
+    "email": "user@example.com"
   }
   ```
 
@@ -223,7 +222,7 @@ server of chatFoodie.
 * Request Body
   ```json
   {
-    "userId": "user@example.com",
+    "email": "user@example.com",
     "verificationCode": "123456"
   }
   ```
@@ -239,7 +238,7 @@ server of chatFoodie.
 
 ### Message
 
-### Get /api/message/chat-history
+#### GET /api/chatrooms/{chatroomId}/messages
 
 저장된 대화 기록 조회
 
@@ -248,46 +247,38 @@ server of chatFoodie.
   {
     "status": 200,
     "response": [
-    {
-      "id": 1,
-      "isFromChatbot" : false,
-      "content": "안녕하세요!",
-      "created_at": "2023-08-01T12:34:56"
-    },
-    {
-      "id": 2,
-      "isFromChatbot" : true,
-      "content": "안녕하세요! 반갑습니다.",
-      "created_at": "2023-08-01T12:35:02"
-    },
-    {
-      "id": 3,
-      "isFromChatbot" : false,
-      "content": "저녁 메뉴 추천해줘",
-      "created_at": "2023-08-01T12:36:18"
-    },
-    {
-      "id": 4,
-      "isFromChatbot" : true,
-      "content": "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다.",
-      "created_at": "2023-08-01T12:36:24"
-    }
+      {
+        "id": 1,
+        "isFromChatbot" : false,
+        "content": "안녕하세요!",
+        "created_at": "2023-08-01T12:34:56"
+      },
+      {
+        "id": 2,
+        "isFromChatbot" : true,
+        "content": "안녕하세요! 반갑습니다.",
+        "created_at": "2023-08-01T12:35:02"
+      },
+      {
+        "id": 3,
+        "isFromChatbot" : false,
+        "content": "저녁 메뉴 추천해줘",
+        "created_at": "2023-08-01T12:36:18"
+      },
+      {
+        "id": 4,
+        "isFromChatbot" : true,
+        "content": "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다.",
+        "created_at": "2023-08-01T12:36:24"
+      }
     ],
     "errorMessage": null
   }
   ```
 
-### Post /api/message/save-chat-history
+#### POST /api/chatrooms
 
-대화 기록 저장
-
-* Request Body
-  ```json
-  {
-    "userId": 1,
-    "content" : "저녁 메뉴 추천해줘"
-  }
-  ```
+새로운 대화방 생성
 
 * Response Body
   ```json
@@ -298,26 +289,6 @@ server of chatFoodie.
   }
   ```
 
-### Post /api/message/create-new-chat
-
-새로운 대화창 생성
-
-* Request Body
-  ```json
-  {
-    "userId": 1
-  }
-  ```
-
-* Response Body
-  ```json
-  {
-    "status": 200,
-    "response": null,
-    "errorMessage": null
-  }
-  ```
-  
 ## WebSocket
 
 ### WebSocket /api/public-chat
