@@ -366,11 +366,12 @@ server of chatFoodie.
         "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다."
       ]
     ],
-    "regenerate" : false,
-    "continue" : false,
+    "regenerate" : false
   }
   ```
-  * `regenerate`와 `continue`를 사용하여 이전 답변 재 생성과 답변 이어서 생성이 가능하다.
+  * `regenerate`를 사용하여 이전 답변 재 생성이 가능하다.
+  * `history`의 길이는 최대 20으로 제한된다.
+  * `input`의 문자열 길이는 최대 500이다.
 
 * Response Messages
   ```json
