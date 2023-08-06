@@ -19,7 +19,6 @@ public class JwtProvider {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expired = now.plusDays(2);  // 사실 지금 EXP 안쓰고 이걸로 돼있음
         String jwt = JWT.create()
-                .withSubject(user.getLoginId())
                 .withExpiresAt(Timestamp.valueOf(expired))
                 .withClaim("id", user.getId())
                 .sign(Algorithm.HMAC512(SECRET));
