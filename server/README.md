@@ -381,22 +381,14 @@ server of chatFoodie.
 
 * 하루 채팅 제한 존재 X
 * 서버에서 회원 선호도를 추가하여 챗봇에게 전달하게 된다.
+* 별도의 history는 없이 채팅방 번호가 전달된다.
 
 
 * Request Message
   ```json
   {
     "input" : "피자 때문에 배가 아픈데 속이 편한 음식을 알려줘",
-    "history" : [
-      [
-        "안녕하세요!",
-        "안녕하세요! 반갑습니다."
-      ],
-      [
-        "저녁 메뉴 추천해줘",
-        "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다."
-      ]
-    ],
+    "chatroom" : 1,
     "regenerate" : false,
     "continue" : false,
   }
