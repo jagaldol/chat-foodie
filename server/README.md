@@ -172,7 +172,7 @@ server of chatFoodie.
   
 ### Favor
 
-#### POST /api/favors
+#### POST /api/favor/saveUserFoodPreference
 
 유저의 음식 선호도 저장
 * 기존 선호도 존재 시 삭제 후 요청 받은 값으로 저장
@@ -181,15 +181,7 @@ server of chatFoodie.
   ```json
   {
     "userId": 1,
-    "favors": [
-      {
-        "foodId": 1
-      }, 
-      {
-        "foodId": 15
-      }, 
-      ...
-    ]
+    "favorIds": [ 1, 15, ... ]
   }
   ```
   
@@ -244,3 +236,140 @@ server of chatFoodie.
     "errorMessage": null
   }
   ```
+
+### Message
+
+### Post /api/message/message-exchange
+
+챗봇에 사용자의 메시지 전달과 챗봇에서 생성된 메시지 사용자에게 출력
+
+* Request Body
+  ```json
+  {
+    "content" : "저녁 메뉴 추천해줘",
+    "isFromChatbot" : false,
+    "isRegenerate" : false
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": {
+      "content" : "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다.",
+      "isFromChatbot" : true
+    },
+    "errorMessage": null
+  }
+  ```
+
+### Post /api/message/regenerate-message
+
+답변 재생성
+
+* Request Body
+  ```json
+  {
+    "content" : "저녁 메뉴 추천해줘",
+    "isFromChatbot" : false,
+    "isRegenerate" : true
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": {
+      "content" : "돈까스를 추천드립니다!",
+      "isFromChatbot" : true
+    },
+    "errorMessage": null
+  }
+  ```
+  
+### Get /api/message/chat-history
+
+저장된 대화 기록 조회
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": [
+    {
+      "id": 1,
+      "isFromChatbot" : false,
+      "content": "안녕하세요!",
+      "created_at": "2023-08-01T12:34:56"
+    },
+    {
+      "id": 2,
+      "isFromChatbot" : true,
+      "content": "안녕하세요! 반갑습니다.",
+      "created_at": "2023-08-01T12:35:02"
+    },
+    {
+      "id": 3,
+      "isFromChatbot" : false,
+      "content": "저녁 메뉴 추천해줘",
+      "created_at": "2023-08-01T12:36:18"
+    },
+    {
+      "id": 4,
+      "isFromChatbot" : true,
+      "content": "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다.",
+      "created_at": "2023-08-01T12:36:24"
+    }
+    ],
+    "errorMessage": null
+  }
+  ```
+
+### Post /api/message/save-chat-history
+
+대화 기록 저장
+
+* Request Body
+  ```json
+  {
+    "userId": 1,
+    "content" : "저녁 메뉴 추천해줘"
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+
+### Post /api/message/create-new-chat
+
+새로운 대화창 생성
+
+* Request Body
+  ```json
+  {
+    "userId": 1
+  }
+  ```
+
+* Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+  
+
+
+
+
+
