@@ -2,7 +2,7 @@ spring:
   profiles:
     active:
       - local
-      - mail
+      - private
 
 file:
   path: ./images/
