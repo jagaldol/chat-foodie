@@ -114,12 +114,6 @@ server of chatFoodie.
   
   * 보내진 정보 중 비어 있지 않은 정보에 대한 업데이트
 
-* Response Header
-  ```
-  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiaWQiOjEsImV4cCI6MTY5MTEzMzc2NH0.lC2RxRr_NHm23JCsccAIucBcIW21Dew-JgSLdKRRfd6hkSw3CyD_8r6D7kpcBkTtMjjDV8ptU5Blafqu3HIVGQ
-  ```
-  * JWT 토큰 헤더로 전달
-
 * Response Body
   ```json
   {
