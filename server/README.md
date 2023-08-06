@@ -415,7 +415,7 @@ server of chatFoodie.
   ```json
   {
     "input" : "피자 때문에 배가 아픈데 속이 편한 음식을 알려줘",
-    "chatroom" : 1,
+    "chatroomId" : 1,
     "regenerate" : false,
     "continue" : false,
   }
