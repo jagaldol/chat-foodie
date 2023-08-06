@@ -1,4 +1,4 @@
-package net.chatfoodie.server.message;
+package net.chatfoodie.server.chatroom.message;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
