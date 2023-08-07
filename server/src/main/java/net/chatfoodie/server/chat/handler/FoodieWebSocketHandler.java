@@ -35,7 +35,7 @@ public class FoodieWebSocketHandler extends TextWebSocketHandler {
         return messageQueue.take(); // 큐에서 메시지를 가져옴 (메시지가 없으면 대기)
     }
 
-    private boolean isStreamEndEvent(String message) {
+    public boolean isStreamEndEvent(String message) {
         // 메시지가 JSON 형식인 경우 파싱하여 이벤트를 확인합니다.
         try {
             ObjectMapper objectMapper = new ObjectMapper();

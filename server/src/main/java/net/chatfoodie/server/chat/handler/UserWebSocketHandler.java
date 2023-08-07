@@ -25,8 +25,6 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
 
     private final Map<WebSocketSession, ChatSessionInfo> chatSessions = new ConcurrentHashMap<>();
 
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
     private final ObjectMapper om;
 
     @Override
@@ -41,6 +39,7 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
     public UserWebSocketHandler(UserWebSocketService userWebSocketService, ObjectMapper om) {
         this.userWebSocketService = userWebSocketService;
         this.om = om;
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(this::checkExpiredConnections, 1, 1, TimeUnit.SECONDS);
     }
 
