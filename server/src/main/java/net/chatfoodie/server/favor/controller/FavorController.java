@@ -23,14 +23,10 @@ public class FavorController {
 
     final private FavorService favorService;
 
-    @PostMapping("/favors/{id}")
-    public ResponseEntity<?> saveUserFoodPreference(@PathVariable Long id,
-                                                    @AuthenticationPrincipal CustomUserDetails userDetails,
+    @PostMapping("/favors")
+    public ResponseEntity<?> saveUserFoodPreference(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @RequestBody @Valid FavorRequest.SaveUserFoodPreferenceDto requestDto, Errors error) {
-        if (!Objects.equals(userDetails.getId(), id)) {
-            throw new Exception403("권한이 없습니다.");
-        }
-        favorService.saveUserFoodPreference(id, requestDto);
+        favorService.saveUserFoodPreference(userDetails.getId(), requestDto);
         ApiUtils.Response<?> response = ApiUtils.success(requestDto);
         return ResponseEntity.ok().body(response);
     }
