@@ -25,7 +25,7 @@ public class FavorController {
 
     @PostMapping("/favors")
     public ResponseEntity<?> saveUserFoodPreference(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                    @RequestBody @Valid FavorRequest.SaveUserFoodPreferenceDto requestDto, Errors error) {
+                                                    @RequestBody @Valid FavorRequest.SaveUserFoodPreferenceDto requestDto, Errors errors) {
         favorService.saveUserFoodPreference(userDetails.getId(), requestDto);
         ApiUtils.Response<?> response = ApiUtils.success(requestDto);
         return ResponseEntity.ok().body(response);

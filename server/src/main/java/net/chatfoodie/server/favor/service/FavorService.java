@@ -47,14 +47,12 @@ public class FavorService {
                 .map(food -> Favor.builder()
                         .user(user)
                         .food(food)
-                        .created_at(LocalDateTime.now())
                         .build())
                 .collect(Collectors.toList());
 
         favorRepository.saveAll(favors);
-                log.info("사용자의 선호 음식 정보가 저장되었습니다. 사용자 ID: {}, 음식 ID: {}", id, foodIds);
-            }
-
+        log.info("사용자의 선호 음식 정보가 저장되었습니다. 사용자 ID: {}, 음식 ID: {}", id, foodIds);
+    }
 }
 
 
