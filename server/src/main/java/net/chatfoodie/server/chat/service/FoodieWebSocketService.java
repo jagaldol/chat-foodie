@@ -13,6 +13,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 
@@ -50,14 +51,11 @@ public class FoodieWebSocketService {
             long startTime = System.currentTimeMillis();
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    String message = foodieWebSocketHandler.receiveMessage(); // 메시지를 받음 (메시지가 없으면 대기)
-
-                    var foodieMessageDto = om.readValue(message, ChatFoodieResponse.MessageDto.class);
+                    ChatFoodieResponse.MessageDto foodieMessageDto = foodieWebSocketHandler.receiveMessage(); // 메시지를 받음 (메시지가 없으면 대기)
 
                     var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
 
                     TextMessage textMessage = new TextMessage(om.writeValueAsString(userMessageDto));
-                    // 메시지 처리 로직 작성
 
                     users.forEach(user -> {
                         try {
@@ -67,7 +65,7 @@ public class FoodieWebSocketService {
                         }
                     });
 
-                    if (foodieWebSocketHandler.isStreamEndEvent(message)) {
+                    if (isStreamEndEvent(foodieMessageDto)) {
                         break;
                     }
                 } catch (InterruptedException e) {
@@ -87,5 +85,9 @@ public class FoodieWebSocketService {
         }
 
         executorService.shutdown();
+    }
+
+    public static boolean isStreamEndEvent(ChatFoodieResponse.MessageDto messageDto) {
+        return Objects.equals(messageDto.event(), "stream_end");
     }
 }
