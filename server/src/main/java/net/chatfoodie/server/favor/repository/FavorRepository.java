@@ -13,13 +13,10 @@ import java.util.List;
 public interface FavorRepository extends JpaRepository<Favor, Long> {
 
     @Modifying
-    @Query("DELETE FROM Favor f WHERE f.user = :user")
-    void deleteAllByUser(@Param("user") User user);
-
-    @Modifying
-    @Query(value = "ALTER TABLE favor_tb ALTER COLUMN id RESTART WITH 1", nativeQuery = true)
-    void resetIdSequence();
+    @Query("DELETE FROM Favor f WHERE f.user.id = :userId")
+    void deleteAllByUserId(Long userId);
 
     @Query("SELECT f FROM Favor f JOIN FETCH f.food fo WHERE f.user.id=:userId")
     List<Favor> findByUserId(Long userId);
+
 }

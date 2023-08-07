@@ -8,14 +8,7 @@ import java.util.List;
 
 
 public class FavorRequest {
-    public record SaveUserFoodPreferenceDto(Long userId, List<Long> favorIds) {
-        public List<Favor> toFavors() {
-            return favorIds.stream()
-                    .map(favorId -> Favor.builder()
-                            .user(User.builder().id(userId).build())
-                            .food(Food.builder().id(favorId).build())
-                            .build())
-                    .toList();
-        }
+    public record SaveUserFoodPreferenceDto(Long userId, List<Long> foodIds) {
+
     }
 }
