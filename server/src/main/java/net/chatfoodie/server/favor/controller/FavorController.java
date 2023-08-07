@@ -2,7 +2,7 @@ package net.chatfoodie.server.favor.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.chatfoodie.server._core.errors.exception.Exception403;
+
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.ApiUtils;
 import net.chatfoodie.server.favor.dto.FavorRequest;
@@ -13,7 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+
 
 
 @RequiredArgsConstructor

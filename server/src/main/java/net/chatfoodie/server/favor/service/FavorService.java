@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception404;
-import net.chatfoodie.server._core.security.CustomUserDetails;
+
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.dto.FavorRequest;
 import net.chatfoodie.server.favor.repository.FavorRepository;
@@ -13,7 +13,7 @@ import net.chatfoodie.server.food.Food;
 import net.chatfoodie.server.food.repository.FoodRepository;
 import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.repository.UserRepository;
-import net.chatfoodie.server.user.service.UserService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
