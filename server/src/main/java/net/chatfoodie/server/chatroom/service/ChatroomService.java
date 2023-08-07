@@ -47,9 +47,7 @@ public class ChatroomService {
         Chatroom chatroom = chatroomRepository.findById(chatroomId).orElseThrow(() -> new Exception404("채팅방을 찾을 수 없습니다."));
         
         if (!Objects.equals(chatroom.getUser().getId(), userId)) throw new Exception400("현재 유저의 채팅방이 아닙니다.");
-        
-        if (requestDto.title() != null) {
-            chatroom.updateTitle(requestDto.title());
-        }
+
+        chatroom.updateTitle(requestDto.title());
     }
 }
