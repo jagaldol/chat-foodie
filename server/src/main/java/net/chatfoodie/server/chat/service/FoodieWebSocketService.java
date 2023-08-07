@@ -35,14 +35,10 @@ public class FoodieWebSocketService {
     }
 
 
-    public void sendMessage(String message) {
-        try {
-            // 서버로 메시지 전송
-            WebSocketSession session = webSocketClient.execute(foodieWebSocketHandler, serverUri).get();
-            session.sendMessage(new TextMessage(message));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendMessage(String message) throws Exception {
+        // 서버로 메시지 전송
+        WebSocketSession session = webSocketClient.execute(foodieWebSocketHandler, serverUri).get();
+        session.sendMessage(new TextMessage(message));
     }
 
     public void listenForMessages(List<WebSocketSession> users) {
@@ -61,7 +57,7 @@ public class FoodieWebSocketService {
                         try {
                             user.sendMessage(textMessage);
                         } catch (IOException e) {
-                            log.info("챗봇의 답변 전달 중 오류가 발생했습니다.");
+                            log.error("챗봇의 답변 전달 중 오류가 발생했습니다.");
                         }
                     });
 
@@ -69,9 +65,11 @@ public class FoodieWebSocketService {
                         break;
                     }
                 } catch (InterruptedException e) {
+                    log.error("챗봇의 응답을 듣는 중 에러가 발생했습니다.");
                     Thread.currentThread().interrupt(); // InterruptedException을 받으면 쓰레드 interrupt 상태를 설정하여 종료
                 } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    log.error("챗봇의 응답을 분석하는 중 에러가 발생했습니다.");
+                    Thread.currentThread().interrupt();
                 }
             }
             log.debug("쓰레드 종료됨");
@@ -81,6 +79,7 @@ public class FoodieWebSocketService {
             // 10분 후에 쓰레드 종료
             future.get(10, TimeUnit.MINUTES);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            log.error("챗봇과의 연결이 10분이 초과되어 강제로 종료합니다.");
             future.cancel(true); // 예외 발생 시 쓰레드 강제 종료
         }
 

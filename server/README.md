@@ -398,7 +398,8 @@ server of chatFoodie.
   ```
   ```json
   {
-    "event"  : "stream_end"
+    "event"  : "stream_end",
+    "response": ""
   }
   ```
 

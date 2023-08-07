@@ -55,10 +55,11 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
         try {
             messageDto = om.readValue(payload, ChatUserRequest.MessageDto.class);
             if (!messageDto.validate()) {
-                throw new RuntimeException("올바른 형식의 메시지가 아닙니다.");
+                log.error("올바른 형식의 메시지가 아닙니다.");
+                throw new RuntimeException();
             }
         } catch (Exception e) {
-            log.info("올바른 형식의 메시지가 아닙니다.");
+            log.error("올바른 형식의 메시지가 아닙니다.");
             session.close();
             return;
         }
