@@ -79,11 +79,11 @@ server of chatFoodie.
         "email": "test@test.com",
         "favors": [
           {
-            "id": 1,
+            "foodId": 1,
             "foodName": "쌀국수"
           },
           {
-            "id": 2,
+            "foodId": 2,
             "foodName": "카레"
           }
         ]
