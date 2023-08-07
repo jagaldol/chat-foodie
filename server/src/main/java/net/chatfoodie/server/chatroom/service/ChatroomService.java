@@ -2,6 +2,7 @@ package net.chatfoodie.server.chatroom.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.utils.Utils;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -37,6 +39,17 @@ public class ChatroomService {
             chatroomRepository.save(chatroom);
         } catch (Exception e) {
             throw new Exception500("채팅방 생성 중 오류가 발생하였습니다.");
+        }
+    }
+
+    @Transactional
+    public void changeTitle(Long chatroomId, Long userId, ChatroomRequest.ChangeTitleDto requestDto) {
+        Chatroom chatroom = chatroomRepository.findById(chatroomId).orElseThrow(() -> new Exception404("채팅방을 찾을 수 없습니다."));
+        
+        if (!Objects.equals(chatroom.getUser().getId(), userId)) throw new Exception400("현재 유저의 채팅방이 아닙니다.");
+        
+        if (requestDto.title() != null) {
+            chatroom.updateTitle(requestDto.title());
         }
     }
 }
