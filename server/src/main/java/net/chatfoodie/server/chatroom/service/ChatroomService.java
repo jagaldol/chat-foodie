@@ -26,9 +26,12 @@ public class ChatroomService {
     public void create(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("회원이 존재하지 않습니다"));
 
-        var requestDto = new ChatroomRequest.CreateDto(user, Utils.convertDateTimeToString(LocalDateTime.now()) + " 음식 추천");
+        String title = Utils.convertDateTimeToString(LocalDateTime.now()) + " 음식 추천";
 
-        Chatroom chatroom = requestDto.createChatroom();
+        Chatroom chatroom = Chatroom.builder()
+                                .title(title)
+                                .user(user)
+                                .build();
 
         try {
             chatroomRepository.save(chatroom);
