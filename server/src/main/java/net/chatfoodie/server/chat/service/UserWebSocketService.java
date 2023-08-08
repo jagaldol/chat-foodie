@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -23,9 +22,9 @@ public class UserWebSocketService {
 
     private  final ObjectMapper om;
 
-    public void requestToFoodie(ChatUserRequest.MessageDto userMessageDto, List<WebSocketSession> users) {
+    public void requestToFoodie(ChatUserRequest.PublicMessageDto userPublicMessageDto, List<WebSocketSession> users) {
         // 메시지를 보내고 응답을 받습니다.
-        var foodieMessageDto = new ChatFoodieRequest.MessageDto(userMessageDto);
+        var foodieMessageDto = new ChatFoodieRequest.MessageDto(userPublicMessageDto);
 
         String messageToSend;
         try {

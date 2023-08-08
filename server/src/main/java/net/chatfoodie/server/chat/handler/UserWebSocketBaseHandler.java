@@ -2,6 +2,7 @@ package net.chatfoodie.server.chat.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server.chat.ChatSessionInfo;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.service.UserWebSocketService;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class UserWebSocketHandler extends TextWebSocketHandler {
+public class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
-    private final UserWebSocketService userWebSocketService;
+    protected final UserWebSocketService userWebSocketService;
 
-    private final Map<WebSocketSession, ChatSessionInfo> chatSessions = new ConcurrentHashMap<>();
+    protected final Map<WebSocketSession, ChatSessionInfo> chatSessions = new ConcurrentHashMap<>();
 
-    private final ObjectMapper om;
+    protected final ObjectMapper om;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -36,7 +37,7 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
         log.info(session + "클라이언트 접속");
     }
 
-    public UserWebSocketHandler(UserWebSocketService userWebSocketService, ObjectMapper om) {
+    public UserWebSocketBaseHandler(UserWebSocketService userWebSocketService, ObjectMapper om) {
         this.userWebSocketService = userWebSocketService;
         this.om = om;
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -51,10 +52,10 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
         log.info("받은 메시지 : " + payload);
 
         // Object 로 매핑
-        ChatUserRequest.MessageDto messageDto;
+        ChatUserRequest.PublicMessageDto publicMessageDto;
         try {
-            messageDto = om.readValue(payload, ChatUserRequest.MessageDto.class);
-            if (!messageDto.validate()) {
+            publicMessageDto = om.readValue(payload, ChatUserRequest.PublicMessageDto.class);
+            if (publicMessageDto.notValidate()) {
                 log.error("올바른 형식의 메시지가 아닙니다.");
                 throw new RuntimeException();
             }
@@ -69,7 +70,7 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
                 .filter(s -> chatSessions.get(s).chatSessionId().equals(chatSessionId))
                 .toList();
 
-        userWebSocketService.requestToFoodie(messageDto, users);
+        userWebSocketService.requestToFoodie(publicMessageDto, users);
     }
 
     @Override
@@ -78,17 +79,6 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
         chatSessions.remove(session);
     }
 
-    private record ChatSessionInfo(
-            String chatSessionId,
-            Long expirationTime
-    ) {
-        private static final Long connectionTimeout = 10 * 60 * 1000L; // 10m
-
-        public ChatSessionInfo(String chatRoomId) {
-            this(chatRoomId, System.currentTimeMillis() + connectionTimeout);
-        }
-
-    }
 
     private void checkExpiredConnections() {
         long currentTime = System.currentTimeMillis();

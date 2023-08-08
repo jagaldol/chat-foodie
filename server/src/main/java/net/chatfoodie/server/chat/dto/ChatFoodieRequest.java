@@ -18,11 +18,11 @@ public class ChatFoodieRequest {
             Boolean early_stopping
     ) {
 
-        public MessageDto(ChatUserRequest.MessageDto userMessageDto) {
+        public MessageDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
             this(
-                    userMessageDto.input(),
-                    new HistoryDto(userMessageDto.history()),
-                    userMessageDto.regenerate() != null && userMessageDto.regenerate(),
+                    userPublicMessageDto.input(),
+                    new HistoryDto(userPublicMessageDto.history()),
+                    userPublicMessageDto.regenerate() != null && userPublicMessageDto.regenerate(),
                     250,
                     "Example",
                     "Alpaca",
