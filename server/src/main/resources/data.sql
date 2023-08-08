@@ -79,3 +79,15 @@ VALUES ('test', '{bcrypt}$2a$10$iRfOSldsM6yVzqGfsQNF5u1Fq8g85xFt.k/DPldr1jVk3rds
 INSERT INTO favor_tb (user_id, food_id)
 VALUES (1, 1),
        (1, 2);
+
+INSERT INTO chatroom_tb (title, user_id)
+VALUES ('아침 추천', 1),
+       ('매운 음식 추천', 1);
+
+INSERT INTO message_tb (chatroom_id, is_from_chatbot, content)
+VALUES (1, false, '아침 메뉴 추천해줘'),
+       (1, true, '건강한 아침을 위해 그릭 요거트에 견과류와 과일을 넣고 오트밀과 함께 즐겨보세요!'),
+       (1, false, '밥 요리로 추천해줘'),
+       (1, true, '달걀 볶음밥을 만들어보세요. 신선한 야채와 함께 볶은 밥에 계란을 섞어 풍미를 더하고, 간장 또는 고추장으로 맛을 조절해보세요!'),
+       (2, false, '매운 음식 추천해줘'),
+       (2, true, '매운 맛을 즐기고 싶다면 "양념 불고기"를 추천드려요. 소고기를 매운 양념과 함께 볶아내어 매콤하고 풍미 있는 한식 요리를 즐겨보세요!');
