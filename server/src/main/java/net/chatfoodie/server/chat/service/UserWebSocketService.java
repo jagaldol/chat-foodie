@@ -114,6 +114,8 @@ public class UserWebSocketService {
             throw new Exception403("권한이 없는 채팅방입니다.");
 
         var messages = messageRepository.findTop38ByChatroomIdOrderByIdDesc(userMessageDto.chatroomId());
+
+        // TODO: 맨 앞에 선호도 채팅을 추가하기!!!
         var history = makeHistoryFromMessages(messages);
         return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
     }
