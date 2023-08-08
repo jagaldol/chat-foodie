@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.ApiUtils;
 import net.chatfoodie.server.chatroom.dto.ChatroomRequest;
+import net.chatfoodie.server.chatroom.dto.ChatroomResponse;
 import net.chatfoodie.server.chatroom.service.ChatroomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,13 @@ public class ChatroomController {
     public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails) {
         chatroomService.create(userDetails.getId());
         ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/chatrooms")
+    public ResponseEntity<?> get(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        ChatroomResponse.GetChatroomDto getChatroomDto = chatroomService.get(userDetails.getId());
+        ApiUtils.Response<?> response = ApiUtils.success(getChatroomDto);
         return ResponseEntity.ok().body(response);
     }
 
