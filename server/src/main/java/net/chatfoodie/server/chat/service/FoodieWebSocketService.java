@@ -42,7 +42,7 @@ public class FoodieWebSocketService {
         session.sendMessage(new TextMessage(message));
     }
 
-    public void listenForMessages(List<WebSocketSession> users) {
+    public void listenForMessages(WebSocketSession user) {
 
         Future<?> future = executorService.submit(() -> {
             while (!Thread.currentThread().isInterrupted()) {
@@ -53,13 +53,7 @@ public class FoodieWebSocketService {
 
                     TextMessage textMessage = new TextMessage(om.writeValueAsString(userMessageDto));
 
-                    users.forEach(user -> {
-                        try {
-                            user.sendMessage(textMessage);
-                        } catch (IOException e) {
-                            log.error("챗봇의 답변 전달 중 오류가 발생했습니다.");
-                        }
-                    });
+                    user.sendMessage(textMessage);
 
                     if (isStreamEndEvent(foodieMessageDto)) {
                         break;
@@ -70,6 +64,9 @@ public class FoodieWebSocketService {
                 } catch (JsonProcessingException e) {
                     log.error("챗봇의 응답을 분석하는 중 에러가 발생했습니다.");
                     Thread.currentThread().interrupt();
+                } catch (IOException e) {
+                    log.error("챗봇의 답변 전달 중 오류가 발생했습니다.");
+                    throw new RuntimeException(e);
                 }
             }
             log.debug("쓰레드 종료됨");

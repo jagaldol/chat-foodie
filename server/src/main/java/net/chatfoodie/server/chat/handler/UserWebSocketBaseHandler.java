@@ -1,8 +1,11 @@
 package net.chatfoodie.server.chat.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception401;
 import net.chatfoodie.server.chat.ChatSessionInfo;
+import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.service.UserWebSocketService;
 import org.springframework.stereotype.Component;
@@ -20,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class UserWebSocketBaseHandler extends TextWebSocketHandler {
+public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
     protected final UserWebSocketService userWebSocketService;
 
@@ -46,15 +49,14 @@ public class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        // TODO: pulbic-chat의 경우 하루 요청가능 횟수 제한 필요
 
         String payload = message.getPayload();
         log.info("받은 메시지 : " + payload);
 
         // Object 로 매핑
-        ChatUserRequest.PublicMessageDto publicMessageDto;
+        ChatUserRequest.MessageDtoInterface publicMessageDto;
         try {
-            publicMessageDto = om.readValue(payload, ChatUserRequest.PublicMessageDto.class);
+            publicMessageDto = toMessageDto(payload);
             if (publicMessageDto.notValidate()) {
                 log.error("올바른 형식의 메시지가 아닙니다.");
                 throw new RuntimeException();
@@ -65,15 +67,24 @@ public class UserWebSocketBaseHandler extends TextWebSocketHandler {
             return;
         }
 
-        var foodieMessageDto = userWebSocketService.toFoodieRequestDto(publicMessageDto);
+        ChatFoodieRequest.MessageDto foodieMessageDto;
+        try {
+            foodieMessageDto = toFoodieMessageDto(publicMessageDto, session);
+        } catch (Exception e) {
+            log.error("잘못된 입력입니다.");
+            session.close();
+            return;
+        }
 
-        String chatSessionId = chatSessions.get(session).chatSessionId();
-        var users = chatSessions.keySet().stream()
-                .filter(s -> chatSessions.get(s).chatSessionId().equals(chatSessionId))
-                .toList();
-
-        userWebSocketService.requestToFoodie(foodieMessageDto, users);
+        userWebSocketService.requestToFoodie(foodieMessageDto, session);
     }
+
+    protected abstract ChatUserRequest.MessageDtoInterface toMessageDto(String payload) throws JsonProcessingException;
+
+
+    protected abstract ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session);
+
+
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

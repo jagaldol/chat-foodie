@@ -39,7 +39,7 @@ public class UserWebSocketService {
 
     private final ChatroomRepository chatroomRepository;
 
-    public void requestToFoodie( ChatFoodieRequest.MessageDto foodieMessageDto, List<WebSocketSession> users) {
+    public void requestToFoodie( ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user) {
         // 메시지를 보내고 응답을 받습니다.
 
         String messageToSend;
@@ -57,7 +57,7 @@ public class UserWebSocketService {
             log.error("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
             return;
         }
-        foodieWebSocketService.listenForMessages(users);
+        foodieWebSocketService.listenForMessages(user);
     }
 
     public ChatFoodieRequest.MessageDto toFoodieRequestDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
