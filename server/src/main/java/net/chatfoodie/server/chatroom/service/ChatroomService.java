@@ -9,7 +9,6 @@ import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.chatroom.Chatroom;
 import net.chatfoodie.server.chatroom.dto.ChatroomRequest;
 import net.chatfoodie.server.chatroom.dto.ChatroomResponse;
-import net.chatfoodie.server.chatroom.message.Message;
 import net.chatfoodie.server.chatroom.message.repository.MessageRepository;
 import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.user.User;
@@ -48,7 +47,7 @@ public class ChatroomService {
     }
 
     public ChatroomResponse.GetChatroomDto get(Long userId) {
-        List<Chatroom> chatrooms = chatroomRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Chatroom> chatrooms = chatroomRepository.findAllByUserIdOrderByIdDesc(userId);
 
         return ChatroomResponse.GetChatroomDto.of(chatrooms);
     }
