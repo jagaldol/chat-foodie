@@ -21,10 +21,6 @@ public record CustomUserDetails(User user) implements UserDetails {
         return user.getId();
     }
 
-    public String getLoginId() {
-        return user.getLoginId();
-    }
-
     @Override
     public String getPassword() {
         return user.getPassword();

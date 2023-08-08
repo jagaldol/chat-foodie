@@ -60,13 +60,8 @@ public class UserWebSocketService {
         foodieWebSocketService.listenForMessages(user);
     }
 
-    public ChatFoodieRequest.MessageDto toFoodieRequestDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
-        return new ChatFoodieRequest.MessageDto(userPublicMessageDto);
-    }
-
-
     @Transactional
-    public ChatFoodieRequest.MessageDto toFoodieRequestDto(ChatUserRequest.MessageDto userMessageDto, Long userId) {
+    public ChatFoodieRequest.MessageDto makeFoodieRequestDto(ChatUserRequest.MessageDto userMessageDto, Long userId) {
 
         Chatroom chatroom = chatroomRepository.findByIdJoinUser(userMessageDto.chatroomId())
                 .orElseThrow(() -> new Exception404("존재하지 않는 채팅방입니다."));
@@ -75,11 +70,11 @@ public class UserWebSocketService {
             throw new Exception403("권한이 없는 채팅방입니다.");
 
         var messages = messageRepository.findTop38ByChatroomIdOrderByIdDesc(userMessageDto.chatroomId());
-        var history = toHistoryFromMessages(messages);
+        var history = makeHistoryFromMessages(messages);
         return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
     }
 
-    private List<List<String>> toHistoryFromMessages(List<Message> messages) {
+    private List<List<String>> makeHistoryFromMessages(List<Message> messages) {
         List<String> reversedMessages = new ArrayList<>();
 
         for (Message message : messages) {
