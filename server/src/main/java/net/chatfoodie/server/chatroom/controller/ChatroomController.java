@@ -1,15 +1,15 @@
 package net.chatfoodie.server.chatroom.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.ApiUtils;
+import net.chatfoodie.server.chatroom.dto.ChatroomRequest;
 import net.chatfoodie.server.chatroom.service.ChatroomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,5 +22,15 @@ public class ChatroomController {
         chatroomService.create(userDetails.getId());
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping("/chatrooms/{chatroomId}")
+    public ResponseEntity<?> changeTitle(@PathVariable Long chatroomId,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+                                         @RequestBody @Valid ChatroomRequest.ChangeTitleDto requestDto,
+                                         Errors errors) {
+        chatroomService.changeTitle(chatroomId, userDetails.getId(), requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
     }
 }

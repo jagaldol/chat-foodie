@@ -37,4 +37,8 @@ public class Chatroom {
         this.user = user;
         this.createdAt = createdAt;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }
