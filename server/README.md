@@ -255,20 +255,22 @@ server of chatFoodie.
   ```json
   {
     "status": 200,
-    "response": [
-      {
-        "id": 3,
-        "title": "저녁 메뉴 추천"
-      },
-      {
-        "id": 2,
-        "title": "23. 8. 7. 오후 5:18 음식 추천"
-      },
-      {
-        "id": 1,
-        "title" : "23. 8. 7. 오후 1:02 음식 추천"
-      }
-    ],
+    "response": {
+      "chatrooms": [
+        {
+          "id": 3,
+          "title": "저녁 메뉴 추천"
+        },
+        {
+          "id": 2,
+          "title": "23. 8. 7. 오후 5:18 음식 추천"
+        },
+        {
+          "id": 1,
+          "title" : "23. 8. 7. 오후 1:02 음식 추천"
+        }
+      ],
+    }
     "errorMessage": null
   }
   ```
