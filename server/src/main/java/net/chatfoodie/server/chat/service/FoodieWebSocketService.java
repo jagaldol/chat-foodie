@@ -44,7 +44,6 @@ public class FoodieWebSocketService {
     public void listenForMessages(List<WebSocketSession> users) {
 
         Future<?> future = executorService.submit(() -> {
-            long startTime = System.currentTimeMillis();
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     ChatFoodieResponse.MessageDto foodieMessageDto = foodieWebSocketHandler.receiveMessage(); // 메시지를 받음 (메시지가 없으면 대기)
