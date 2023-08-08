@@ -8,14 +8,15 @@ import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.chatroom.Chatroom;
 import net.chatfoodie.server.chatroom.dto.ChatroomRequest;
+import net.chatfoodie.server.chatroom.dto.ChatroomResponse;
 import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.repository.UserRepository;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -40,6 +41,12 @@ public class ChatroomService {
         } catch (Exception e) {
             throw new Exception500("채팅방 생성 중 오류가 발생하였습니다.");
         }
+    }
+
+    public ChatroomResponse.GetChatroomDto get(Long userId) {
+        List<Chatroom> chatrooms = chatroomRepository.findByUserIdOrderByCreatedAtDesc(userId);
+
+        return ChatroomResponse.GetChatroomDto.of(chatrooms);
     }
 
     @Transactional
