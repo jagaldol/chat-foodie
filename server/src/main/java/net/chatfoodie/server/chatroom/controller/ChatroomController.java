@@ -41,4 +41,12 @@ public class ChatroomController {
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/chatrooms/{chatroomId}")
+    public ResponseEntity<?> deleteChatroom(@PathVariable Long chatroomId,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        chatroomService.delete(userDetails.getId(), chatroomId);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
+    }
 }
