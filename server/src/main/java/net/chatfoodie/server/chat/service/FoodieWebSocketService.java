@@ -3,6 +3,7 @@ package net.chatfoodie.server.chat.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieResponse;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
 import net.chatfoodie.server.chat.handler.FoodieWebSocketHandler;
@@ -12,7 +13,6 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -42,9 +42,10 @@ public class FoodieWebSocketService {
         session.sendMessage(new TextMessage(message));
     }
 
-    public void listenForMessages(WebSocketSession user) {
+    public void listenForMessages(WebSocketSession user, MyFunction function) {
 
         Future<?> future = executorService.submit(() -> {
+            String finalResponse = "";
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     ChatFoodieResponse.MessageDto foodieMessageDto = foodieWebSocketHandler.receiveMessage(); // 메시지를 받음 (메시지가 없으면 대기)
@@ -56,8 +57,10 @@ public class FoodieWebSocketService {
                     user.sendMessage(textMessage);
 
                     if (isStreamEndEvent(foodieMessageDto)) {
+                        function.apply(finalResponse);
                         break;
                     }
+                    finalResponse = userMessageDto.response();
                 } catch (InterruptedException e) {
                     log.error("챗봇의 응답을 듣는 중 에러가 발생했습니다.");
                     Thread.currentThread().interrupt(); // InterruptedException을 받으면 쓰레드 interrupt 상태를 설정하여 종료

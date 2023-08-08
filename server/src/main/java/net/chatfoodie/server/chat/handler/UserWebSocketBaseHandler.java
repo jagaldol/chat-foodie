@@ -3,7 +3,6 @@ package net.chatfoodie.server.chat.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import net.chatfoodie.server._core.errors.exception.Exception401;
 import net.chatfoodie.server.chat.ChatSessionInfo;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
@@ -54,10 +53,10 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
         log.info("받은 메시지 : " + payload);
 
         // Object 로 매핑
-        ChatUserRequest.MessageDtoInterface publicMessageDto;
+        ChatUserRequest.MessageDtoInterface messageDtoInterface;
         try {
-            publicMessageDto = toMessageDto(payload);
-            if (publicMessageDto.notValidate()) {
+            messageDtoInterface = toMessageDto(payload);
+            if (messageDtoInterface.notValidate()) {
                 log.error("올바른 형식의 메시지가 아닙니다.");
                 throw new RuntimeException();
             }
@@ -69,14 +68,14 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
         ChatFoodieRequest.MessageDto foodieMessageDto;
         try {
-            foodieMessageDto = toFoodieMessageDto(publicMessageDto, session);
+            foodieMessageDto = toFoodieMessageDto(messageDtoInterface, session);
         } catch (Exception e) {
             log.error("잘못된 입력입니다.");
             session.close();
             return;
         }
 
-        userWebSocketService.requestToFoodie(foodieMessageDto, session);
+        requestToFoodie(messageDtoInterface, foodieMessageDto, session);
     }
 
     protected abstract ChatUserRequest.MessageDtoInterface toMessageDto(String payload) throws JsonProcessingException;
@@ -84,7 +83,7 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
     protected abstract ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session);
 
-
+    protected abstract void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session);
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

@@ -3,11 +3,9 @@ package net.chatfoodie.server.chat.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.service.UserWebSocketService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -25,18 +23,16 @@ public class UserWebSocketApiHandler extends UserWebSocketBaseHandler {
 
     @Override
     protected ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session) {
-        Authentication authentication = (Authentication) session.getPrincipal();
-
-        if (authentication == null) {
-            throw new RuntimeException();
-        }
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        Long userId = customUserDetails.getId();
-
+        Long userId = userWebSocketService.getUserId(session);
 
         return userWebSocketService.makeFoodieRequestDto(
                 (ChatUserRequest.MessageDto) messageDto, userId
         );
+    }
+
+    @Override
+    protected void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) {
+        var userMessageDto = (ChatUserRequest.MessageDto) messageDtoInterface;
+        userWebSocketService.requestToFoodie(foodieMessageDto, session, userMessageDto.chatroomId());
     }
 }

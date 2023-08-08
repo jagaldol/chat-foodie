@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
+import net.chatfoodie.server._core.security.CustomUserDetails;
+import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chatroom.Chatroom;
@@ -14,6 +16,7 @@ import net.chatfoodie.server.chatroom.message.repository.MessageRepository;
 import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
@@ -39,9 +42,39 @@ public class UserWebSocketService {
 
     private final ChatroomRepository chatroomRepository;
 
-    public void requestToFoodie( ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user) {
+    public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) {
         // 메시지를 보내고 응답을 받습니다.
+        var chatroom = chatroomRepository.findById(chatroomId).orElseThrow();
+        Long userId = getUserId(user); // throw 될거 생각
+        var userMessage = Message.builder()
+                .chatroom(chatroom)
+                .isFromChatbot(false)
+                .content(foodieMessageDto.user_input())
+                .build();
 
+        messageRepository.save(userMessage);
+
+        sendMessageToFoodie(foodieMessageDto, user, (message) -> {
+            Message chatbotMessage = Message.builder()
+                    .chatroom(chatroom)
+                    .isFromChatbot(true)
+                    .content(message)
+                    .build();
+            messageRepository.save(chatbotMessage);
+            log.debug("함수를 전달해서 실행시킴!!!!!!!!!!\n" + message);
+        });
+    }
+
+    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user) {
+        // 메시지를 보내고 응답을 받습니다.
+        // TODO: ip 기반으로 테이블 조회해서 10회 보냈으면 block 필요
+        sendMessageToFoodie(foodieMessageDto, user, (message) -> {
+            // TODO: ip랑 input, history, response를 저장 필요
+            log.debug("public api 마지막 전달 완료!!\n" + message);
+        });
+    }
+
+    private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) {
         String messageToSend;
         try {
             messageToSend = om.writeValueAsString(foodieMessageDto);
@@ -57,7 +90,18 @@ public class UserWebSocketService {
             log.error("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
             return;
         }
-        foodieWebSocketService.listenForMessages(user);
+        foodieWebSocketService.listenForMessages(user, function);
+    }
+
+    public Long getUserId(WebSocketSession session) {
+        Authentication authentication = (Authentication) session.getPrincipal();
+
+        if (authentication == null) {
+            throw new RuntimeException();
+        }
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        return customUserDetails.getId();
     }
 
     @Transactional

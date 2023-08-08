@@ -22,7 +22,12 @@ public class UserWebSocketPublicApiHandler extends UserWebSocketBaseHandler {
 
     @Override
     protected ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session) {
-        // TODO: pulbic-chat의 경우 하루 요청가능 횟수 제한 필요
+
         return new ChatFoodieRequest.MessageDto((ChatUserRequest.PublicMessageDto) messageDto);
+    }
+
+    @Override
+    protected void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) {
+        userWebSocketService.requestToFoodiePublic(foodieMessageDto, session);
     }
 }
