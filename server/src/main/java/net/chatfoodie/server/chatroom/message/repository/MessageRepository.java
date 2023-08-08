@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     void deleteAllByChatroomId(Long chatroomId);
+
+    List<Message> findTop38ByChatroomIdOrderByIdDesc(Long chatroomId);
 }

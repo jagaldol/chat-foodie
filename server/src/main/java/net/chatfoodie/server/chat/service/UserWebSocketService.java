@@ -4,17 +4,28 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception403;
+import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
+import net.chatfoodie.server.chatroom.Chatroom;
+import net.chatfoodie.server.chatroom.message.Message;
+import net.chatfoodie.server.chatroom.message.repository.MessageRepository;
+import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
+import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
-@Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Service
 public class UserWebSocketService {
 
     @Value("${chatbot.url}")
@@ -22,9 +33,14 @@ public class UserWebSocketService {
 
     private  final ObjectMapper om;
 
-    public void requestToFoodie(ChatUserRequest.PublicMessageDto userPublicMessageDto, List<WebSocketSession> users) {
+    private final UserRepository userRepository;
+
+    private final MessageRepository messageRepository;
+
+    private final ChatroomRepository chatroomRepository;
+
+    public void requestToFoodie( ChatFoodieRequest.MessageDto foodieMessageDto, List<WebSocketSession> users) {
         // 메시지를 보내고 응답을 받습니다.
-        var foodieMessageDto = new ChatFoodieRequest.MessageDto(userPublicMessageDto);
 
         String messageToSend;
         try {
@@ -42,5 +58,55 @@ public class UserWebSocketService {
             return;
         }
         foodieWebSocketService.listenForMessages(users);
+    }
+
+    public ChatFoodieRequest.MessageDto toFoodieRequestDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
+        return new ChatFoodieRequest.MessageDto(userPublicMessageDto);
+    }
+
+
+    @Transactional
+    public ChatFoodieRequest.MessageDto toFoodieRequestDto(ChatUserRequest.MessageDto userMessageDto, Long userId) {
+
+        Chatroom chatroom = chatroomRepository.findByIdJoinUser(userMessageDto.chatroomId())
+                .orElseThrow(() -> new Exception404("존재하지 않는 채팅방입니다."));
+
+        if (!Objects.equals(userId, chatroom.getUser().getId()))
+            throw new Exception403("권한이 없는 채팅방입니다.");
+
+        var messages = messageRepository.findTop38ByChatroomIdOrderByIdDesc(userMessageDto.chatroomId());
+        var history = toHistoryFromMessages(messages);
+        return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
+    }
+
+    private List<List<String>> toHistoryFromMessages(List<Message> messages) {
+        List<String> reversedMessages = new ArrayList<>();
+
+        for (Message message : messages) {
+
+            var isChatbotTurn = reversedMessages.size() % 2 == 0;
+
+            if (isChatbotTurn && !message.isFromChatbot()) {
+               reversedMessages.add("");
+            }
+            if (!isChatbotTurn && message.isFromChatbot()) {
+                reversedMessages.add("");
+            }
+
+            reversedMessages.add(message.getContent());
+
+            if (reversedMessages.size() >= 38)
+                break;
+        }
+        if (reversedMessages.size() % 2 == 1)
+            reversedMessages.remove(reversedMessages.size() - 1);
+
+        List<List<String>> history = new ArrayList<>();
+
+        for(int i = reversedMessages.size() - 1; i >= 0; i -= 2) {
+            history.add(List.of(reversedMessages.get(i), reversedMessages.get(i - 1)));
+        }
+
+        return history;
     }
 }

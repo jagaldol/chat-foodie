@@ -35,6 +35,23 @@ public class ChatFoodieRequest {
             );
         }
 
+        public MessageDto(ChatUserRequest.MessageDto userMessageDto, List<List<String>> history, String userName) {
+            this(
+                    userMessageDto.input(),
+                    new HistoryDto(history),
+                    userMessageDto.regenerate() != null && userMessageDto.regenerate(),
+                    250,
+                    "Example",
+                    "Alpaca",
+                    userName,
+                    0.7f,
+                    0.9f,
+                    1.15f,
+                    20.0f,
+                    false
+            );
+        }
+
         record HistoryDto(
                 List<List<String>> internal,
                 List<List<String>> visible

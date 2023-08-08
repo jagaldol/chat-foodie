@@ -29,5 +29,5 @@ public class Message {
     private String content;
 
     @ColumnDefault(value = "now()")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

@@ -38,6 +38,7 @@ public class FoodieWebSocketService {
     public void sendMessage(String message) throws Exception {
         // 서버로 메시지 전송
         WebSocketSession session = webSocketClient.execute(foodieWebSocketHandler, serverUri).get();
+        log.info("챗봇으로의 보낼 메시지:" + message);
         session.sendMessage(new TextMessage(message));
     }
 

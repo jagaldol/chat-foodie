@@ -65,12 +65,14 @@ public class UserWebSocketBaseHandler extends TextWebSocketHandler {
             return;
         }
 
+        var foodieMessageDto = userWebSocketService.toFoodieRequestDto(publicMessageDto);
+
         String chatSessionId = chatSessions.get(session).chatSessionId();
         var users = chatSessions.keySet().stream()
                 .filter(s -> chatSessions.get(s).chatSessionId().equals(chatSessionId))
                 .toList();
 
-        userWebSocketService.requestToFoodie(publicMessageDto, users);
+        userWebSocketService.requestToFoodie(foodieMessageDto, users);
     }
 
     @Override
