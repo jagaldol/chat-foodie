@@ -40,4 +40,8 @@ public class Message {
         this.content = content;
         this.createdAt = createdAt;
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

@@ -45,24 +45,40 @@ public class UserWebSocketService {
     public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) {
         // 메시지를 보내고 응답을 받습니다.
         var chatroom = chatroomRepository.findById(chatroomId).orElseThrow();
-        Long userId = getUserId(user); // throw 될거 생각
-        var userMessage = Message.builder()
-                .chatroom(chatroom)
-                .isFromChatbot(false)
-                .content(foodieMessageDto.user_input())
-                .build();
-
-        messageRepository.save(userMessage);
-
-        sendMessageToFoodie(foodieMessageDto, user, (message) -> {
-            Message chatbotMessage = Message.builder()
+        Long userId = getUserId(user);
+        if (!foodieMessageDto.regenerate()) {
+            var userMessage = Message.builder()
                     .chatroom(chatroom)
-                    .isFromChatbot(true)
-                    .content(message)
+                    .isFromChatbot(false)
+                    .content(foodieMessageDto.user_input())
                     .build();
-            messageRepository.save(chatbotMessage);
-            log.debug("함수를 전달해서 실행시킴!!!!!!!!!!\n" + message);
-        });
+
+            messageRepository.save(userMessage);
+        }
+
+        sendMessageToFoodie(foodieMessageDto, user, foodieMessageDto.regenerate() ?
+            message -> {
+                Message oldMessage = messageRepository.findTop1ByChatroomIdOrderByIdDesc(chatroomId).orElse(null);
+                if (oldMessage != null && oldMessage.isFromChatbot()) {
+                    oldMessage.updateContent(message);
+                    messageRepository.save(oldMessage);
+                    return;
+                }
+                Message chatbotMessage = Message.builder()
+                        .chatroom(chatroom)
+                        .isFromChatbot(true)
+                        .content(message)
+                        .build();
+                messageRepository.save(chatbotMessage);
+            } : message -> {
+                Message chatbotMessage = Message.builder()
+                        .chatroom(chatroom)
+                        .isFromChatbot(true)
+                        .content(message)
+                        .build();
+                messageRepository.save(chatbotMessage);
+            }
+        );
     }
 
     public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user) {
