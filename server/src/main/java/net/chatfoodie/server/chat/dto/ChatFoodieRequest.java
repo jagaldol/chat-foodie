@@ -3,6 +3,16 @@ package net.chatfoodie.server.chat.dto;
 import java.util.List;
 
 public class ChatFoodieRequest {
+
+    private static final Integer MAX_NEW_TOKEN = 250;
+    private static final String CHARACTER = "Example";
+    private static final String INSTRUCTION_TEMPLATE = "Alpaca";
+    private static final Float TEMPERATURE = 0.7f;
+    private static final Float TOP_P = 0.9f;
+    private static final Float REPETITION_PENALTY = 1.15f;
+    private static final Float TOP_K = 20.0f;
+    private static final Boolean EARLY_STOPPING = false;
+
     public record MessageDto(
             String user_input,
             HistoryDto history,
@@ -18,20 +28,37 @@ public class ChatFoodieRequest {
             Boolean early_stopping
     ) {
 
-        public MessageDto(ChatUserRequest.MessageDto userMessageDto) {
+        public MessageDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
+            this(
+                    userPublicMessageDto.input(),
+                    new HistoryDto(userPublicMessageDto.history()),
+                    userPublicMessageDto.regenerate() != null && userPublicMessageDto.regenerate(),
+                    MAX_NEW_TOKEN,
+                    CHARACTER,
+                    INSTRUCTION_TEMPLATE,
+                    "회원",
+                    TEMPERATURE,
+                    TOP_P,
+                    REPETITION_PENALTY,
+                    TOP_K,
+                    EARLY_STOPPING
+            );
+        }
+
+        public MessageDto(ChatUserRequest.MessageDto userMessageDto, List<List<String>> history, String userName) {
             this(
                     userMessageDto.input(),
-                    new HistoryDto(userMessageDto.history()),
+                    new HistoryDto(history),
                     userMessageDto.regenerate() != null && userMessageDto.regenerate(),
-                    250,
-                    "Example",
-                    "Alpaca",
-                    "회원",
-                    0.7f,
-                    0.9f,
-                    1.15f,
-                    20.0f,
-                    false
+                    MAX_NEW_TOKEN,
+                    CHARACTER,
+                    INSTRUCTION_TEMPLATE,
+                    userName,
+                    TEMPERATURE,
+                    TOP_P,
+                    REPETITION_PENALTY,
+                    TOP_K,
+                    EARLY_STOPPING
             );
         }
 

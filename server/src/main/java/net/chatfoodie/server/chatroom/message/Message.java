@@ -2,6 +2,7 @@ package net.chatfoodie.server.chatroom.message;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.chatfoodie.server.chatroom.Chatroom;
@@ -29,5 +30,18 @@ public class Message {
     private String content;
 
     @ColumnDefault(value = "now()")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Message(Long id, Chatroom chatroom, boolean isFromChatbot, String content, LocalDateTime createdAt) {
+        this.id = id;
+        this.chatroom = chatroom;
+        this.isFromChatbot = isFromChatbot;
+        this.content = content;
+        this.createdAt = createdAt;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

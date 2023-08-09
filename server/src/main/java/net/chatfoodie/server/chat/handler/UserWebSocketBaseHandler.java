@@ -1,7 +1,10 @@
 package net.chatfoodie.server.chat.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server.chat.ChatSessionInfo;
+import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.service.UserWebSocketService;
 import org.springframework.stereotype.Component;
@@ -19,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class UserWebSocketHandler extends TextWebSocketHandler {
+public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
-    private final UserWebSocketService userWebSocketService;
+    protected final UserWebSocketService userWebSocketService;
 
-    private final Map<WebSocketSession, ChatSessionInfo> chatSessions = new ConcurrentHashMap<>();
+    protected final Map<WebSocketSession, ChatSessionInfo> chatSessions = new ConcurrentHashMap<>();
 
-    private final ObjectMapper om;
+    protected final ObjectMapper om;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -36,7 +39,7 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
         log.info(session + "클라이언트 접속");
     }
 
-    public UserWebSocketHandler(UserWebSocketService userWebSocketService, ObjectMapper om) {
+    public UserWebSocketBaseHandler(UserWebSocketService userWebSocketService, ObjectMapper om) {
         this.userWebSocketService = userWebSocketService;
         this.om = om;
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -45,16 +48,15 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        // TODO: pulbic-chat의 경우 하루 요청가능 횟수 제한 필요
 
         String payload = message.getPayload();
         log.info("받은 메시지 : " + payload);
 
         // Object 로 매핑
-        ChatUserRequest.MessageDto messageDto;
+        ChatUserRequest.MessageDtoInterface messageDtoInterface;
         try {
-            messageDto = om.readValue(payload, ChatUserRequest.MessageDto.class);
-            if (!messageDto.validate()) {
+            messageDtoInterface = toMessageDto(payload);
+            if (messageDtoInterface.notValidate()) {
                 log.error("올바른 형식의 메시지가 아닙니다.");
                 throw new RuntimeException();
             }
@@ -64,13 +66,24 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-        String chatSessionId = chatSessions.get(session).chatSessionId();
-        var users = chatSessions.keySet().stream()
-                .filter(s -> chatSessions.get(s).chatSessionId().equals(chatSessionId))
-                .toList();
+        ChatFoodieRequest.MessageDto foodieMessageDto;
+        try {
+            foodieMessageDto = toFoodieMessageDto(messageDtoInterface, session);
+        } catch (Exception e) {
+            log.error("잘못된 입력입니다.");
+            session.close();
+            return;
+        }
 
-        userWebSocketService.requestToFoodie(messageDto, users);
+        requestToFoodie(messageDtoInterface, foodieMessageDto, session);
     }
+
+    protected abstract ChatUserRequest.MessageDtoInterface toMessageDto(String payload) throws JsonProcessingException;
+
+
+    protected abstract ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session);
+
+    protected abstract void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session);
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -78,17 +91,6 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
         chatSessions.remove(session);
     }
 
-    private record ChatSessionInfo(
-            String chatSessionId,
-            Long expirationTime
-    ) {
-        private static final Long connectionTimeout = 10 * 60 * 1000L; // 10m
-
-        public ChatSessionInfo(String chatRoomId) {
-            this(chatRoomId, System.currentTimeMillis() + connectionTimeout);
-        }
-
-    }
 
     private void checkExpiredConnections() {
         long currentTime = System.currentTimeMillis();
