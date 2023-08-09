@@ -16,6 +16,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Optional<Message> findTop1ByChatroomIdOrderByIdDesc(Long chatroomId);
 
-    List<Message> findAllByChatroomIdOrderByIdDesc(Long chatroomId);
+    List<Message> findAllByChatroomIdOrderByIdAsc(Long chatroomId);
 
 }

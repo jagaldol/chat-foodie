@@ -5,10 +5,10 @@ import java.util.List;
 
 
 public class MessageResponse {
-    public record contentList(List<MessageDto> messages) {
+    public record ContentList(List<MessageDto> messages) {
         // messages 리스트에서 content와 isFromChatbot가져오는 메소드
-        public static contentList of(List<Message> messageList) {
-            return new contentList(messageList.stream()
+        public static ContentList of(List<Message> messageList) {
+            return new ContentList(messageList.stream()
                     .map(message -> new MessageDto(message.getContent(), message.isFromChatbot()))
                     .toList());
         }
