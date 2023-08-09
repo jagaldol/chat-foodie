@@ -2,7 +2,6 @@ package net.chatfoodie.server._core.config;
 
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server.chat.handler.UserWebSocketApiHandler;
-import net.chatfoodie.server.chat.handler.UserWebSocketBaseHandler;
 import net.chatfoodie.server.chat.handler.UserWebSocketPublicApiHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
