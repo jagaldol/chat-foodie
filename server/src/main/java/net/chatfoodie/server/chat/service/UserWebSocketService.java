@@ -2,6 +2,7 @@ package net.chatfoodie.server.chat.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception403;
@@ -10,6 +11,8 @@ import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
+import net.chatfoodie.server.chat.publiclog.ChatPublicLog;
+import net.chatfoodie.server.chat.publiclog.repository.ChatPublicLogRepository;
 import net.chatfoodie.server.chatroom.Chatroom;
 import net.chatfoodie.server.chatroom.message.Message;
 import net.chatfoodie.server.chatroom.message.repository.MessageRepository;
@@ -41,6 +44,8 @@ public class UserWebSocketService {
     private final MessageRepository messageRepository;
 
     private final ChatroomRepository chatroomRepository;
+
+    private final ChatPublicLogRepository chatPublicLogRepository;
 
     public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) {
         // 메시지를 보내고 응답을 받습니다.
@@ -81,13 +86,24 @@ public class UserWebSocketService {
         );
     }
 
-    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user) {
+    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, String requestMessage) {
         // 메시지를 보내고 응답을 받습니다.
         // TODO: ip 기반으로 테이블 조회해서 10회 보냈으면 block 필요
+        getClientIp(user);
         sendMessageToFoodie(foodieMessageDto, user, (message) -> {
             // TODO: ip랑 input, history, response를 저장 필요
+            ChatPublicLog chatLog = ChatPublicLog.builder()
+                    .ip(getClientIp(user))
+                    .requestMessage(requestMessage)
+                    .output(message)
+                    .build();
+            chatPublicLogRepository.save(chatLog);
             log.debug("public api 마지막 전달 완료!!\n" + message);
         });
+    }
+
+    private String getClientIp(WebSocketSession session) {
+        return Objects.requireNonNull(session.getRemoteAddress()).getAddress().getHostAddress();
     }
 
     private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) {
