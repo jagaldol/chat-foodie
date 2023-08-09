@@ -80,13 +80,12 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
             requestToFoodie(messageDtoInterface, foodieMessageDto, session);
         } catch (Exception500 | Exception400 e) {
             session.sendMessage(userWebSocketService.createErrorMessage(e.getMessage()));
-            session.close();
         } catch (JsonProcessingException e) {
             session.sendMessage(userWebSocketService.createErrorMessage("메시지 변환 중 오류가 발생했습니다."));
-            session.close();
         } catch (Exception e) {
             session.sendMessage(userWebSocketService.createErrorMessage("챗봇에게 요청 중 오류가 발생했습니다."));
-            session.close();
+        } finally {
+            session.close(); // 자동 세션 종료 시켜줌
         }
     }
 
