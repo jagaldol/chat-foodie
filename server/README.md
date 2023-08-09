@@ -352,7 +352,7 @@ server of chatFoodie.
 
 (비회원 메서드)사용자의 입력을 전달하고 답변을 스트리밍으로 돌려 받음
 
-하루에 메시지 생성 가능 횟수 제한
+하루에 메시지 생성 가능 횟수 제한(20회)
 
 * Request Message
   ```json
@@ -405,6 +405,14 @@ server of chatFoodie.
   }
   ```
 
+* Error의 경우(프론트에서 event에 error인 경우 alert 창으로 경고문 전송 처리할 것)
+  ```json
+  {
+    "event": "error",
+    "response": "일일 최대 횟수에 도달했습니다."
+  }
+  ```
+
 ### WebSocket /api/chat
 
 (회원 전용 메서드)사용자의 입력을 전달하고 답변을 스트리밍으로 돌려 받음
@@ -419,11 +427,10 @@ server of chatFoodie.
   {
     "input" : "피자 때문에 배가 아픈데 속이 편한 음식을 알려줘",
     "chatroomId" : 1,
-    "regenerate" : false,
-    "continue" : false,
+    "regenerate" : false
   }
   ```
-  * `regenerate`와 `continue`를 사용하여 이전 답변 재 생성과 답변 이어서 생성이 가능하다.
+  * `regenerate`를 사용하여 이전 답변 재 생성이 가능하다.
 
 * Response Messages
   ```json
