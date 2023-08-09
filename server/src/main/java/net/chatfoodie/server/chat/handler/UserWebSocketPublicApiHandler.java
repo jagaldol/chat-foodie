@@ -8,6 +8,8 @@ import net.chatfoodie.server.chat.service.UserWebSocketService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+
 @Component
 public class UserWebSocketPublicApiHandler extends UserWebSocketBaseHandler {
 
@@ -27,14 +29,10 @@ public class UserWebSocketPublicApiHandler extends UserWebSocketBaseHandler {
     }
 
     @Override
-    protected void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) {
+    protected void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) throws IOException {
         var messageDto = (ChatUserRequest.PublicMessageDto) messageDtoInterface;
         String requestMessage;
-        try {
-            requestMessage = om.writeValueAsString(messageDto);
-        } catch (JsonProcessingException e) {
-            requestMessage = "유저 메시지를 JSON 화 중 오류 발생했습니다.";
-        }
+        requestMessage = om.writeValueAsString(messageDto);
         userWebSocketService.requestToFoodiePublic(foodieMessageDto, session, requestMessage);
     }
 }

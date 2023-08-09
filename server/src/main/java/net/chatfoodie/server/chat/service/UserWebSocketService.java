@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
+import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
@@ -57,7 +59,7 @@ public class UserWebSocketService {
 
     private final FavorRepository favorRepository;
 
-    public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) {
+    public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) throws IOException {
         // 메시지를 보내고 응답을 받습니다.
         var chatroom = chatroomRepository.findById(chatroomId).orElseThrow();
         Long userId = getUserId(user);
@@ -96,22 +98,14 @@ public class UserWebSocketService {
         );
     }
 
-    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, String requestMessage){
+    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, String requestMessage) throws IOException {
         // 메시지를 보내고 응답을 받습니다.
         var ip = getClientIp(user);
 
         Long todayRequestNum = chatPublicLogRepository.countByIpAndCreatedAtBetween(ip, LocalDate.now().atStartOfDay(), LocalDateTime.now());
-        if (todayRequestNum >= 20) {
+        if (todayRequestNum >= 20 ) {
             log.info(ip + ": 일일 최대 횟수에 도달했습니다.");
-            var errorResponse = new ChatUserResponse.MessageDto("error", "일일 최대 횟수에 도달했습니다.");
-            try {
-                TextMessage textMessage = new TextMessage(om.writeValueAsString(errorResponse));
-                user.sendMessage(textMessage);
-                user.close();
-            } catch (IOException e) {
-                log.error("오류 발생" + e.getMessage());
-            }
-            return;
+            throw new Exception400("일일 최대 횟수에 도달했습니다.");
         }
         sendMessageToFoodie(foodieMessageDto, user, (message) -> {
             ChatPublicLog chatLog = ChatPublicLog.builder()
@@ -122,29 +116,6 @@ public class UserWebSocketService {
             chatPublicLogRepository.save(chatLog);
             log.debug("public api 마지막 전달 완료!!\n" + message);
         });
-    }
-
-    private String getClientIp(WebSocketSession session) {
-        return Objects.requireNonNull(session.getRemoteAddress()).getAddress().getHostAddress();
-    }
-
-    private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) {
-        String messageToSend;
-        try {
-            messageToSend = om.writeValueAsString(foodieMessageDto);
-        } catch (JsonProcessingException e) {
-            log.error("챗봇 전달 메시지 변환 중 오류가 발생했습니다.");
-            return;
-        }
-
-        FoodieWebSocketService foodieWebSocketService = new FoodieWebSocketService(serverUri);
-        try {
-            foodieWebSocketService.sendMessage(messageToSend);
-        } catch (Exception e) {
-            log.error("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
-            return;
-        }
-        foodieWebSocketService.listenForMessages(user, function);
     }
 
     public Long getUserId(WebSocketSession session) {
@@ -172,6 +143,22 @@ public class UserWebSocketService {
         var favorMessages = makeFavorMessages(userId);
         var history = makeHistoryFromMessages(messages, favorMessages);
         return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
+    }
+
+    private String getClientIp(WebSocketSession session) {
+        return Objects.requireNonNull(session.getRemoteAddress()).getAddress().getHostAddress();
+    }
+
+    private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) throws IOException {
+        String messageToSend = om.writeValueAsString(foodieMessageDto);
+
+        FoodieWebSocketService foodieWebSocketService = new FoodieWebSocketService(serverUri);
+        try {
+            foodieWebSocketService.sendMessage(messageToSend);
+        } catch (Exception e) {
+            throw new Exception500("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
+        }
+        foodieWebSocketService.listenForMessages(user, function);
     }
 
     private List<String> makeFavorMessages(Long userId) {
@@ -248,5 +235,15 @@ public class UserWebSocketService {
         }
 
         return history;
+    }
+
+    public TextMessage createErrorMessage(String message) {
+        var errorResponse = new ChatUserResponse.MessageDto("error", message);
+        try {
+            return new TextMessage(om.writeValueAsString(errorResponse));
+        } catch (JsonProcessingException e) {
+            log.error("ErrorMessage를 만드는 중 오류 발생했습니다.:" + message);
+            return new TextMessage("{\"event\":\"error\",\"response\":\"서버 에러입니다.\"}");
+        }
     }
 }
