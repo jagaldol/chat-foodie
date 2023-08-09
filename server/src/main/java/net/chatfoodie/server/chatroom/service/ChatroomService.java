@@ -2,7 +2,7 @@ package net.chatfoodie.server.chatroom.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.chatfoodie.server._core.errors.exception.Exception400;
+import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.utils.Utils;
@@ -56,7 +56,7 @@ public class ChatroomService {
     public void changeTitle(Long chatroomId, Long userId, ChatroomRequest.ChangeTitleDto requestDto) {
         Chatroom chatroom = chatroomRepository.findById(chatroomId).orElseThrow(() -> new Exception404("채팅방을 찾을 수 없습니다."));
         
-        if (!Objects.equals(chatroom.getUser().getId(), userId)) throw new Exception400("현재 유저의 채팅방이 아닙니다.");
+        if (!Objects.equals(chatroom.getUser().getId(), userId)) throw new Exception403("현재 유저의 채팅방이 아닙니다.");
 
         chatroom.updateTitle(requestDto.title());
     }
@@ -65,7 +65,7 @@ public class ChatroomService {
     public void delete(Long userId, Long chatroomId) {
         Chatroom chatroom = chatroomRepository.findById(chatroomId).orElseThrow(() -> new Exception404("채팅방을 찾을 수 없습니다."));
 
-        if (!Objects.equals(userId, chatroom.getUser().getId())) throw new Exception400("현재 유저의 채팅방이 아닙니다.");
+        if (!Objects.equals(userId, chatroom.getUser().getId())) throw new Exception403("현재 유저의 채팅방이 아닙니다.");
 
         messageRepository.deleteAllByChatroomId(chatroomId);
         chatroomRepository.delete(chatroom);
