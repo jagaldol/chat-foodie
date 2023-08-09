@@ -11,6 +11,7 @@ import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
+import net.chatfoodie.server.chat.dto.ChatUserResponse;
 import net.chatfoodie.server.chat.publiclog.ChatPublicLog;
 import net.chatfoodie.server.chat.publiclog.repository.ChatPublicLogRepository;
 import net.chatfoodie.server.chatroom.Chatroom;
@@ -22,8 +23,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -86,12 +91,24 @@ public class UserWebSocketService {
         );
     }
 
-    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, String requestMessage) {
+    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, String requestMessage){
         // 메시지를 보내고 응답을 받습니다.
-        // TODO: ip 기반으로 테이블 조회해서 10회 보냈으면 block 필요
-        getClientIp(user);
+        var ip = getClientIp(user);
+
+        Long todayRequestNum = chatPublicLogRepository.countByIpAndCreatedAtBetween(ip, LocalDate.now().atStartOfDay(), LocalDateTime.now());
+        if (todayRequestNum >= 20) {
+            log.info(ip + ": 일일 최대 횟수에 도달했습니다.");
+            var errorResponse = new ChatUserResponse.MessageDto("error", "일일 최대 횟수에 도달했습니다.");
+            try {
+                TextMessage textMessage = new TextMessage(om.writeValueAsString(errorResponse));
+                user.sendMessage(textMessage);
+                user.close();
+            } catch (IOException e) {
+                log.error("오류 발생" + e.getMessage());
+            }
+            return;
+        }
         sendMessageToFoodie(foodieMessageDto, user, (message) -> {
-            // TODO: ip랑 input, history, response를 저장 필요
             ChatPublicLog chatLog = ChatPublicLog.builder()
                     .ip(getClientIp(user))
                     .requestMessage(requestMessage)

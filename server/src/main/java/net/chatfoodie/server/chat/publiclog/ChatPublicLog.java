@@ -14,7 +14,10 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "chat_public_log_tb")
+@Table(name = "chat_public_log_tb",
+        indexes = {
+            @Index(name = "chat_public_log_created_at_idx", columnList = "createdAt")
+        })
 public class ChatPublicLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
