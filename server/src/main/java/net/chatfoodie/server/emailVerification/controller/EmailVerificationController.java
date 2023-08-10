@@ -31,7 +31,7 @@ public class EmailVerificationController {
     public ResponseEntity<?> verifyVerificationCode(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @RequestBody @Valid EmailVerificationRequest.VerificationCodeDto requestDto,
                                                     Errors errors) {
-        emailVerificationService.verifyVerificationCode(requestDto);
+        emailVerificationService.verifyVerificationCode(userDetails.getId(), requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }

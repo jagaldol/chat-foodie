@@ -79,16 +79,17 @@ public class EmailVerificationService {
     }
 
     @Transactional
-    public void verifyVerificationCode(EmailVerificationRequest.VerificationCodeDto requestDto) {
-        var emailVerification = emailVerificationRepository.findFirstByEmailOrderByCreatedAtDesc(requestDto.email())
+    public void verifyVerificationCode(Long userId, EmailVerificationRequest.VerificationCodeDto requestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("유저를 찾을 수 없습니다."));
+        var email = user.getEmail();
+
+        var emailVerification = emailVerificationRepository.findFirstByEmailOrderByCreatedAtDesc(email)
                 .orElseThrow(() -> new Exception404("존재하지 않은 이메일 입니다."));
 
         if (!Objects.equals(emailVerification.getVerificationCode(), requestDto.verificationCode())) {
             throw new Exception400("인증코드가 일치하지 않습니다.");
         }
 
-        var user = userRepository.findByEmail(requestDto.email())
-                .orElseThrow(() -> new Exception404("현재 이메일의 유저를 찾을 수 없습니다."));
         user.updateRole(Role.ROLE_USER);
     }
 }
