@@ -3,6 +3,7 @@ package net.chatfoodie.server.chat.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieResponse;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
@@ -46,33 +47,35 @@ public class FoodieWebSocketService {
 
         Future<?> future = executorService.submit(() -> {
             String finalResponse = "";
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    ChatFoodieResponse.MessageDto foodieMessageDto = foodieWebSocketHandler.receiveMessage(); // 메시지를 받음 (메시지가 없으면 대기)
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        ChatFoodieResponse.MessageDto foodieMessageDto = foodieWebSocketHandler.receiveMessage(); // 메시지를 받음 (메시지가 없으면 대기)
 
-                    var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
+                        var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
 
-                    TextMessage textMessage = new TextMessage(om.writeValueAsString(userMessageDto));
+                        TextMessage textMessage = new TextMessage(om.writeValueAsString(userMessageDto));
 
-                    user.sendMessage(textMessage);
+                        user.sendMessage(textMessage);
 
-                    if (isStreamEndEvent(foodieMessageDto)) {
-                        function.apply(finalResponse);
-                        break;
+                        if (isStreamEndEvent(foodieMessageDto)) {
+                            function.apply(finalResponse);
+                            break;
+                        }
+                        finalResponse = userMessageDto.response();
+                    } catch (InterruptedException e) {
+                        throw new Exception500("챗봇의 응답을 듣는 중 에러가 발생했습니다.");
+                    } catch (JsonProcessingException e) {
+                        throw new Exception500("챗봇의 응답을 분석하는 중 에러가 발생했습니다.");
+                    } catch (IOException e) {
+                        throw new Exception500("챗봇의 답변 전달 중 오류가 발생했습니다.");
                     }
-                    finalResponse = userMessageDto.response();
-                } catch (InterruptedException e) {
-                    log.error("챗봇의 응답을 듣는 중 에러가 발생했습니다.");
-                    Thread.currentThread().interrupt(); // InterruptedException을 받으면 쓰레드 interrupt 상태를 설정하여 종료
-                } catch (JsonProcessingException e) {
-                    log.error("챗봇의 응답을 분석하는 중 에러가 발생했습니다.");
-                    Thread.currentThread().interrupt();
-                } catch (IOException e) {
-                    log.error("챗봇의 답변 전달 중 오류가 발생했습니다.");
-                    throw new RuntimeException(e);
                 }
+            } catch (Exception500 e) {
+                throw new Exception500(e.getMessage());
+            } finally {
+                log.debug("쓰레드 종료됨");
             }
-            log.debug("쓰레드 종료됨");
         });
 
         try {
@@ -81,9 +84,12 @@ public class FoodieWebSocketService {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.error("챗봇과의 연결이 10분이 초과되어 강제로 종료합니다.");
             future.cancel(true); // 예외 발생 시 쓰레드 강제 종료
+            throw new Exception500("챗봇과의 연결이 10분이 초과되어 강제로 종료합니다.");
+        } catch (Exception500 e) {
+            throw new Exception500(e.getMessage());
+        } finally {
+            executorService.shutdown();
         }
-
-        executorService.shutdown();
     }
 
     public static boolean isStreamEndEvent(ChatFoodieResponse.MessageDto messageDto) {

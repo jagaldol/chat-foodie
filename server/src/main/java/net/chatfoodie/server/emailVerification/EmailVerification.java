@@ -14,7 +14,10 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "email_verification_tb")
+@Table(name = "email_verification_tb",
+        indexes = {
+                @Index(name = "email_verification_email_idx", columnList = "email")
+        })
 public class EmailVerification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

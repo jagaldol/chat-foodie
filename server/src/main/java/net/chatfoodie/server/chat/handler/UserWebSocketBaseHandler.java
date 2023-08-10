@@ -3,6 +3,8 @@ package net.chatfoodie.server.chat.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception400;
+import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server.chat.ChatSessionInfo;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
@@ -57,11 +59,10 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
         try {
             messageDtoInterface = toMessageDto(payload);
             if (messageDtoInterface.notValidate()) {
-                log.error("올바른 형식의 메시지가 아닙니다.");
                 throw new RuntimeException();
             }
         } catch (Exception e) {
-            log.error("올바른 형식의 메시지가 아닙니다.");
+            session.sendMessage(userWebSocketService.createErrorMessage("올바른 형식의 메시지가 아닙니다."));
             session.close();
             return;
         }
@@ -70,12 +71,22 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
         try {
             foodieMessageDto = toFoodieMessageDto(messageDtoInterface, session);
         } catch (Exception e) {
-            log.error("잘못된 입력입니다.");
+            session.sendMessage(userWebSocketService.createErrorMessage("잘못된 입력입니다."));
             session.close();
             return;
         }
 
-        requestToFoodie(messageDtoInterface, foodieMessageDto, session);
+        try {
+            requestToFoodie(messageDtoInterface, foodieMessageDto, session);
+        } catch (Exception500 | Exception400 e) {
+            session.sendMessage(userWebSocketService.createErrorMessage(e.getMessage()));
+        } catch (JsonProcessingException e) {
+            session.sendMessage(userWebSocketService.createErrorMessage("메시지 변환 중 오류가 발생했습니다."));
+        } catch (Exception e) {
+            session.sendMessage(userWebSocketService.createErrorMessage("챗봇에게 요청 중 오류가 발생했습니다."));
+        } finally {
+            session.close(); // 자동 세션 종료 시켜줌
+        }
     }
 
     protected abstract ChatUserRequest.MessageDtoInterface toMessageDto(String payload) throws JsonProcessingException;
@@ -83,7 +94,7 @@ public abstract class UserWebSocketBaseHandler extends TextWebSocketHandler {
 
     protected abstract ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session);
 
-    protected abstract void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session);
+    protected abstract void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) throws IOException;
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

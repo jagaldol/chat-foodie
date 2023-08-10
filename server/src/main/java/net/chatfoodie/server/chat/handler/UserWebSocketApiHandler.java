@@ -9,6 +9,8 @@ import net.chatfoodie.server.chat.service.UserWebSocketService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 public class UserWebSocketApiHandler extends UserWebSocketBaseHandler {
@@ -31,7 +33,7 @@ public class UserWebSocketApiHandler extends UserWebSocketBaseHandler {
     }
 
     @Override
-    protected void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) {
+    protected void requestToFoodie(ChatUserRequest.MessageDtoInterface messageDtoInterface, ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession session) throws IOException {
         var userMessageDto = (ChatUserRequest.MessageDto) messageDtoInterface;
         userWebSocketService.requestToFoodie(foodieMessageDto, session, userMessageDto.chatroomId());
     }

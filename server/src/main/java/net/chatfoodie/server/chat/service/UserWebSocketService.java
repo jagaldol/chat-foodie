@@ -2,25 +2,38 @@ package net.chatfoodie.server.chat.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
+import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
+import net.chatfoodie.server.chat.dto.ChatUserResponse;
+import net.chatfoodie.server.chat.publiclog.ChatPublicLog;
+import net.chatfoodie.server.chat.publiclog.repository.ChatPublicLogRepository;
 import net.chatfoodie.server.chatroom.Chatroom;
 import net.chatfoodie.server.chatroom.message.Message;
 import net.chatfoodie.server.chatroom.message.repository.MessageRepository;
 import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
+import net.chatfoodie.server.favor.Favor;
+import net.chatfoodie.server.favor.repository.FavorRepository;
+import net.chatfoodie.server.food.Food;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +55,11 @@ public class UserWebSocketService {
 
     private final ChatroomRepository chatroomRepository;
 
-    public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) {
+    private final ChatPublicLogRepository chatPublicLogRepository;
+
+    private final FavorRepository favorRepository;
+
+    public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) throws IOException {
         // 메시지를 보내고 응답을 받습니다.
         var chatroom = chatroomRepository.findById(chatroomId).orElseThrow();
         Long userId = getUserId(user);
@@ -81,32 +98,24 @@ public class UserWebSocketService {
         );
     }
 
-    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user) {
+    public void requestToFoodiePublic(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, String requestMessage) throws IOException {
         // 메시지를 보내고 응답을 받습니다.
-        // TODO: ip 기반으로 테이블 조회해서 10회 보냈으면 block 필요
+        var ip = getClientIp(user);
+
+        Long todayRequestNum = chatPublicLogRepository.countByIpAndCreatedAtBetween(ip, LocalDate.now().atStartOfDay(), LocalDateTime.now());
+        if (todayRequestNum >= 20 ) {
+            log.info(ip + ": 일일 최대 횟수에 도달했습니다.");
+            throw new Exception400("일일 최대 횟수에 도달했습니다.");
+        }
         sendMessageToFoodie(foodieMessageDto, user, (message) -> {
-            // TODO: ip랑 input, history, response를 저장 필요
+            ChatPublicLog chatLog = ChatPublicLog.builder()
+                    .ip(getClientIp(user))
+                    .requestMessage(requestMessage)
+                    .output(message)
+                    .build();
+            chatPublicLogRepository.save(chatLog);
             log.debug("public api 마지막 전달 완료!!\n" + message);
         });
-    }
-
-    private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) {
-        String messageToSend;
-        try {
-            messageToSend = om.writeValueAsString(foodieMessageDto);
-        } catch (JsonProcessingException e) {
-            log.error("챗봇 전달 메시지 변환 중 오류가 발생했습니다.");
-            return;
-        }
-
-        FoodieWebSocketService foodieWebSocketService = new FoodieWebSocketService(serverUri);
-        try {
-            foodieWebSocketService.sendMessage(messageToSend);
-        } catch (Exception e) {
-            log.error("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
-            return;
-        }
-        foodieWebSocketService.listenForMessages(user, function);
     }
 
     public Long getUserId(WebSocketSession session) {
@@ -131,12 +140,71 @@ public class UserWebSocketService {
 
         var messages = messageRepository.findTop38ByChatroomIdOrderByIdDesc(userMessageDto.chatroomId());
 
-        // TODO: 맨 앞에 선호도 채팅을 추가하기!!!
-        var history = makeHistoryFromMessages(messages);
+        var favorMessages = makeFavorMessages(userId);
+        var history = makeHistoryFromMessages(messages, favorMessages);
         return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
     }
 
-    private List<List<String>> makeHistoryFromMessages(List<Message> messages) {
+    private String getClientIp(WebSocketSession session) {
+        return Objects.requireNonNull(session.getRemoteAddress()).getAddress().getHostAddress();
+    }
+
+    private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) throws IOException {
+        String messageToSend = om.writeValueAsString(foodieMessageDto);
+
+        FoodieWebSocketService foodieWebSocketService = new FoodieWebSocketService(serverUri);
+        try {
+            foodieWebSocketService.sendMessage(messageToSend);
+        } catch (Exception e) {
+            throw new Exception500("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
+        }
+        foodieWebSocketService.listenForMessages(user, function);
+    }
+
+    private List<String> makeFavorMessages(Long userId) {
+        var favors = favorRepository.findByUserId(userId);
+        List<String> favorMessages = new ArrayList<>();
+
+        if (favors.size() != 0) {
+            StringBuilder userMessage = new StringBuilder("나는 ");
+            for (Favor favor : favors) {
+                Food food = favor.getFood();
+                var foodName = food.getName();
+                var foodCountry = food.getCountry();
+                var foodFlavor = food.getFlavor();
+                var foodTemperature = food.getTemperature();
+                var foodIngredient = food.getIngredient();
+                var foodSpicy = toSpicyString(food.getSpicy());
+                var foodOily = food.getOily();
+                var favorText = foodName
+                        + "(국가 분류: " + foodCountry
+                        + ", 맛: " + foodFlavor
+                        + ", 온도: " + foodTemperature
+                        + ", 주재료: " + foodIngredient
+                        + ", 맵기: " + foodSpicy
+                        + ", " + foodOily + "), ";
+                userMessage.append(favorText);
+            }
+            userMessage.delete(userMessage.length() - 2, userMessage.length());
+            userMessage.append(" 같은 종류의 음식들을 좋아하는 사람이야. 앞으로의 대화에 내 선호도를 기반으로 대답해줘");
+            var foodieMessage = "알겠습니다 선호도를 기억했습니다! 앞으로의 대답은 기억한 선호도를 기반으로 대답해 드리겠습니다.";
+            favorMessages.add(userMessage.toString());
+            favorMessages.add(foodieMessage);
+            log.info(userMessage.toString());
+        }
+        return favorMessages;
+    }
+
+    private String toSpicyString(int spicy) {
+        return switch (spicy) {
+            case 1 -> "덜 매움";
+            case 2 -> "매움";
+            case 3 -> "많이 매움";
+            default -> "안 매움";
+        };
+    }
+
+    private List<List<String>> makeHistoryFromMessages(List<Message> messages, List<String> favorMessages) {
         List<String> reversedMessages = new ArrayList<>();
 
         for (Message message : messages) {
@@ -160,10 +228,22 @@ public class UserWebSocketService {
 
         List<List<String>> history = new ArrayList<>();
 
+        history.add(favorMessages);
+
         for(int i = reversedMessages.size() - 1; i >= 0; i -= 2) {
             history.add(List.of(reversedMessages.get(i), reversedMessages.get(i - 1)));
         }
 
         return history;
+    }
+
+    public TextMessage createErrorMessage(String message) {
+        var errorResponse = new ChatUserResponse.MessageDto("error", message);
+        try {
+            return new TextMessage(om.writeValueAsString(errorResponse));
+        } catch (JsonProcessingException e) {
+            log.error("ErrorMessage를 만드는 중 오류 발생했습니다.:" + message);
+            return new TextMessage("{\"event\":\"error\",\"response\":\"서버 에러입니다.\"}");
+        }
     }
 }
