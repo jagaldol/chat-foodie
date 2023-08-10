@@ -8,6 +8,7 @@ import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.repository.EmailVerificationRepository;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -73,6 +74,7 @@ public class EmailVerificationService {
         }
     }
 
+    @Transactional
     public void verifyVerificationCode(EmailVerificationRequest.VerificationCodeDto requestDto) {
         var emailVerification = emailVerificationRepository.findFirstByEmailOrderByCreatedAtDesc(requestDto.email())
                 .orElseThrow(() -> new Exception404("존재하지 않은 이메일 입니다."));
@@ -80,5 +82,9 @@ public class EmailVerificationService {
         if (!Objects.equals(emailVerification.getVerificationCode(), requestDto.verificationCode())) {
             throw new Exception400("인증코드가 일치하지 않습니다.");
         }
+
+        var user = userRepository.findByEmail(requestDto.email())
+                .orElseThrow(() -> new Exception404("현재 이메일의 유저를 찾을 수 없습니다."));
+        user.updateRole(Role.ROLE_USER);
     }
 }
