@@ -38,6 +38,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ROLE_PENDING'")
+    @Column(length = 50)
     private Role role;
 
     @ColumnDefault("now()")

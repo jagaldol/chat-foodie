@@ -21,6 +21,7 @@ public class JwtProvider {
         String jwt = JWT.create()
                 .withExpiresAt(Timestamp.valueOf(expired))
                 .withClaim("id", user.getId())
+                .withClaim("role", String.valueOf(user.getRole()))
                 .sign(Algorithm.HMAC512(SECRET));
         return TOKEN_PREFIX + jwt;
     }
