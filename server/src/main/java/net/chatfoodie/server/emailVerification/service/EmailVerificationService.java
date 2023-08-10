@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
+import net.chatfoodie.server.emailVerification.EmailVerification;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.repository.EmailVerificationRepository;
 import net.chatfoodie.server.user.Role;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -31,20 +33,19 @@ public class EmailVerificationService {
 
     final private JavaMailSender javaMailSender;
     @Transactional
-    public void sendVerificationCode(EmailVerificationRequest.VerificationDto requestDto) {
+    public void sendVerificationCode(String email) {
 
-        var existEmailCnt = emailVerificationRepository.countByEmailAndCreatedAtBetween(requestDto.email(), LocalDate.now().atStartOfDay(), LocalDateTime.now());
+        var existEmailCnt = emailVerificationRepository.countByEmailAndCreatedAtBetween(email, LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
         if (existEmailCnt >= 5) throw new Exception400("하루 최대 5번까지 인증번호 메일을 요청할 수 있습니다.");
 
-        if (userRepository.findByEmail(requestDto.email()).isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다.");
-        }
-
         var verificationCode = makeCode();
-        var emailVerification = requestDto.createVerification(verificationCode);
+        var emailVerification = EmailVerification.builder()
+                                                .email(email)
+                                                .verificationCode(verificationCode)
+                                                .build();
 
-        sendEmail(requestDto.email(), verificationCode);
+        sendEmail(email, verificationCode);
 
         try {
             emailVerificationRepository.save(emailVerification);
@@ -70,6 +71,8 @@ public class EmailVerificationService {
             helper.setText(text, true);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+
             throw new Exception500("서버 이메일 전송 한도가 초과되었습니다. 내일 다시 시도해주세요.");
         }
     }
