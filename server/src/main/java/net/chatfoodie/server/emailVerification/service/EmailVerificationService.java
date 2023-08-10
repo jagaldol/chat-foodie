@@ -10,6 +10,7 @@ import net.chatfoodie.server.emailVerification.EmailVerification;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.repository.EmailVerificationRepository;
 import net.chatfoodie.server.user.Role;
+import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -33,7 +34,9 @@ public class EmailVerificationService {
 
     final private JavaMailSender javaMailSender;
     @Transactional
-    public void sendVerificationCode(String email) {
+    public void sendVerificationCode(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("유저를 찾을 수 없습니다."));
+        var email = user.getEmail();
 
         var existEmailCnt = emailVerificationRepository.countByEmailAndCreatedAtBetween(email, LocalDate.now().atStartOfDay(), LocalDateTime.now());
 
@@ -71,8 +74,6 @@ public class EmailVerificationService {
             helper.setText(text, true);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-
             throw new Exception500("서버 이메일 전송 한도가 초과되었습니다. 내일 다시 시도해주세요.");
         }
     }

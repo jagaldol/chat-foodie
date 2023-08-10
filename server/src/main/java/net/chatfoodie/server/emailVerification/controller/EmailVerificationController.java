@@ -22,7 +22,7 @@ public class EmailVerificationController {
 
     @PostMapping("/email-verifications")
     public ResponseEntity<?> sendVerificationCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        emailVerificationService.sendVerificationCode(userDetails.user().getEmail());
+        emailVerificationService.sendVerificationCode(userDetails.getId());
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
