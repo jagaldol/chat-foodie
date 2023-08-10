@@ -72,8 +72,8 @@ VALUES ('쌀국수', '/images/쌀국수.jpg', '외국 음식', '신맛', '뜨거
 
 
 -- 비밀번호 test1234
-INSERT INTO user_tb (login_id, password, name, email)
-VALUES ('test', '{bcrypt}$2a$10$iRfOSldsM6yVzqGfsQNF5u1Fq8g85xFt.k/DPldr1jVk3rds/fkea', 'test회원', 'test@test.com');
+INSERT INTO user_tb (login_id, password, name, email, role)
+VALUES ('test', '{bcrypt}$2a$10$iRfOSldsM6yVzqGfsQNF5u1Fq8g85xFt.k/DPldr1jVk3rds/fkea', 'test회원', 'test@test.com', 'ROLE_USER');
 
 
 INSERT INTO favor_tb (user_id, food_id)

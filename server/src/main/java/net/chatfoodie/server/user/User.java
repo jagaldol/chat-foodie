@@ -36,11 +36,16 @@ public class User {
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ROLE_PENDING'")
+    @Column(length = 50)
+    private Role role;
+
     @ColumnDefault("now()")
     private LocalDateTime createdAt;
 
     @Builder
-    public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, LocalDateTime created_at) {
+    public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, Role role, LocalDateTime created_at) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
@@ -48,6 +53,7 @@ public class User {
         this.gender = gender;
         this.birth = birth;
         this.email = email;
+        this.role = role;
         this.createdAt = created_at;
     }
 
@@ -65,5 +71,8 @@ public class User {
     }
     public void updateBirth(LocalDate birth) {
         this.birth = birth;
+    }
+    public void updateRole(Role role) {
+        this.role = role;
     }
 }

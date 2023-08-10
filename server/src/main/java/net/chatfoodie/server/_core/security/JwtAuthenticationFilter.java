@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,8 +36,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
             Long id = decodedJWT.getClaim("id").asLong();
+            Role role = decodedJWT.getClaim("role").as(Role.class);
             User user = User.builder()
                     .id(id)
+                    .role(role)
                     .build();
             CustomUserDetails userDetails = new CustomUserDetails(user);
             Authentication authentication =
