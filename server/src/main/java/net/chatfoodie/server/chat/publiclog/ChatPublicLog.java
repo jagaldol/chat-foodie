@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "chat_public_log_tb",
         indexes = {
-            @Index(name = "chat_public_log_created_at_idx", columnList = "createdAt")
+            @Index(name = "chat_public_log_ip_created_at_idx", columnList = "ip, createdAt")
         })
 public class ChatPublicLog {
     @Id
