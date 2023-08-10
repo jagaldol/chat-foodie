@@ -15,7 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "chatroom_tb")
+@Table(name = "chatroom_tb",
+        indexes = {
+                @Index(name = "chatroom_user_id_idx", columnList = "user_id")
+        })
 public class Chatroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

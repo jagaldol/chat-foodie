@@ -15,7 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "favor_tb")
+@Table(name = "favor_tb",
+        indexes = {
+                @Index(name = "favor_user_id_idx", columnList = "user_id")
+        })
 public class Favor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
