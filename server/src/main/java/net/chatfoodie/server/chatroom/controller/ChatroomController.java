@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.utils.ApiUtils;
+import net.chatfoodie.server._core.utils.cursor.CursorRequest;
+import net.chatfoodie.server._core.utils.cursor.PageCursor;
 import net.chatfoodie.server.chatroom.dto.ChatroomRequest;
 import net.chatfoodie.server.chatroom.dto.ChatroomResponse;
 import net.chatfoodie.server.chatroom.service.ChatroomService;
@@ -47,6 +49,15 @@ public class ChatroomController {
                                             @AuthenticationPrincipal CustomUserDetails userDetails) {
         chatroomService.delete(userDetails.getId(), chatroomId);
         ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/chatrooms/{chatroomId}/messages")
+    public ResponseEntity<?> chatHistory(@PathVariable Long chatroomId,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+                                         CursorRequest cursorRequest) {
+        PageCursor<?> responseDto = chatroomService.chatHistory(userDetails.getId(), chatroomId, cursorRequest);
+        ApiUtils.Response<?> response = ApiUtils.success(responseDto);
         return ResponseEntity.ok(response);
     }
 }
