@@ -22,8 +22,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Page<Message> findAllByChatroomId(Long chatroomId, Pageable pageable);
 
-    @Query("SELECT m FROM Message m WHERE m.chatroom.id = :chatroomId AND m.id < :id")
-    Page<Message> findAllByLessThanIdAndChatroomId(Long id, Long chatroomId, Pageable pageable);
+    List<Message> findAllByChatroomIdAndIdLessThanOrderByIdDesc(Long chatroomId, Long key, Pageable pageable);
 
-
+    List<Message> findAllByChatroomIdOrderByIdDesc(Long chatroomId, Pageable pageable);
 }
