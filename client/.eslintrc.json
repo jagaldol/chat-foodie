@@ -6,7 +6,8 @@
     "project": "./tsconfig.json",
     "createDefaultProgram": true
   },
-  "env": { // 전역객체를 eslint가 인식하는 구간
+  "env": {
+    // 전역객체를 eslint가 인식하는 구간
     "browser": true, // document나 window 인식되게 함
     "node": true,
     "es6": true
