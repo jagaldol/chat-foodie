@@ -312,36 +312,51 @@ server of chatFoodie.
 
 대화 기록 조회
 
+무한 스크롤 방식으로 대화기록을 가져옵니다. 최초에는 제일 최근의 대화부터 size만큼 
+대화를 가져온 뒤 가져온 대화의 마지막 메시지의 id를 다음 조회를 위한 새로운 key로 사용
+더이상 가져올 대화가 없다면 중단
+
+* Query String
+
+| Param | Description             |
+|-------|-------------------------|
+| key   | 페이지를 나누는 기준             |
+| size  | 한번에 받아올 데이터의 개수(기본값 20) |
+
 * Response Body
   ```json
   {
     "status": 200,
-    "response": [
-      {
-        "id": 1,
-        "isFromChatbot" : false,
-        "content": "안녕하세요!",
-        "created_at": "2023-08-01T12:34:56"
-      },
-      {
-        "id": 2,
-        "isFromChatbot" : true,
-        "content": "안녕하세요! 반갑습니다.",
-        "created_at": "2023-08-01T12:35:02"
-      },
-      {
-        "id": 3,
-        "isFromChatbot" : false,
-        "content": "저녁 메뉴 추천해줘",
-        "created_at": "2023-08-01T12:36:18"
-      },
-      {
-        "id": 4,
-        "isFromChatbot" : true,
-        "content": "오리고기, 김치찌개, 생선구이, 들깨나물무침 등이 좋은 저녁 식사가 될 수 있습니다.",
-        "created_at": "2023-08-01T12:36:24"
-      }
-    ],
+    "response": {
+        "nextCursorRequest": {
+            "key": 1,
+            "size": 20
+        },
+        "body": {
+            "messages": [
+                {
+                    "id": 1,
+                    "content": "아침 메뉴 추천해줘",
+                    "isFromChatbot": false
+                },
+                {
+                    "id": 2,
+                    "content": "건강한 아침을 위해 그릭 요거트에 견과류와 과일을 넣고 오트밀과 함께 즐겨보세요!",
+                    "isFromChatbot": true
+                },
+                {
+                    "id": 3,
+                    "content": "밥 요리로 추천해줘",
+                    "isFromChatbot": false
+                },
+                {
+                    "id": 4,
+                    "content": "달걀 볶음밥을 만들어보세요. 신선한 야채와 함께 볶은 밥에 계란을 섞어 풍미를 더하고, 간장 또는 고추장으로 맛을 조절해보세요!",
+                    "isFromChatbot": true
+                }
+            ]
+        }
+    },
     "errorMessage": null
   }
   ```
