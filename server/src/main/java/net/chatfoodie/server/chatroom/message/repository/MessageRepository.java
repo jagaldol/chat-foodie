@@ -20,8 +20,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Optional<Message> findTop1ByChatroomIdOrderByIdDesc(Long chatroomId);
 
-    Page<Message> findAllByChatroomId(Long chatroomId, Pageable pageable);
-
     List<Message> findAllByChatroomIdAndIdLessThanOrderByIdDesc(Long chatroomId, Long key, Pageable pageable);
 
     List<Message> findAllByChatroomIdOrderByIdDesc(Long chatroomId, Pageable pageable);

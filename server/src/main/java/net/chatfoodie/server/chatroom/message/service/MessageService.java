@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public class MessageService {
     final private MessageRepository messageRepository;
     final private ChatroomRepository chatroomRepository;
 
-    public PageCursor<MessageResponse.ContentList> chatHistory(Long userId, Long chatroomId, CursorRequest cursorRequest) {
+    public PageCursor<MessageResponse.getMessagesDto> chatHistory(Long userId, Long chatroomId, CursorRequest cursorRequest) {
 
         Chatroom chatroom = chatroomRepository.findById(chatroomId)
                 .orElseThrow(() -> new Exception404("채팅방을 찾을 수 없습니다."));
@@ -40,12 +41,15 @@ public class MessageService {
         }
 
         var messages = getMessages(chatroomId, cursorRequest);
+        Collections.reverse(messages);
+
+        var response = MessageResponse.getMessagesDto.of(messages);
+
 
         var nextKey = messages.stream()
                 .mapToLong(Message::getId)
                 .min().orElse(CursorRequest.NONE_KEY);
 
-        var response = MessageResponse.ContentList.of(messages);
         return new PageCursor<>(cursorRequest.next(nextKey), response);
     }
 
