@@ -1,5 +1,6 @@
 import Image from "next/image"
 import titleFont from "@/styles/TitleFont"
+import Account from "@/containers/home/account"
 
 export default function Header() {
   return (
@@ -12,14 +13,7 @@ export default function Header() {
         </div>
         <p className="text-sm text-center ml-5">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
       </div>
-      <div className="flex flex-wrap grow justify-end items-center min-w-[20%] h-min">
-        <div className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded hover:cursor-pointer">
-          <p className="text-sm mx-2.5 my-2 text-center">로그인</p>
-        </div>
-        <div className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded hover:cursor-pointer">
-          <p className="text-sm mx-2.5 my-2 text-center">회원가입</p>
-        </div>
-      </div>
+      <Account />
     </header>
   )
 }
