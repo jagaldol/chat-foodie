@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
-      <body className={`${notoSans.className} flex pt-7 box-border min-h-screen`}>
+      <body className={`${notoSans.className} flex pt-7 pb-7 box-border min-h-screen`}>
         <Navigator />
         <main className="flex grow flex-col">
           <Header />

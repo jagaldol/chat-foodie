@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header className="flex items-center">
       <div className="grow min-w-[20%]" />
-      <div className="flex grow-[6] flex-col justify-center">
+      <div className="flex grow flex-col justify-center">
         <div className="flex items-center justify-center">
           <Image src="/svg/logo.svg" alt="logo" width={60} height={60} />
           <h1 className={`text-5xl text-main-theme font-bold ${titleFont.className}`}>Chatfoodie</h1>
