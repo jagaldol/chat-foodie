@@ -1,13 +1,14 @@
 import Image from "next/image"
+import titleFont from "@/styles/TitleFont"
 
 export default function Header() {
   return (
-    <header className="flex mt-7 items-center">
+    <header className="flex items-center">
       <div className="grow min-w-[20%]" />
       <div className="flex grow-[6] flex-col justify-center">
         <div className="flex items-center justify-center">
           <Image src="/svg/logo.svg" alt="logo" width={60} height={60} />
-          <h1 className="text-5xl text-main-theme font-bold">Chatfoodie</h1>
+          <h1 className={`text-5xl text-main-theme font-bold ${titleFont.className}`}>Chatfoodie</h1>
         </div>
         <p className="text-sm text-center ml-5">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
       </div>
