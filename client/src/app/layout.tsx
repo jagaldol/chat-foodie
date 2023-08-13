@@ -1,7 +1,9 @@
+import "@/styles/variable.css"
 import "@/styles/globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { ReactNode } from "react"
+import Header from "@/containers/home/header"
 
 const inter = Inter({ subsets: ["latin"] }) // google font Inter으로 tailwind 사용하여 기본 폰트 지정
 
@@ -14,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body className={inter.className}>
-        <h1 className="text-xl">ChatFoodie</h1>
+        <Header />
         {children}
       </body>
     </html>
