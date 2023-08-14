@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import LoginModal from "@/containers/login/loginModal"
+import LoginModal from "@/containers/account/loginModal"
 
 export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)

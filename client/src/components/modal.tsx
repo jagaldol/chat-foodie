@@ -23,7 +23,7 @@ export default function Modal({ content, onClickClose }: { content: ReactNode; o
           </div>
           <p className="text-sm text-center">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
         </div>
-        {content}
+        <div className="p-10">{content}</div>
       </div>
     </div>
   )

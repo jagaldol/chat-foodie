@@ -1,6 +1,6 @@
 import Image from "next/image"
 import titleFont from "@/styles/TitleFont"
-import Account from "@/containers/login/account"
+import Account from "@/containers/account/account"
 
 export default function Header() {
   return (
