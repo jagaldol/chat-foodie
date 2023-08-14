@@ -8,7 +8,7 @@ export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)
   const [needToUpdateAccount, setNeedToUpdateAccount] = useState(false)
 
-  const [userId, setUserId] = useState(getJwtId())
+  const [userId, setUserId] = useState(null)
 
   useEffect(() => {
     setUserId(getJwtId())
