@@ -1,8 +1,8 @@
-import { MouseEventHandler, ReactNode } from "react"
+import { ReactNode } from "react"
 import Image from "next/image"
 import titleFont from "@/styles/TitleFont"
 
-export default function Modal({ content, onClickClose }: { content: ReactNode; onClickClose: MouseEventHandler }) {
+export default function Modal({ content, onClickClose }: { content: ReactNode; onClickClose(): void }) {
   return (
     <div className="bg-black/5 h-screen w-screen z-30 flex fixed left-0 top-0 items-center justify-center">
       <div className="w-[500px] h-[650px] bg-white drop-shadow p-5">

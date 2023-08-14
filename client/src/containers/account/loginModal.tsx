@@ -1,10 +1,9 @@
 "use client"
 
-import { MouseEventHandler } from "react"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 
-export default function LoginModal({ onClickClose }: { onClickClose: MouseEventHandler }) {
+export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
   const content = (
     <form
       onSubmit={(e) => {
@@ -15,9 +14,20 @@ export default function LoginModal({ onClickClose }: { onClickClose: MouseEventH
         const password = passwordInput.value
         console.log(id)
         console.log(password)
-        proxy.get("/foods/random", { params: { size: 30 } }).then((res) => {
-          console.log(res)
-        })
+        proxy
+          .post("/login", {
+            loginId: id,
+            password,
+          })
+          .then((res) => {
+            const jwt = res.headers.authorization
+            sessionStorage.setItem("jwt", jwt)
+            alert("로그인 성공")
+            onClickClose()
+          })
+          .catch((res) => {
+            alert(res.response.data.errorMessage)
+          })
       }}
     >
       <label className="flex items-center" htmlFor="id">
