@@ -3,6 +3,7 @@ package net.chatfoodie.server.emailVerification.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.chatfoodie.server._core.security.CustomUserDetails;
+import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.ApiUtils;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.service.EmailVerificationService;
@@ -31,8 +32,8 @@ public class EmailVerificationController {
     public ResponseEntity<?> verifyVerificationCode(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @RequestBody @Valid EmailVerificationRequest.VerificationCodeDto requestDto,
                                                     Errors errors) {
-        emailVerificationService.verifyVerificationCode(userDetails.getId(), requestDto);
+        String jwt = emailVerificationService.verifyVerificationCode(userDetails.getId(), requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
 }

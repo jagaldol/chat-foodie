@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
+import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server.emailVerification.EmailVerification;
 import net.chatfoodie.server.emailVerification.dto.EmailVerificationRequest;
 import net.chatfoodie.server.emailVerification.repository.EmailVerificationRepository;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -79,7 +79,7 @@ public class EmailVerificationService {
     }
 
     @Transactional
-    public void verifyVerificationCode(Long userId, EmailVerificationRequest.VerificationCodeDto requestDto) {
+    public String verifyVerificationCode(Long userId, EmailVerificationRequest.VerificationCodeDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("유저를 찾을 수 없습니다."));
         var email = user.getEmail();
 
@@ -91,5 +91,6 @@ public class EmailVerificationService {
         }
 
         user.updateRole(Role.ROLE_USER);
+        return JwtProvider.create(user);
     }
 }
