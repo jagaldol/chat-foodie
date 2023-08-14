@@ -4,13 +4,7 @@ import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
 
-export default function LoginModal({
-  onClickClose,
-  onChangeAccount,
-}: {
-  onClickClose(): void
-  onChangeAccount(): void
-}) {
+export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
   return (
     <Modal onClickClose={onClickClose}>
       <form
@@ -29,7 +23,6 @@ export default function LoginModal({
               const jwt = res.headers.authorization
               saveJwt(jwt)
               alert("로그인 성공")
-              onChangeAccount()
               onClickClose()
             })
             .catch((res) => {

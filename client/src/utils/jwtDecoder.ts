@@ -20,7 +20,6 @@ export function getJwtPayload(jwtString?: string) {
     const value = sessionStorage.getItem(sessionKey)
     jwt = value || jwt
   }
-  console.log(jwt)
   if (jwt === null) return null
   const jwtParts = jwt.split(".")
   if (!jwt.startsWith("Bearer ") || jwtParts.length !== 3) {
