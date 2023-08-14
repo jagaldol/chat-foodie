@@ -34,9 +34,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -165,35 +163,79 @@ public class UserWebSocketService {
         var favors = favorRepository.findByUserId(userId);
         List<String> favorMessages = new ArrayList<>();
 
-        if (favors.size() != 0) {
-            StringBuilder userMessage = new StringBuilder("나는 ");
+        if (!favors.isEmpty()){
+
+            Random random = new Random();
+            int randomFoodIndex = random.nextInt(favors.size());
+            Food randomFood = favors.get(randomFoodIndex).getFood();
+            String randomFoodName = randomFood.getName();
+
+            // 각 요소의 빈도를 카운트하기 위한 맵들
+            Map<String, Integer> flavorCounts = new HashMap<>();
+            Map<String, Integer> countryCounts = new HashMap<>();
+            Map<String, Integer> temperatureCounts = new HashMap<>();
+            Map<String, Integer> mainIngredientCounts = new HashMap<>();
+            Map<String, Integer> spicyCounts = new HashMap<>();
+            Map<String, Integer> oilyCounts = new HashMap<>();
+
             for (Favor favor : favors) {
                 Food food = favor.getFood();
-                var foodName = food.getName();
-                var foodCountry = food.getCountry();
                 var foodFlavor = food.getFlavor();
+                var foodCountry = food.getCountry();
                 var foodTemperature = food.getTemperature();
-                var foodIngredient = food.getIngredient();
+                var foodMainIngredient = food.getIngredient();
                 var foodSpicy = toSpicyString(food.getSpicy());
                 var foodOily = food.getOily();
-                var favorText = foodName
-                        + "(국가 분류: " + foodCountry
-                        + ", 맛: " + foodFlavor
-                        + ", 온도: " + foodTemperature
-                        + ", 주재료: " + foodIngredient
-                        + ", 맵기: " + foodSpicy
-                        + ", " + foodOily + "), ";
-                userMessage.append(favorText);
+
+                // 각 요소의 빈도를 카운트
+                flavorCounts.put(foodFlavor, flavorCounts.getOrDefault(foodFlavor, 0) + 1);
+                countryCounts.put(foodCountry, countryCounts.getOrDefault(foodCountry, 0) + 1);
+                temperatureCounts.put(foodTemperature, temperatureCounts.getOrDefault(foodTemperature, 0) + 1);
+                mainIngredientCounts.put(foodMainIngredient, mainIngredientCounts.getOrDefault(foodMainIngredient, 0) + 1);
+                spicyCounts.put(foodSpicy, spicyCounts.getOrDefault(foodSpicy, 0) + 1);
+                oilyCounts.put(foodOily, oilyCounts.getOrDefault(foodOily, 0) + 1);
             }
-            userMessage.delete(userMessage.length() - 2, userMessage.length());
-            userMessage.append(" 같은 종류의 음식들을 좋아하는 사람이야. 앞으로의 대화에 내 선호도를 기반으로 대답해줘");
+
+            // 가장 많이 선택된 요소들 찾기
+            String mostPreferredFlavor = findMostPreferredElement(flavorCounts);
+            String mostPreferredCountry = findMostPreferredElement(countryCounts);
+            String mostPreferredTemperature = findMostPreferredElement(temperatureCounts);
+            String mostPreferredMainIngredient = findMostPreferredElement(mainIngredientCounts);
+            String mostPreferredSpicy = findMostPreferredElement(spicyCounts);
+            String mostPreferredOily = findMostPreferredElement(oilyCounts);
+
+            var userMessage = "내가 가장 좋아하는 맛은 '" + mostPreferredFlavor + "' 맛이며, " +
+                    "선호하는 음식의 국가는 '" + mostPreferredCountry + "'이고, " +
+                    "선호하는 온도는 '" + mostPreferredTemperature + "'이며, " +
+                    "주요한 재료로 '" + mostPreferredMainIngredient + "'을(를) 선호하며, " +
+                    "선호하는 맵기는 '" + mostPreferredSpicy + "' 정도이고, '" +
+                    mostPreferredOily + "' 을 가진 음식을 좋아해. " +
+                    "예를 들면 '" + randomFoodName + "'를 좋아해 " +
+                    "앞으로의 대화에 내 선호도를 기반으로 대답해줘!";
             var foodieMessage = "알겠습니다 선호도를 기억했습니다! 앞으로의 대답은 기억한 선호도를 기반으로 대답해 드리겠습니다.";
-            favorMessages.add(userMessage.toString());
+            favorMessages.add(userMessage);
             favorMessages.add(foodieMessage);
-            log.info(userMessage.toString());
+            log.info(userMessage);
         }
         return favorMessages;
     }
+
+    // 가장 많이 선택된 요소 찾기
+    private String findMostPreferredElement(Map<String, Integer> elementCounts) {
+        String mostPreferredElement = "";
+        int maxCount = 0;
+
+        for (Map.Entry<String, Integer> entry : elementCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostPreferredElement = entry.getKey();
+            }
+        }
+
+        return mostPreferredElement;
+    }
+
+    // toSpicyString 메서드 정의 (매운 정도를 텍스트로 변환)
 
     private String toSpicyString(int spicy) {
         return switch (spicy) {
