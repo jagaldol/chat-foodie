@@ -2,8 +2,15 @@
 
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
+import { saveJwt } from "@/utils/jwtDecoder"
 
-export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
+export default function LoginModal({
+  onClickClose,
+  onChangeAccount,
+}: {
+  onClickClose(): void
+  onChangeAccount(): void
+}) {
   const content = (
     <form
       onSubmit={(e) => {
@@ -12,8 +19,6 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
         const id = idInput.value
         const passwordInput = e.currentTarget.querySelector("[name='password']") as HTMLInputElement
         const password = passwordInput.value
-        console.log(id)
-        console.log(password)
         proxy
           .post("/login", {
             loginId: id,
@@ -21,8 +26,9 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
           })
           .then((res) => {
             const jwt = res.headers.authorization
-            sessionStorage.setItem("jwt", jwt)
+            saveJwt(jwt)
             alert("로그인 성공")
+            onChangeAccount()
             onClickClose()
           })
           .catch((res) => {
