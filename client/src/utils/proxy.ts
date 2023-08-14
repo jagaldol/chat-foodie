@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios"
 
 const proxy = {
-  proxyUrl: "http://localhost:8080/api",
+  proxyUrl: `${process.env.NEXT_PUBLIC_API_URL}/api`,
   getUrl(url: string) {
     return this.proxyUrl + url
   },
