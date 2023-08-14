@@ -1,10 +1,14 @@
 "use client"
 
+import { useContext } from "react"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
+import { AuthContext } from "@/contexts/authContextProvider"
 
 export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
+  const { needUpdate } = useContext(AuthContext)
+
   return (
     <Modal onClickClose={onClickClose}>
       <form
@@ -23,6 +27,7 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
               const jwt = res.headers.authorization
               saveJwt(jwt)
               alert("로그인 성공")
+              needUpdate()
               onClickClose()
             })
             .catch((res) => {
