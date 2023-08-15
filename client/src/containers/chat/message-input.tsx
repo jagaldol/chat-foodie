@@ -21,7 +21,6 @@ export default function MessageInput({ addMessage }: { addMessage: (message: Cha
         className="w-10 flex justify-center items-center"
         onClick={() => {
           const userInputBox = document.getElementById("user-input-box") as HTMLTextAreaElement
-          console.log(userInputBox.value)
           const userMessage: ChatMessages = {
             id: 0,
             content: userInputBox.value,

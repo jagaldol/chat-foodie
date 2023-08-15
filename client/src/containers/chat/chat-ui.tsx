@@ -9,8 +9,11 @@ export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessages[]>([])
 
   const addMessage = (message: ChatMessages) => {
-    setMessages([...messages, message])
-    console.log(messages)
+    setMessages((messagesState) => {
+      const saveMessage = { ...message }
+      if (saveMessage.id === 0) saveMessage.id = messagesState.length + 1
+      return [...messagesState, saveMessage]
+    })
   }
 
   return (
