@@ -1,7 +1,8 @@
 import Image from "next/image"
 import MessageInput from "@/containers/chat/message-input"
+import { ChatMessages } from "@/types/chat"
 
-export default function MessageInputContainer() {
+export default function MessageInputContainer({ addMessage }: { addMessage: (message: ChatMessages) => void }) {
   return (
     <div className="flex flex-col justify-end items-center">
       <div className="flex justify-center h-9 mb-4">
@@ -13,7 +14,7 @@ export default function MessageInputContainer() {
           <p className="text-gray-500 ml-2 text-sm">답변 재생성</p>
         </button>
       </div>
-      <MessageInput />
+      <MessageInput addMessage={addMessage} />
     </div>
   )
 }
