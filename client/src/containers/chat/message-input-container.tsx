@@ -1,4 +1,5 @@
 import Image from "next/image"
+import MessageInput from "@/containers/chat/message-input"
 
 export default function MessageInputContainer() {
   return (
@@ -13,11 +14,7 @@ export default function MessageInputContainer() {
         </button>
       </div>
       <div className="flex justify-center mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content">
-        <textarea
-          // TODO: 메시지 길이가 늘어나 줄바꿈이 되면 박스 크기 늘려주기 한줄에 24px
-          className="w-full focus:outline-none pl-5 overflow-hidden resize-none h-6"
-          placeholder="메시지를 입력해주세요"
-        />
+        <MessageInput />
         <button type="button" className="w-10 flex justify-center items-center">
           <Image src="/svg/send.svg" alt="전송" width="16" height="16" />
         </button>

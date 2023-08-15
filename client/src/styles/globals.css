@@ -11,3 +11,17 @@
 /*    )*/
 /*    rgb(var(--background-start-rgb));*/
 /*}*/
+
+@layer utilities {
+    .custom-scroll-bar-4px::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(0,0,0,0.3);
+    }
+    .custom-scroll-bar-4px::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    .custom-scroll-bar-4px::-webkit-scrollbar-thumb {
+        background-color: rgb(0,0,0,0.2);
+        border-radius: 100px;
+    }
+}
