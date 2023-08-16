@@ -36,4 +36,15 @@
         background-color: rgb(0,0,0,0.2);
         border-radius: 100px;
     }
+    .custom-scroll-bar-8px::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(0,0,0,0.3);
+    }
+    .custom-scroll-bar-8px::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .custom-scroll-bar-8px::-webkit-scrollbar-thumb {
+        background-color: rgb(0,0,0,0.2);
+        border-radius: 100px;
+    }
 }

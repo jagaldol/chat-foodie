@@ -60,7 +60,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   return (
     <Modal onClickClose={onClickClose}>
       <form
-        className="h-[438px] overflow-y-scroll "
+        className="h-[438px] overflow-y-scroll custom-scroll-bar-8px"
         style={{ maxHeight: "calc(100%)" }}
         onSubmit={(e) => {
           e.preventDefault()
