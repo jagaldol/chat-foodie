@@ -22,11 +22,6 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
   }
 
   const handleSendSelection = () => {
-    // 선택한 음식의 리스트를 서버로 전송하는 로직 추가
-    if (selectedFoods.length === 0) {
-      alert("하나 이상의 음식을 선택해 주세요")
-      return
-    }
     const headers = {
       Authorization: getJwtTokenFromStorage(),
     }
@@ -34,7 +29,6 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
       foodIds: selectedFoods,
     }
 
-    // 서버로 선택한 음식 ID 리스트를 전송하는 로직 추가
     proxy
       .post("/favors", requestData, { headers })
       .then(() => {
