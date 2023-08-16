@@ -100,7 +100,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
   }
 
   return (
-    <Modal onClickClose={onClickClose}>
+    <Modal onClickClose={onClickClose} description="선호 하는 음식들을 선택해주세요.">
       {loading ? (
         <p>Loading...</p>
       ) : (
