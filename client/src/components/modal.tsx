@@ -17,9 +17,9 @@ export default function Modal({ children, onClickClose }: { children: ReactNode;
           />
         </div>
         <div className="flex flex-col justify-center">
-          <div className="flex items-center justify-center mr-5">
-            <Image src="/svg/logo.svg" alt="logo" width={36} height={36} />
-            <p className={`text-3xl text-main-theme font-bold ${titleFont.className}`}>Chatfoodie</p>
+          <div className="flex items-center justify-center">
+            <Image src="/svg/logo.svg" alt="logo" width={26} height={26} />
+            <p className={`text-3xl text-main-theme ml-1 font-bold ${titleFont.className}`}>Chatfoodie</p>
           </div>
           <p className="text-sm text-center">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
         </div>
