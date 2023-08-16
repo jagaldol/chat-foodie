@@ -9,7 +9,7 @@ export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)
   const { userId, isLoad, needUpdate } = useContext(AuthContext)
   return (
-    <div className="flex flex-wrap grow justify-end items-center min-w-[20%] h-min">
+    <div className="flex flex-wrap justify-end items-center h-min">
       {(() => {
         if (!isLoad) return null
         if (userId !== 0)
