@@ -7,16 +7,15 @@ export default function ProfileModal({ onClickClose }: { onClickClose(): void })
 
   return (
     <>
-      {preferenceModalOpened && (
+      {preferenceModalOpened ? (
         <div className="fixed inset-0 flex items-center justify-center z-40">
           <PreferenceModal
             onClickClose={() => {
-              onClickClose()
-              setPreferenceModalOpened(true)
+              setPreferenceModalOpened(false)
             }}
           />
         </div>
-      )}
+      ) : null}
       <Modal onClickClose={onClickClose}>
         <div className="p-4 relative">
           {/* 회원 정보 표시 */}
