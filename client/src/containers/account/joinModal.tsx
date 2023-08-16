@@ -5,6 +5,7 @@ import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
 import { AuthContext } from "@/contexts/authContextProvider"
+import { limitInputNumber } from "@/utils/utils"
 
 const daysInMonth: any = {
   1: 31,
@@ -114,6 +115,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="loginId"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
               placeholder="아이디를 입력하세요"
+              onChange={(e) => limitInputNumber(e, 40)}
             />
           </label>
 
@@ -126,6 +128,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="password"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
               placeholder="비밀번호를 입력하세요"
+              onChange={(e) => limitInputNumber(e, 64)}
             />
           </label>
 
@@ -138,6 +141,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="passwordCheck"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
               placeholder="비밀번호를 입력하세요"
+              onChange={(e) => limitInputNumber(e, 64)}
             />
           </label>
 
@@ -148,6 +152,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="name"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
               placeholder="이름을 입력하세요"
+              onChange={(e) => limitInputNumber(e, 40)}
             />
           </label>
 
@@ -214,6 +219,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="email"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
               placeholder="example@domain.com"
+              onChange={(e) => limitInputNumber(e, 100)}
             />
           </label>
 
