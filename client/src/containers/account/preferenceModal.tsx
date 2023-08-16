@@ -58,7 +58,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
           <div
             className={`food-image ${
               selectedFoods.includes(food.id) ? "selected-image ring-2 ring-orange-500" : "unselected-image"
-            } p-2 rounded-md`}
+            } m-2 rounded-md`}
           >
             <Image src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`} alt={food.name} width={140} height={95} />
           </div>
