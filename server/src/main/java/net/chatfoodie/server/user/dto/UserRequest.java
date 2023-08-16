@@ -38,7 +38,7 @@ public class UserRequest {
             return User.builder()
                     .loginId(loginId)
                     .password(EncodedPassword)
-                    .name(name)
+                    .name(name.isEmpty() ? null : name)
                     .gender(gender)
                     .birth(birth == null ? null : Utils.convertStringToDate(birth))
                     .email(email)
