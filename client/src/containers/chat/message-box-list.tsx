@@ -3,9 +3,11 @@ import { ChatMessage } from "@/types/chat"
 
 function MessageBox({ message }: { message: ChatMessage }) {
   return (
-    <div className={`${message.isFromChatbot ? "bg-gray-100 " : ""}py-7 flex justify-center items-center w-full`}>
-      <div className="w-[60%] flex items-center">
-        <div className={`${message.isFromChatbot ? "bg-white " : ""} min-w-[30px] mr-10`}>
+    <div
+      className={`${message.isFromChatbot ? "bg-gray-100 " : ""}pt-10 pb-14 flex justify-center items-center w-full`}
+    >
+      <div className="w-[60%] flex">
+        <div className={`${message.isFromChatbot ? "bg-white " : ""} min-w-[30px] mr-10 h-fit`}>
           <Image
             src={`${message.isFromChatbot ? "/svg/logo.svg" : "/svg/user.svg"}`}
             alt="icon"
@@ -22,7 +24,7 @@ function MessageBox({ message }: { message: ChatMessage }) {
 
 export default function MessageBoxList({ messages }: { messages: ChatMessage[] }) {
   return (
-    <div className="w-full overflow-y-scroll custom-scroll-bar-12px h-full" id="chat-main">
+    <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main">
       {messages.map((message) => {
         console.log(message)
         return <MessageBox message={message} key={message.id} />
