@@ -10,6 +10,7 @@ export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)
   const { userId, isLoad, needUpdate } = useContext(AuthContext)
   const [profileModalOpened, setProfileModalOpened] = useState(false)
+
   return (
     <div className="flex flex-wrap justify-end items-center h-min">
       {(() => {
