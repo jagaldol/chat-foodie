@@ -53,3 +53,10 @@ export function getJwtRole(jwtString?: string) {
   const payload = getJwtPayload(jwtString)
   return payload ? payload.role : null
 }
+
+export function getJwtTokenFromStorage() {
+  if (typeof window === "undefined") {
+    return null
+  }
+  return sessionStorage.getItem(sessionKey)
+}
