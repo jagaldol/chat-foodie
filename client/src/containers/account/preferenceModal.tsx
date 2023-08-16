@@ -3,12 +3,7 @@ import Image from "next/image"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
-
-interface FoodDto {
-  id: number
-  name: string
-  imageUrl: string
-}
+import { FoodDto } from "@/types/foodpreference"
 
 export default function PreferenceModal({ onClickClose }: { onClickClose(): void }) {
   const [foodList, setFoodList] = useState<FoodDto[]>([]) // 초기 데이터 설정
@@ -58,25 +53,14 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
         <button
           type="button"
           onClick={() => handleFoodClick(food.id)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleFoodClick(food.id)
-            }
-          }}
           className={`food-button ${selectedFoods.includes(food.id) ? "selected" : ""}`}
         >
           <div
-            className={`food-image ${selectedFoods.includes(food.id) ? "selected-image" : "unselected-image"}`}
-            style={{
-              opacity: selectedFoods.includes(food.id) ? 0.4 : 1,
-            }}
+            className={`food-image ${
+              selectedFoods.includes(food.id) ? "selected-image ring-2 ring-orange-500" : "unselected-image"
+            } p-2 rounded-md`}
           >
-            <Image
-              src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`}
-              alt={food.name}
-              width={150}
-              height={100}
-            />
+            <Image src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`} alt={food.name} width={140} height={95} />
           </div>
           <p>{food.name}</p>
         </button>
@@ -107,11 +91,11 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
         headers, // headers 객체를 직접 넣어줘야 합니다.
       })
       .then(() => {
-        alert("성공")
+        alert("선호하는 음식이 저장되었습니다!")
         onClickClose()
       })
       .catch(() => {
-        alert("오류")
+        alert("오류가 발생하였습니다.")
       })
   }
 
