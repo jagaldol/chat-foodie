@@ -22,11 +22,19 @@ function MessageBox({ message }: { message: ChatMessage }) {
 
 export default function MessageBoxList({ messages }: { messages: ChatMessage[] }) {
   return (
-    <div className="w-full overflow-y-scroll custom-scroll-bar-12px h-full">
+    <div className="w-full overflow-y-scroll custom-scroll-bar-12px h-full" id="chat-main">
       {messages.map((message) => {
         console.log(message)
         return <MessageBox message={message} key={message.id} />
       })}
     </div>
   )
+}
+
+export const scrollDownChatBox = () => {
+  const chatBox = document.querySelector<HTMLElement>("#chat-main")
+
+  if (chatBox !== null) {
+    chatBox.scrollTop = chatBox.scrollHeight
+  }
 }

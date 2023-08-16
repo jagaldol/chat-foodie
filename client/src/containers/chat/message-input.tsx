@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { ChatMessage } from "@/types/chat"
+import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 
 export default function MessageInput({ addMessage }: { addMessage: (message: ChatMessage) => void }) {
   const onSendClick = () => {
@@ -13,6 +14,7 @@ export default function MessageInput({ addMessage }: { addMessage: (message: Cha
         isFromChatbot: false,
       }
       addMessage(userMessage)
+      scrollDownChatBox()
       // 서버 요청 하기??
       const chatbotMessage: ChatMessage = {
         id: 0,

@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import MessageInputContainer from "@/containers/chat/message-input-container"
 import MessageBoxListContainer from "@/containers/chat/message-box-list-container"
 import { ChatMessage } from "@/types/chat"
+import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 
 export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -15,6 +16,10 @@ export default function ChatUi() {
       return [...messagesState, saveMessage]
     })
   }
+
+  useEffect(() => {
+    scrollDownChatBox()
+  }, [messages])
 
   return (
     <div className="flex flex-col min-h-full">
