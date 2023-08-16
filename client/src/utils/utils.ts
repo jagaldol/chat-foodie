@@ -20,7 +20,7 @@ export function limitInputNumber(event: ChangeEvent<HTMLInputElement | HTMLTextA
  * @param event
  * @param callback
  */
-export function pressEnter(event: KeyboardEvent<HTMLTextAreaElement>, callback: () => void) {
+export function pressEnter(event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>, callback: () => void) {
   if (event.key === "Enter") {
     // Enter 입력
     callback()
