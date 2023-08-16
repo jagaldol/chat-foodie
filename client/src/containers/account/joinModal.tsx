@@ -1,7 +1,10 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import Modal from "@/components/modal"
+import proxy from "@/utils/proxy"
+import { saveJwt } from "@/utils/jwtDecoder"
+import { AuthContext } from "@/contexts/authContextProvider"
 
 const daysInMonth: any = {
   1: 31,
@@ -21,6 +24,7 @@ const daysInMonth: any = {
 function isLeapYear(year: number) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
 }
+
 function generateDayOptions(year: number, month: number) {
   const maxDays = month === 2 && isLeapYear(year) ? 29 : daysInMonth[month]
   const options = []
@@ -51,6 +55,7 @@ function generateYearOptions() {
 export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   const [selectedMonth, setSelectedMonth] = useState(1)
   const [selectedYear, setSelectedYear] = useState(2000)
+  const { needUpdate } = useContext(AuthContext)
   return (
     <Modal onClickClose={onClickClose}>
       <form
@@ -58,6 +63,45 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         style={{ maxHeight: "calc(100%)" }}
         onSubmit={(e) => {
           e.preventDefault()
+          const inputFields = [
+            "loginId",
+            "password",
+            "passwordCheck",
+            "name",
+            "gender",
+            "birthYear",
+            "birthMonth",
+            "birthDay",
+            "email",
+          ]
+          const fieldValues: Record<string, string> = {}
+          inputFields.forEach((fieldName) => {
+            const input = e.currentTarget.querySelector<HTMLInputElement>(`[name='${fieldName}']`)
+            if (input) {
+              fieldValues[fieldName] = input.value
+            }
+          })
+          const birthDate = `${fieldValues.birthYear}-${fieldValues.birthMonth}-${fieldValues.birthDay}`
+
+          proxy
+            .post("/join", {
+              loginId: fieldValues.loginId,
+              password: fieldValues.password,
+              passwordCheck: fieldValues.passwordCheck,
+              name: fieldValues.name,
+              gender: fieldValues.gender,
+              birth: birthDate,
+              email: fieldValues.email,
+            })
+            .then((res) => {
+              const jwt = res.headers.authorization
+              saveJwt(jwt)
+              needUpdate()
+              onClickClose()
+            })
+            .catch((res) => {
+              alert(res.response.data.errorMessage)
+            })
         }}
       >
         <div className="flex flex-col items-center">
@@ -98,9 +142,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
           </label>
 
           <label htmlFor="name" className="block w-80 h-16 mb-3">
-            <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-              이름
-            </span>
+            <span className="block text-sm font-medium text-slate-700">이름</span>
             <input
               type="text"
               name="name"
@@ -110,22 +152,18 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
           </label>
 
           <label htmlFor="gender" className="block w-80 h-16 mb-3">
-            <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-              성별
-            </span>
+            <span className="block text-sm font-medium text-slate-700">성별</span>
             <select
               name="gender"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
             >
-              <option value="male">남성</option>
-              <option value="female">여성</option>
+              <option value="false">남성</option>
+              <option value="true">여성</option>
             </select>
           </label>
 
-          <label htmlFor="birthdate" className="block w-80 h-16 mb-3">
-            <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-              생년월일
-            </span>
+          <label htmlFor="birthDate" className="block w-80 h-16 mb-3">
+            <span className="block text-sm font-medium text-slate-700">생년월일</span>
             <div className="flex space-x-2 mt-1">
               <select
                 name="birthYear"
@@ -175,7 +213,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               type="email"
               name="email"
               className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-              placeholder="이메일을 입력하세요"
+              placeholder="example@domain.com"
             />
           </label>
 
