@@ -11,11 +11,15 @@ function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string;
 
 export default function Navigator() {
   return (
-    <nav className="flex flex-col w-64 p-2.5 border-r-gray-200 border-r border-solid">
-      <div className="border-solid border border-gray-400 rounded-md h-11 flex items-center hover:cursor-pointer">
+    <nav className="flex flex-col min-w-[16rem] p-2.5 border-r-gray-200 border-r border-solid">
+      <a
+        type="button"
+        className="border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition"
+        href="/"
+      >
         <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
         <p className="ml-2 text-sm font-bold">새로운 대화</p>
-      </div>
+      </a>
       <div className="grow" />
       <div className="border-t-2 border-solid border-gray-400">
         <div>

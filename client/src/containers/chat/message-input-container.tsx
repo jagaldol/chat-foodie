@@ -37,10 +37,10 @@ export default function MessageInputContainer({ addMessage }: { addMessage: (mes
       <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative">
         <button
           type="button"
-          className="w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center hover:bg-gray-100  h-9 mb-4 absolute -top-14"
+          className="w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition"
         >
           <Image src="/svg/refresh.svg" alt="" width="16" height="16" style={{ height: "16px" }} />
-          <p className="text-gray-500 ml-2 text-sm">답변 재생성</p>
+          <p className="ml-2 text-sm">답변 재생성</p>
         </button>
         <textarea
           className="w-full focus:outline-none pl-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6"
