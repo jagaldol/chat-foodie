@@ -5,7 +5,7 @@ import titleFont from "@/styles/TitleFont"
 export default function Modal({
   children,
   onClickClose,
-  description,
+  description = "음식 추천의 전문가 foodie와 채팅을 해보세요!",
 }: {
   children: ReactNode
   onClickClose(): void
@@ -35,8 +35,4 @@ export default function Modal({
       </div>
     </div>
   )
-}
-
-Modal.defaultProps = {
-  description: "음식 추천의 전문가 foodie와 채팅을 해보세요!",
 }
