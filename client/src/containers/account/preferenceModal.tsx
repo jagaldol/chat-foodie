@@ -69,30 +69,19 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
               })
               .map((food) => {
                 return (
-                  <div
-                    key={food.id}
-                    className={`food ${selectedFoods.includes(food.id) ? "selected-food" : "unselected-food"}`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleFoodClick(food.id)}
-                      className={`food-button ${selectedFoods.includes(food.id) ? "selected" : ""}`}
+                  <button type="button" onClick={() => handleFoodClick(food.id)} key={food.id}>
+                    <div
+                      className={`${selectedFoods.includes(food.id) ? "ring-2 ring-orange-500 " : ""}m-2 rounded-md`}
                     >
-                      <div
-                        className={`food-image ${
-                          selectedFoods.includes(food.id) ? "selected-image ring-2 ring-orange-500" : "unselected-image"
-                        } m-2 rounded-md`}
-                      >
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`}
-                          alt={food.name}
-                          width={140}
-                          height={95}
-                        />
-                      </div>
-                      <p>{food.name}</p>
-                    </button>
-                  </div>
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`}
+                        alt={food.name}
+                        width={140}
+                        height={95}
+                      />
+                    </div>
+                    <p>{food.name}</p>
+                  </button>
                 )
               })}
           </div>
