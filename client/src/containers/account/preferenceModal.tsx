@@ -78,6 +78,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
                         alt={food.name}
                         width={140}
                         height={95}
+                        style={{ height: "95px" }}
                       />
                     </div>
                     <p>{food.name}</p>
