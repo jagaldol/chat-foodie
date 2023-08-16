@@ -1,7 +1,7 @@
-import { ChatMessages } from "@/types/chat"
-import Messages from "@/containers/chat/messages-list"
+import { ChatMessage } from "@/types/chat"
+import MessageBoxList from "@/containers/chat/message-box-list"
 
-export default function MessagesContainer({ messages }: { messages: ChatMessages[] }) {
+export default function MessageBoxListContainer({ messages }: { messages: ChatMessage[] }) {
   return (
     <div className="grow flex justify-center items-center">
       {messages.length === 0 ? (
@@ -11,7 +11,7 @@ export default function MessagesContainer({ messages }: { messages: ChatMessages
           <p>예시 채팅이라던지 튜토리얼 안내문</p>
         </div>
       ) : (
-        <Messages messages={messages} />
+        <MessageBoxList messages={messages} />
       )}
     </div>
   )

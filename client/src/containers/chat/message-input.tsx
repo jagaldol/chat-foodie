@@ -1,8 +1,8 @@
 import Image from "next/image"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
-import { ChatMessages } from "@/types/chat"
+import { ChatMessage } from "@/types/chat"
 
-export default function MessageInput({ addMessage }: { addMessage: (message: ChatMessages) => void }) {
+export default function MessageInput({ addMessage }: { addMessage: (message: ChatMessage) => void }) {
   return (
     <div className="flex justify-center mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content">
       <textarea
@@ -21,14 +21,14 @@ export default function MessageInput({ addMessage }: { addMessage: (message: Cha
         className="w-10 flex justify-center items-center"
         onClick={() => {
           const userInputBox = document.getElementById("user-input-box") as HTMLTextAreaElement
-          const userMessage: ChatMessages = {
+          const userMessage: ChatMessage = {
             id: 0,
             content: userInputBox.value,
             isFromChatbot: false,
           }
           addMessage(userMessage)
           // 서버 요청 하기??
-          const chatbotMessage: ChatMessages = {
+          const chatbotMessage: ChatMessage = {
             id: 0,
             content: userInputBox.value,
             isFromChatbot: true,
