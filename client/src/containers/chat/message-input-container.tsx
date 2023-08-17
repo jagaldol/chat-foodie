@@ -46,8 +46,11 @@ export default function MessageInputContainer({
     // const socket = io.connect(`${process.env.NEXT_PUBLIC_API_URL}/api/public-chat`)
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/api/public-chat`)
 
+    let successConnect = false
+
     socket.addEventListener("open", () => {
       // 서버로 메시지 전송
+      successConnect = true
       socket.send(
         JSON.stringify({
           input: userInputValue,
@@ -61,29 +64,25 @@ export default function MessageInputContainer({
       const res = JSON.parse(event.data)
       switch (res.event) {
         case "text_stream": {
-          // const chatbotMessage: ChatMessage = {
-          //   id: 0,
-          //   content: res.response,
-          //   isFromChatbot: true,
-          // }
           handleStreamMessage(res.response)
           break
         }
         case "stream_end":
-          console.log("종료 신호 옴")
           handleStreamMessage("")
           socket.close()
           break
         case "error":
           alert(res.response)
+          socket.close()
           break
         default:
           alert("서버 통신 중 오류가 발생했습니다.")
+          socket.close()
       }
     })
 
-    socket.addEventListener("close", (event) => {
-      console.log("WebSocket이 닫혔습니다.", event)
+    socket.addEventListener("close", () => {
+      if (!successConnect) alert("채팅 서버에 연결할 수 없습니다!")
     })
   }
 
