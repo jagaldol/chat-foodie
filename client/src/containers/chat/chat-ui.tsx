@@ -42,7 +42,7 @@ export default function ChatUi() {
 
   useEffect(() => {
     scrollDownChatBox()
-  }, [messages])
+  }, [streamingMessage])
 
   return (
     <div className="flex flex-col min-h-full">

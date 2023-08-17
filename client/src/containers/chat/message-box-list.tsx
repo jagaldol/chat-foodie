@@ -1,7 +1,23 @@
 import Image from "next/image"
+import { useEffect } from "react"
 import { ChatMessage } from "@/types/chat"
 
+export const scrollDownChatBox = () => {
+  const chatBox = document.querySelector<HTMLElement>("#chat-main")
+
+  if (chatBox !== null && chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) <= 80) {
+    chatBox.scrollTop = chatBox.scrollHeight
+  }
+}
+
 function MessageBox({ message }: { message: ChatMessage }) {
+  useEffect(() => {
+    const chatBox = document.querySelector<HTMLElement>("#chat-main")
+    if (chatBox !== null) {
+      chatBox.scrollTop = chatBox.scrollHeight
+    }
+  }, [])
+
   return (
     <div
       className={`${message.isFromChatbot ? "bg-gray-100 " : ""}pt-10 pb-14 flex justify-center items-center w-full`}
@@ -39,12 +55,4 @@ export default function MessageBoxList({
       ) : null}
     </div>
   )
-}
-
-export const scrollDownChatBox = () => {
-  const chatBox = document.querySelector<HTMLElement>("#chat-main")
-
-  if (chatBox !== null) {
-    chatBox.scrollTop = chatBox.scrollHeight
-  }
 }
