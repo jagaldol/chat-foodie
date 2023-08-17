@@ -6,9 +6,11 @@ import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 export default function MessageInputContainer({
   messages,
   addMessage,
+  handleStreamMessage,
 }: {
   messages: ChatMessage[]
   addMessage: (message: ChatMessage) => void
+  handleStreamMessage: (message: string) => void
 }) {
   const resizeBox = (e: any) => {
     e.target.style.height = "24px"
@@ -29,6 +31,9 @@ export default function MessageInputContainer({
       }
       formattedMessages.push(message.content)
     })
+
+    if (formattedMessages.length % 2 === 1) formattedMessages.push("")
+
     const formattedMessages38 = formattedMessages.slice(-38)
 
     const history: string[][] = []
@@ -38,7 +43,7 @@ export default function MessageInputContainer({
     return history
   }
 
-  const onSendClick = async () => {
+  const onSendClick = () => {
     const userInputBox = document.getElementById("user-input-box") as HTMLTextAreaElement
 
     const userInputValue = userInputBox.value
@@ -65,19 +70,33 @@ export default function MessageInputContainer({
         )
       })
       socket.addEventListener("message", (event) => {
-        console.log("서버로부터 메시지 받음:", event.data)
+        const res = JSON.parse(event.data)
+        switch (res.event) {
+          case "text_stream": {
+            // const chatbotMessage: ChatMessage = {
+            //   id: 0,
+            //   content: res.response,
+            //   isFromChatbot: true,
+            // }
+            handleStreamMessage(res.response)
+            break
+          }
+          case "stream_end":
+            console.log("종료 신호 옴")
+            handleStreamMessage("")
+            socket.close()
+            break
+          case "error":
+            alert(res.response)
+            break
+          default:
+            alert("서버 통신 중 오류가 발생했습니다.")
+        }
       })
 
       socket.addEventListener("close", (event) => {
         console.log("WebSocket이 닫혔습니다.", event)
       })
-
-      const chatbotMessage: ChatMessage = {
-        id: 0,
-        content: userInputBox.value,
-        isFromChatbot: true,
-      }
-      addMessage(chatbotMessage)
 
       userInputBox.value = ""
     }

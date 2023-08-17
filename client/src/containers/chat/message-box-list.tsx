@@ -22,12 +22,21 @@ function MessageBox({ message }: { message: ChatMessage }) {
   )
 }
 
-export default function MessageBoxList({ messages }: { messages: ChatMessage[] }) {
+export default function MessageBoxList({
+  messages,
+  streamingMessage,
+}: {
+  messages: ChatMessage[]
+  streamingMessage: string
+}) {
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main">
       {messages.map((message) => {
         return <MessageBox message={message} key={message.id} />
       })}
+      {streamingMessage !== "" ? (
+        <MessageBox message={{ id: 0, content: streamingMessage, isFromChatbot: true }} />
+      ) : null}
     </div>
   )
 }

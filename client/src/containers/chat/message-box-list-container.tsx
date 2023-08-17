@@ -1,7 +1,13 @@
 import { ChatMessage } from "@/types/chat"
 import MessageBoxList from "@/containers/chat/message-box-list"
 
-export default function MessageBoxListContainer({ messages }: { messages: ChatMessage[] }) {
+export default function MessageBoxListContainer({
+  messages,
+  streamingMessage,
+}: {
+  messages: ChatMessage[]
+  streamingMessage: string
+}) {
   return (
     <div className="grow flex justify-center items-center h-0">
       {messages.length === 0 ? (
@@ -11,7 +17,7 @@ export default function MessageBoxListContainer({ messages }: { messages: ChatMe
           <p>예시 채팅이라던지 튜토리얼 안내문</p>
         </div>
       ) : (
-        <MessageBoxList messages={messages} />
+        <MessageBoxList messages={messages} streamingMessage={streamingMessage} />
       )}
     </div>
   )
