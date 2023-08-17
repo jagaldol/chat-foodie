@@ -13,7 +13,7 @@ export default function Modal({
 }) {
   return (
     <div className="bg-black/5 h-screen w-screen z-30 flex fixed left-0 top-0 items-center justify-center">
-      <div className="w-[500px] h-[650px] bg-white drop-shadow p-5">
+      <div className="flex flex-col w-[500px] h-[650px] bg-white drop-shadow p-5">
         <div className="flex justify-end">
           <Image
             src="/svg/close.svg"
@@ -31,7 +31,7 @@ export default function Modal({
           </div>
           {description === "" ? null : <p className="text-sm text-center">{description}</p>}
         </div>
-        <div>{children}</div>
+        <div className="flex flex-col grow">{children}</div>
       </div>
     </div>
   )
