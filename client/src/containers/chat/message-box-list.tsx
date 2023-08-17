@@ -40,9 +40,11 @@ function MessageBox({ message }: { message: ChatMessage }) {
 
 export default function MessageBoxList({
   messages,
+  tempUserMessage,
   streamingMessage,
 }: {
   messages: ChatMessage[]
+  tempUserMessage: string
   streamingMessage: string
 }) {
   return (
@@ -50,6 +52,9 @@ export default function MessageBoxList({
       {messages.map((message) => {
         return <MessageBox message={message} key={message.id} />
       })}
+      {tempUserMessage !== "" ? (
+        <MessageBox message={{ id: 0, content: tempUserMessage, isFromChatbot: false }} />
+      ) : null}
       {streamingMessage !== "" ? (
         <MessageBox message={{ id: 0, content: streamingMessage, isFromChatbot: true }} />
       ) : null}

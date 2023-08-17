@@ -8,6 +8,7 @@ import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 
 export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
 
   const addMessage = (message: ChatMessage) => {
@@ -27,6 +28,17 @@ export default function ChatUi() {
     })
   }
   const handleStreamMessage = (message: string) => {
+    if (message === "") {
+      setTempUserMessage((prevState) => {
+        const userMessage: ChatMessage = {
+          id: 0,
+          content: prevState,
+          isFromChatbot: false,
+        }
+        addMessage(userMessage)
+        return ""
+      })
+    }
     setStreamingMessage((prevState) => {
       if (message === "") {
         const chatbotMessage: ChatMessage = {
@@ -46,8 +58,16 @@ export default function ChatUi() {
 
   return (
     <div className="flex flex-col min-h-full">
-      <MessageBoxListContainer messages={messages} streamingMessage={streamingMessage} />
-      <MessageInputContainer messages={messages} addMessage={addMessage} handleStreamMessage={handleStreamMessage} />
+      <MessageBoxListContainer
+        messages={messages}
+        tempUserMessage={tempUserMessage}
+        streamingMessage={streamingMessage}
+      />
+      <MessageInputContainer
+        messages={messages}
+        handleStreamMessage={handleStreamMessage}
+        setTempUserMessage={setTempUserMessage}
+      />
     </div>
   )
 }
