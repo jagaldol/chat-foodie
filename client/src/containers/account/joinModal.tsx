@@ -58,9 +58,93 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   const [selectedMonth, setSelectedMonth] = useState(1)
   const [selectedYear, setSelectedYear] = useState(2000)
   const { needUpdate } = useContext(AuthContext)
+  const [formData, setFormData] = useState({
+    loginId: "",
+    password: "",
+    passwordCheck: "",
+    name: "",
+    email: "",
+  })
+  const [errors, setErrors] = useState({
+    loginId: "",
+    password: "",
+    passwordCheck: "",
+    name: "",
+    email: "",
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  const validateForm = () => {
+    let isValid = true
+    const newErrors = { ...errors }
+
+    if (formData.loginId.trim() === "") {
+      newErrors.loginId = "아이디를 입력해주세요."
+      isValid = false
+    } else if (formData.loginId.length < 4 || formData.loginId.length > 40) {
+      newErrors.loginId = "아이디는 최소 4자 이상 최대 40자 이하이어야 합니다."
+      isValid = false
+    } else if (!/^[a-zA-Z0-9_.]+$/.test(formData.loginId)) {
+      newErrors.loginId = "영어, 숫자, _, . 만 가능합니다."
+      isValid = false
+    } else {
+      newErrors.loginId = ""
+    }
+
+    if (formData.password === "") {
+      newErrors.password = "비밀번호를 입력해주세요."
+      isValid = false
+    } else if (formData.password.length < 8 || formData.password.length > 64) {
+      newErrors.password = "비밀번호는 최소 8자 이상 최대 64자 이하이어야 합니다."
+      isValid = false
+    } else if (!/^(?=.*[a-zA-Z])(?=.*[\d@#$%^&!])[a-zA-Z\d@#$%^&!]+$/.test(formData.password)) {
+      newErrors.password = "영문, 숫자, 특수문자 중 최소 2종류를 포함해야 합니다."
+      isValid = false
+    } else {
+      newErrors.password = ""
+    }
+
+    if (formData.passwordCheck !== formData.password) {
+      newErrors.passwordCheck = "비밀번호가 일치하지 않습니다."
+      isValid = false
+    } else {
+      newErrors.passwordCheck = ""
+    }
+
+    if (formData.name.length > 40) {
+      newErrors.name = "이름은 최대 40자 이하여야 합니다."
+      isValid = false
+    } else {
+      newErrors.name = ""
+    }
+
+    if (formData.email.trim() === "") {
+      newErrors.email = "이메일을 입력해주세요."
+      isValid = false
+    } else if (!/^[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}$/.test(formData.email)) {
+      newErrors.email = "올바른 이메일 주소를 입력해주세요."
+      isValid = false
+    } else if (formData.email.length > 100) {
+      newErrors.email = "이메일은 최대 100자 이하여야 합니다."
+      isValid = false
+    } else {
+      newErrors.email = ""
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!validateForm()) return
     const inputFields = [
       "loginId",
       "password",
@@ -111,8 +195,13 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               type="text"
               name="loginId"
               placeholder="아이디를 입력하세요"
-              onChange={(e) => limitInputNumber(e, 40)}
+              onChange={(e) => {
+                limitInputNumber(e, 40)
+                handleChange(e)
+                validateForm()
+              }}
               required
+              error={errors.loginId}
             />
 
             <TextField
@@ -121,7 +210,12 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="password"
               placeholder="비밀번호를 입력하세요"
               required
-              onChange={(e) => limitInputNumber(e, 64)}
+              onChange={(e) => {
+                limitInputNumber(e, 64)
+                handleChange(e)
+                validateForm()
+              }}
+              error={errors.password}
             />
 
             <TextField
@@ -130,7 +224,12 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               name="passwordCheck"
               placeholder="비밀번호를 입력하세요"
               required
-              onChange={(e) => limitInputNumber(e, 64)}
+              onChange={(e) => {
+                limitInputNumber(e, 64)
+                handleChange(e)
+                validateForm()
+              }}
+              error={errors.passwordCheck}
             />
 
             <TextField
@@ -138,7 +237,12 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               type="text"
               name="name"
               placeholder="이름을 입력하세요"
-              onChange={(e) => limitInputNumber(e, 40)}
+              onChange={(e) => {
+                limitInputNumber(e, 40)
+                handleChange(e)
+                validateForm()
+              }}
+              error={errors.name}
             />
 
             <label htmlFor="gender" className="block w-80 h-16 mb-3">
@@ -197,11 +301,16 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
 
             <TextField
               label="이메일"
-              type="email"
+              type="text"
               name="email"
               placeholder="example@domain.com"
               required
-              onChange={(e) => limitInputNumber(e, 100)}
+              onChange={(e) => {
+                limitInputNumber(e, 100)
+                handleChange(e)
+                validateForm()
+              }}
+              error={errors.email}
             />
 
             <button
