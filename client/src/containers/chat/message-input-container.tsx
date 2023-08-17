@@ -18,6 +18,8 @@ export default function MessageInputContainer({
 }) {
   const [displayRegenerate, setDisplayRegenerate] = useState(false)
 
+  const [isGenerating, setIsGenerating] = useState(false)
+
   const resizeBox = (e: any) => {
     e.target.style.height = "24px"
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`
@@ -72,20 +74,20 @@ export default function MessageInputContainer({
       switch (res.event) {
         case "text_stream": {
           handleStreamMessage(res.response, regenerate)
-          break
+          return
         }
         case "stream_end":
           handleStreamMessage("", regenerate)
-          socket.close()
           break
         case "error":
           alert(res.response)
-          socket.close()
           break
         default:
           alert("서버 통신 중 오류가 발생했습니다.")
-          socket.close()
       }
+      socket.close()
+      if (regenerate) setDisplayRegenerate(true)
+      setIsGenerating(false)
     })
 
     socket.addEventListener("close", () => {
@@ -94,17 +96,21 @@ export default function MessageInputContainer({
   }
 
   const onRegenerateClick = () => {
+    if (isGenerating) return
+    setIsGenerating(true)
     setDisplayRegenerate(false)
     prepareRegenerate()
     generateFoodieResponse("", true)
   }
 
   const onSendClick = () => {
+    if (isGenerating) return
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
 
     const userInputValue = userInputBox!.value
     if (userInputValue) {
       setTempUserMessage(userInputValue)
+      setIsGenerating(true)
       generateFoodieResponse(userInputValue, false)
 
       userInputBox!.value = ""
@@ -133,7 +139,7 @@ export default function MessageInputContainer({
           <p className="ml-2 text-sm">답변 재생성</p>
         </button>
         <textarea
-          className="w-full focus:outline-none pl-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6"
+          className="w-full focus:outline-none pl-5 mr-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6"
           id="user-input-box"
           onChange={(e) => {
             resizeBox(e)
@@ -145,8 +151,18 @@ export default function MessageInputContainer({
           }}
           placeholder="메시지를 입력해주세요"
         />
-        <button type="button" className="w-10 flex justify-center items-center" onClick={onSendClick}>
-          <Image src="/svg/send.svg" alt="전송" width="16" height="16" />
+        <button
+          type="button"
+          className={`w-10 flex justify-center items-center${isGenerating ? " hover:cursor-default" : ""}`}
+          onClick={onSendClick}
+        >
+          {isGenerating ? (
+            <div className="-translate-x-2">
+              <div className="dot-elastic" />
+            </div>
+          ) : (
+            <Image src="/svg/send.svg" alt="전송" width="16" height="16" />
+          )}
         </button>
       </div>
     </div>
