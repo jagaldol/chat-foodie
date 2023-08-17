@@ -65,7 +65,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
                 <button type="button" onClick={() => handleFoodClick(food.id)} key={food.id}>
                   <div
                     className={`${
-                      selectedFoods.includes(food.id) ? "ring-2 ring-orange-500 " : ""
+                      selectedFoods.includes(food.id) ? "ring-4 ring-orange-500 " : ""
                     } mb-9 rounded-md overflow-hidden`}
                   >
                     <Image
@@ -73,6 +73,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
                       alt={food.name}
                       width={150}
                       height={100}
+                      style={{ height: "100px" }}
                       onMouseEnter={() => setTooltipFoodId(food.id)}
                       onMouseLeave={() => setTooltipFoodId(null)}
                     />
