@@ -145,7 +145,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   }
   return (
     <Modal onClickClose={onClickClose}>
-      <div className="h-0 grow">
+      <div className="p-5 h-0 grow">
         <form className="overflow-y-scroll custom-scroll-bar-12px max-h-full" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
             <TextField
