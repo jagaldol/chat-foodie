@@ -6,6 +6,7 @@ import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { limitInputNumber } from "@/utils/utils"
+import TextField from "@/components/TextField"
 
 const daysInMonth: any = {
   1: 31,
@@ -105,55 +106,40 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
       <div className="h-0 grow">
         <form className="overflow-y-scroll custom-scroll-bar-12px max-h-full" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
-            <label htmlFor="loginId" className="block w-80 h-16 mb-3">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                아이디
-              </span>
-              <input
-                type="text"
-                name="loginId"
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="아이디를 입력하세요"
-                onChange={(e) => limitInputNumber(e, 40)}
-              />
-            </label>
+            <TextField
+              label="아이디"
+              type="text"
+              name="loginId"
+              placeholder="아이디를 입력하세요"
+              onChange={(e) => limitInputNumber(e, 40)}
+              required
+            />
 
-            <label htmlFor="password" className="block w-80 h-16 mb-3">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                비밀번호
-              </span>
-              <input
-                type="password"
-                name="password"
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="비밀번호를 입력하세요"
-                onChange={(e) => limitInputNumber(e, 64)}
-              />
-            </label>
+            <TextField
+              label="비밀번호"
+              type="password"
+              name="password"
+              placeholder="비밀번호를 입력하세요"
+              required
+              onChange={(e) => limitInputNumber(e, 64)}
+            />
 
-            <label htmlFor="passwordCheck" className="block w-80 h-16 mb-3">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                비밀번호 확인
-              </span>
-              <input
-                type="password"
-                name="passwordCheck"
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="비밀번호를 입력하세요"
-                onChange={(e) => limitInputNumber(e, 64)}
-              />
-            </label>
+            <TextField
+              label="비밀번호 확인"
+              type="password"
+              name="passwordCheck"
+              placeholder="비밀번호를 입력하세요"
+              required
+              onChange={(e) => limitInputNumber(e, 64)}
+            />
 
-            <label htmlFor="passwordCheck" className="block w-80 h-16 mb-3">
-              <span className="block text-sm font-medium text-slate-700">이름</span>
-              <input
-                type="text"
-                name="name"
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="이름을 입력하세요"
-                onChange={(e) => limitInputNumber(e, 40)}
-              />
-            </label>
+            <TextField
+              label="이름"
+              type="text"
+              name="name"
+              placeholder="이름을 입력하세요"
+              onChange={(e) => limitInputNumber(e, 40)}
+            />
 
             <label htmlFor="gender" className="block w-80 h-16 mb-3">
               <span className="block text-sm font-medium text-slate-700">성별</span>
@@ -209,18 +195,14 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               </div>
             </label>
 
-            <label htmlFor="email" className="block w-80 h-16 mb-3">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                이메일
-              </span>
-              <input
-                type="email"
-                name="email"
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="example@domain.com"
-                onChange={(e) => limitInputNumber(e, 100)}
-              />
-            </label>
+            <TextField
+              label="이메일"
+              type="email"
+              name="email"
+              placeholder="example@domain.com"
+              required
+              onChange={(e) => limitInputNumber(e, 100)}
+            />
 
             <button
               className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80"
