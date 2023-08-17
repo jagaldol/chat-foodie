@@ -31,7 +31,7 @@ export default function Modal({
           </div>
           {description === "" ? null : <p className="text-sm text-center">{description}</p>}
         </div>
-        <div className="p-10">{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   )

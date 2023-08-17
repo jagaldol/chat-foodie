@@ -9,6 +9,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
   const [foodList, setFoodList] = useState<FoodDto[]>([]) // 초기 데이터 설정
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedFoods, setSelectedFoods] = useState<number[]>([])
+  const [tooltipFoodId, setTooltipFoodId] = useState<number | null>(null)
 
   const foodsPerPage = 6
 
@@ -52,8 +53,8 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
 
   return (
     <Modal onClickClose={onClickClose} description="선호 하는 음식들을 선택해주세요.">
-      <div className="flex flex-col items-center">
-        <div className="flex flex-wrap justify-center">
+      <div className="flex flex-col items-center mt-10">
+        <div className="flex flex-wrap justify-between mx-9">
           {foodList
             .filter((_, index) => {
               const startIndex = (currentPage - 1) * foodsPerPage
@@ -62,49 +63,43 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
             .map((food) => {
               return (
                 <button type="button" onClick={() => handleFoodClick(food.id)} key={food.id}>
-                  <div className={`${selectedFoods.includes(food.id) ? "ring-2 ring-orange-500 " : ""}m-2 rounded-md`}>
+                  <div
+                    className={`${
+                      selectedFoods.includes(food.id) ? "ring-2 ring-orange-500 " : ""
+                    } mb-9 rounded-md overflow-hidden`}
+                  >
                     <Image
                       src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`}
                       alt={food.name}
-                      width={140}
-                      height={95}
-                      style={{ height: "95px" }}
+                      width={150}
+                      height={100}
+                      onMouseEnter={() => setTooltipFoodId(food.id)}
+                      onMouseLeave={() => setTooltipFoodId(null)}
                     />
+                    {tooltipFoodId === food.id && (
+                      <div className="absolute bg-white p-2 rounded-md shadow-md">
+                        {food.name} {/* 원하는 음식 정보 표시 */}
+                      </div>
+                    )}
                   </div>
-                  <p>{food.name}</p>
                 </button>
               )
             })}
         </div>
-        <div className="text-center mt-3">Page {currentPage} / 5</div>
-        <div className="flex justify-center mt-3 space-x-2">
-          {currentPage > 1 && (
-            <button
-              type="button"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              이전
-            </button>
-          )}
-          {currentPage < 5 && (
-            <button
-              type="button"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              다음
-            </button>
-          )}
-          {currentPage === 5 && (
-            <button
-              type="submit"
-              onClick={handleSendSelection}
-              className="px-4 py-2 bg-green-500 text-white rounded-md"
-            >
-              저장
-            </button>
-          )}
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={() => {
+              if (currentPage === 5) {
+                handleSendSelection()
+              } else {
+                setCurrentPage(currentPage + 1)
+              }
+            }}
+            className="w-80 h-12 bg-main-theme text-white rounded-md mb-1"
+          >
+            Continue({currentPage}/5)
+          </button>
         </div>
       </div>
     </Modal>
