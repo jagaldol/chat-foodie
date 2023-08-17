@@ -1,4 +1,4 @@
-export interface ChatMessages {
+export interface ChatMessage {
   id: number
   content: string
   isFromChatbot: boolean

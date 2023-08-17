@@ -24,4 +24,16 @@
         background-color: rgb(0,0,0,0.2);
         border-radius: 100px;
     }
+    .custom-scroll-bar-10px::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(0,0,0,0.3);
+    }
+    .custom-scroll-bar-10px::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+
+    }
+    .custom-scroll-bar-10px::-webkit-scrollbar-thumb {
+        background-color: rgb(0,0,0,0.2);
+        border-radius: 100px;
+    }
 }

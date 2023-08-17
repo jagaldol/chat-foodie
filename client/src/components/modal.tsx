@@ -25,9 +25,9 @@ export default function Modal({
           />
         </div>
         <div className="flex flex-col justify-center">
-          <div className="flex items-center justify-center mr-5">
-            <Image src="/svg/logo.svg" alt="logo" width={36} height={36} />
-            <h1 className={`text-3xl text-main-theme font-bold ${titleFont.className}`}>Chatfoodie</h1>
+          <div className="flex items-center justify-center">
+            <Image src="/svg/logo.svg" alt="logo" width={26} height={26} />
+            <p className={`text-3xl text-main-theme ml-1 font-bold ${titleFont.className}`}>Chatfoodie</p>
           </div>
           {description === "" ? null : <p className="text-sm text-center">{description}</p>}
         </div>

@@ -7,10 +7,12 @@ export default function Header() {
     <header className="flex items-center">
       <div className="basis-1/3" />
       <div className="basis-1/3 flex flex-col justify-center">
-        <div className="flex items-center justify-center mr-5">
-          <Image src="/svg/logo.svg" alt="logo" width={60} height={60} />
-          <h1 className={`text-5xl text-main-theme font-bold ${titleFont.className}`}>Chatfoodie</h1>
-        </div>
+        <a className="flex items-center justify-center" href="/">
+          <div className="mt-1 min-w-fit">
+            <Image src="/svg/logo.svg" alt="logo" width={36} height={36} />
+          </div>
+          <h1 className={`text-5xl text-main-theme font-bold ml-1 ${titleFont.className}`}>Chatfoodie</h1>
+        </a>
         <p className="text-sm text-center">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
       </div>
       <div className="basis-1/3">

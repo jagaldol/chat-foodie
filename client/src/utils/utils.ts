@@ -22,7 +22,10 @@ export function limitInputNumber(event: ChangeEvent<HTMLInputElement | HTMLTextA
  */
 export function pressEnter(event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>, callback: () => void) {
   if (event.key === "Enter") {
-    // Enter 입력
-    callback()
+    if (!event.shiftKey) {
+      // shift 아니면
+      event.preventDefault()
+      callback()
+    }
   }
 }
