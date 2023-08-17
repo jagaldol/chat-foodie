@@ -24,7 +24,7 @@ export default function ChatUi() {
   return (
     <div className="flex flex-col min-h-full">
       <MessageBoxListContainer messages={messages} />
-      <MessageInputContainer addMessage={addMessage} />
+      <MessageInputContainer messages={messages} addMessage={addMessage} />
     </div>
   )
 }

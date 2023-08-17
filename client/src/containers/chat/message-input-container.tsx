@@ -3,16 +3,46 @@ import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 
-export default function MessageInputContainer({ addMessage }: { addMessage: (message: ChatMessage) => void }) {
+export default function MessageInputContainer({
+  messages,
+  addMessage,
+}: {
+  messages: ChatMessage[]
+  addMessage: (message: ChatMessage) => void
+}) {
   const resizeBox = (e: any) => {
     e.target.style.height = "24px"
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`
   }
 
-  const onSendClick = () => {
+  const makeHistory = () => {
+    const messages38 = messages.slice(-38)
+    const formattedMessages: string[] = []
+    messages38.forEach((message) => {
+      const isChatbotTurn = formattedMessages.length % 2 === 1
+
+      if (isChatbotTurn && !message.isFromChatbot) {
+        formattedMessages.push("")
+      }
+      if (!isChatbotTurn && message.isFromChatbot) {
+        formattedMessages.push("")
+      }
+      formattedMessages.push(message.content)
+    })
+    const formattedMessages38 = formattedMessages.slice(-38)
+
+    const history: string[][] = []
+    for (let i = 0; i < formattedMessages38.length; i += 2) {
+      history.push([formattedMessages38[i], formattedMessages38[i + 1]])
+    }
+    return history
+  }
+
+  const onSendClick = async () => {
     const userInputBox = document.getElementById("user-input-box") as HTMLTextAreaElement
 
-    if (userInputBox.value) {
+    const userInputValue = userInputBox.value
+    if (userInputValue) {
       const userMessage: ChatMessage = {
         id: 0,
         content: userInputBox.value,
@@ -20,7 +50,28 @@ export default function MessageInputContainer({ addMessage }: { addMessage: (mes
       }
       addMessage(userMessage)
       scrollDownChatBox()
-      // 서버 요청 하기??
+
+      // const socket = io.connect(`${process.env.NEXT_PUBLIC_API_URL}/api/public-chat`)
+      const socket = new WebSocket("ws://localhost:8080/api/public-chat")
+
+      socket.addEventListener("open", () => {
+        // 서버로 메시지 전송
+        socket.send(
+          JSON.stringify({
+            input: userInputValue,
+            history: makeHistory(),
+            regenerate: false,
+          }),
+        )
+      })
+      socket.addEventListener("message", (event) => {
+        console.log("서버로부터 메시지 받음:", event.data)
+      })
+
+      socket.addEventListener("close", (event) => {
+        console.log("WebSocket이 닫혔습니다.", event)
+      })
+
       const chatbotMessage: ChatMessage = {
         id: 0,
         content: userInputBox.value,

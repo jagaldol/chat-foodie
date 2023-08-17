@@ -26,7 +26,6 @@ export default function MessageBoxList({ messages }: { messages: ChatMessage[] }
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main">
       {messages.map((message) => {
-        console.log(message)
         return <MessageBox message={message} key={message.id} />
       })}
     </div>
