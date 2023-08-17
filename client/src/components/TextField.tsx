@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function InputComponent({
+export default function TextField({
   label,
   type,
   name,

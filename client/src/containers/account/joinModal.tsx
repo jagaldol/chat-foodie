@@ -5,54 +5,8 @@ import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
 import { AuthContext } from "@/contexts/authContextProvider"
-import { limitInputNumber } from "@/utils/utils"
-import TextField from "@/components/TextField"
-
-const daysInMonth: any = {
-  1: 31,
-  2: 28,
-  3: 31,
-  4: 30,
-  5: 31,
-  6: 30,
-  7: 31,
-  8: 31,
-  9: 30,
-  10: 31,
-  11: 30,
-  12: 31,
-}
-
-function isLeapYear(year: number) {
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
-}
-
-function generateDayOptions(year: number, month: number) {
-  const maxDays = month === 2 && isLeapYear(year) ? 29 : daysInMonth[month]
-  const options = []
-  for (let i = 1; i <= maxDays; i += 1) {
-    options.push(
-      <option key={i} value={i}>
-        {i}
-      </option>,
-    )
-  }
-  return options
-}
-
-function generateYearOptions() {
-  const options = []
-  const minYear = 1900
-  const maxYear = new Date().getFullYear()
-  for (let i = minYear; i <= maxYear; i += 1) {
-    options.push(
-      <option key={i} value={i}>
-        {i}
-      </option>,
-    )
-  }
-  return options
-}
+import { limitInputNumber, generateYearOptions, generateDayOptions } from "@/utils/utils"
+import TextField from "@/components/textField"
 
 export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   const [selectedMonth, setSelectedMonth] = useState(1)
@@ -73,65 +27,69 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
     email: "",
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, validator: (data: any) => boolean) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
+    setFormData((prevData) => {
+      const nextData = {
+        ...prevData,
+        [name]: value,
+      }
+      validator(nextData)
+      return nextData
+    })
   }
 
-  const validateForm = () => {
+  const validateForm = (data: any) => {
     let isValid = true
     const newErrors = { ...errors }
 
-    if (formData.loginId.trim() === "") {
+    if (data.loginId.trim() === "") {
       newErrors.loginId = "아이디를 입력해주세요."
       isValid = false
-    } else if (formData.loginId.length < 4 || formData.loginId.length > 40) {
+    } else if (data.loginId.length < 4 || data.loginId.length > 40) {
       newErrors.loginId = "아이디는 최소 4자 이상 최대 40자 이하이어야 합니다."
       isValid = false
-    } else if (!/^[a-zA-Z0-9_.]+$/.test(formData.loginId)) {
+    } else if (!/^[a-zA-Z0-9_.]+$/.test(data.loginId)) {
       newErrors.loginId = "영어, 숫자, _, . 만 가능합니다."
       isValid = false
     } else {
       newErrors.loginId = ""
     }
 
-    if (formData.password === "") {
+    if (data.password === "") {
       newErrors.password = "비밀번호를 입력해주세요."
       isValid = false
-    } else if (formData.password.length < 8 || formData.password.length > 64) {
+    } else if (data.password.length < 8 || data.password.length > 64) {
       newErrors.password = "비밀번호는 최소 8자 이상 최대 64자 이하이어야 합니다."
       isValid = false
-    } else if (!/^(?=.*[a-zA-Z])(?=.*[\d@#$%^&!])[a-zA-Z\d@#$%^&!]+$/.test(formData.password)) {
+    } else if (!/^(?=.*[a-zA-Z])(?=.*[\d@#$%^&!])[a-zA-Z\d@#$%^&!]+$/.test(data.password)) {
       newErrors.password = "영문, 숫자, 특수문자 중 최소 2종류를 포함해야 합니다."
       isValid = false
     } else {
       newErrors.password = ""
     }
 
-    if (formData.passwordCheck !== formData.password) {
+    if (data.passwordCheck !== data.password) {
       newErrors.passwordCheck = "비밀번호가 일치하지 않습니다."
       isValid = false
     } else {
       newErrors.passwordCheck = ""
     }
 
-    if (formData.name.length > 40) {
+    if (data.name.length > 40) {
       newErrors.name = "이름은 최대 40자 이하여야 합니다."
       isValid = false
     } else {
       newErrors.name = ""
     }
 
-    if (formData.email.trim() === "") {
+    if (data.email.trim() === "") {
       newErrors.email = "이메일을 입력해주세요."
       isValid = false
-    } else if (!/^[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}$/.test(formData.email)) {
+    } else if (!/^[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}$/.test(data.email)) {
       newErrors.email = "올바른 이메일 주소를 입력해주세요."
       isValid = false
-    } else if (formData.email.length > 100) {
+    } else if (data.email.length > 100) {
       newErrors.email = "이메일은 최대 100자 이하여야 합니다."
       isValid = false
     } else {
@@ -144,7 +102,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!validateForm()) return
+    if (!validateForm(formData)) return
     const inputFields = [
       "loginId",
       "password",
@@ -197,8 +155,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               placeholder="아이디를 입력하세요"
               onChange={(e) => {
                 limitInputNumber(e, 40)
-                handleChange(e)
-                validateForm()
+                handleChange(e, validateForm)
               }}
               required
               error={errors.loginId}
@@ -212,8 +169,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               required
               onChange={(e) => {
                 limitInputNumber(e, 64)
-                handleChange(e)
-                validateForm()
+                handleChange(e, validateForm)
               }}
               error={errors.password}
             />
@@ -226,8 +182,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               required
               onChange={(e) => {
                 limitInputNumber(e, 64)
-                handleChange(e)
-                validateForm()
+                handleChange(e, validateForm)
               }}
               error={errors.passwordCheck}
             />
@@ -239,8 +194,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               placeholder="이름을 입력하세요"
               onChange={(e) => {
                 limitInputNumber(e, 40)
-                handleChange(e)
-                validateForm()
+                handleChange(e, validateForm)
               }}
               error={errors.name}
             />
@@ -307,14 +261,13 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               required
               onChange={(e) => {
                 limitInputNumber(e, 100)
-                handleChange(e)
-                validateForm()
+                handleChange(e, validateForm)
               }}
               error={errors.email}
             />
 
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
               type="submit"
             >
               회원가입
