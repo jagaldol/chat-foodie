@@ -51,7 +51,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
       newErrors.loginId = ""
     }
 
-    setErrors(newErrors)
+    setErrors((prev) => ({ ...prev, loginId: newErrors.loginId }))
     return isValid
   }
 
@@ -72,7 +72,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
       newErrors.password = ""
     }
 
-    setErrors(newErrors)
+    setErrors((prev) => ({ ...prev, password: newErrors.password }))
     return isValid
   }
 
@@ -87,7 +87,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
       newErrors.passwordCheck = ""
     }
 
-    setErrors(newErrors)
+    setErrors((prev) => ({ ...prev, passwordCheck: newErrors.passwordCheck }))
     return isValid
   }
 
@@ -101,7 +101,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
     } else {
       newErrors.name = ""
     }
-    setErrors(newErrors)
+    setErrors((prev) => ({ ...prev, name: newErrors.name }))
     return isValid
   }
 
@@ -122,7 +122,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
       newErrors.email = ""
     }
 
-    setErrors(newErrors)
+    setErrors((prev) => ({ ...prev, email: newErrors.email }))
     return isValid
   }
 
@@ -132,7 +132,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
     isValid = validateLoginId() && isValid
     isValid = validatePassword() && isValid
     isValid = validatePasswordCheck() && isValid
-    isValid = validateLoginId() && isValid
+    isValid = validateName() && isValid
     isValid = validateEmail() && isValid
 
     return isValid
