@@ -5,9 +5,10 @@ export default function InputComponent({
   type,
   name,
   placeholder,
-  value,
+  value = undefined,
   onChange,
-  required,
+  required = false,
+  error = undefined,
 }: {
   label: string
   type: string
@@ -16,12 +17,13 @@ export default function InputComponent({
   value?: string
   onChange: React.ChangeEventHandler<HTMLInputElement>
   required?: boolean
+  error?: string
 }) {
   const requiredClass = required
     ? "after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700"
     : "block text-sm font-medium text-slate-700"
   return (
-    <label htmlFor={name} className="block w-80 h-16 mb-3">
+    <label htmlFor={name} className="flex flex-col w-80 mb-3">
       <span className={requiredClass}>{label}</span>
       <input
         type={type}
@@ -31,11 +33,7 @@ export default function InputComponent({
         placeholder={placeholder}
         onChange={onChange}
       />
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </label>
   )
-}
-
-InputComponent.defaultProps = {
-  required: false,
-  value: undefined,
 }
