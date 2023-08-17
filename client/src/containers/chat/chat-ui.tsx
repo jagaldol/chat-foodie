@@ -27,8 +27,8 @@ export default function ChatUi() {
       return [...messagesState, saveMessage]
     })
   }
-  const handleStreamMessage = (message: string) => {
-    if (message === "") {
+  const handleStreamMessage = (message: string, regenerate: boolean) => {
+    if (!regenerate && message === "") {
       setTempUserMessage((prevState) => {
         const userMessage: ChatMessage = {
           id: 0,
@@ -52,6 +52,10 @@ export default function ChatUi() {
     })
   }
 
+  const prepareRegenerate = () => {
+    setMessages((prevState) => prevState.slice(0, -1))
+  }
+
   useEffect(() => {
     scrollDownChatBox()
   }, [streamingMessage])
@@ -66,7 +70,9 @@ export default function ChatUi() {
       <MessageInputContainer
         messages={messages}
         handleStreamMessage={handleStreamMessage}
+        tempUserMessage={tempUserMessage}
         setTempUserMessage={setTempUserMessage}
+        prepareRegenerate={prepareRegenerate}
       />
     </div>
   )

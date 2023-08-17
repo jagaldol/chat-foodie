@@ -1,16 +1,23 @@
 import Image from "next/image"
+import { useEffect, useState } from "react"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 
 export default function MessageInputContainer({
   messages,
   handleStreamMessage,
+  tempUserMessage,
   setTempUserMessage,
+  prepareRegenerate,
 }: {
   messages: ChatMessage[]
-  handleStreamMessage: (message: string) => void
+  handleStreamMessage: (message: string, regenerate: boolean) => void
+  tempUserMessage: string
   setTempUserMessage: (message: string) => void
+  prepareRegenerate: () => void
 }) {
+  const [displayRegenerate, setDisplayRegenerate] = useState(false)
+
   const resizeBox = (e: any) => {
     e.target.style.height = "24px"
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`
@@ -42,7 +49,7 @@ export default function MessageInputContainer({
     return history
   }
 
-  function generateFoodieResponse(userInputValue: string) {
+  function generateFoodieResponse(userInputValue: string, regenerate: boolean) {
     // const socket = io.connect(`${process.env.NEXT_PUBLIC_API_URL}/api/public-chat`)
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/api/public-chat`)
 
@@ -55,7 +62,7 @@ export default function MessageInputContainer({
         JSON.stringify({
           input: userInputValue,
           history: makeHistory(),
-          regenerate: false,
+          regenerate,
         }),
       )
     })
@@ -64,11 +71,11 @@ export default function MessageInputContainer({
       const res = JSON.parse(event.data)
       switch (res.event) {
         case "text_stream": {
-          handleStreamMessage(res.response)
+          handleStreamMessage(res.response, regenerate)
           break
         }
         case "stream_end":
-          handleStreamMessage("")
+          handleStreamMessage("", regenerate)
           socket.close()
           break
         case "error":
@@ -86,24 +93,41 @@ export default function MessageInputContainer({
     })
   }
 
+  const onRegenerateClick = () => {
+    setDisplayRegenerate(false)
+    prepareRegenerate()
+    generateFoodieResponse("", true)
+  }
+
   const onSendClick = () => {
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
 
     const userInputValue = userInputBox!.value
     if (userInputValue) {
       setTempUserMessage(userInputValue)
-      generateFoodieResponse(userInputValue)
+      generateFoodieResponse(userInputValue, false)
 
       userInputBox!.value = ""
     }
   }
+
+  useEffect(() => {
+    if (messages.length === 0) setDisplayRegenerate(false)
+  }, [messages.length])
+
+  useEffect(() => {
+    if (tempUserMessage === "") setDisplayRegenerate(true)
+  }, [tempUserMessage])
 
   return (
     <div className="flex justify-center">
       <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative">
         <button
           type="button"
-          className="w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition"
+          className={`w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${
+            displayRegenerate ? "" : " invisible"
+          }`}
+          onClick={onRegenerateClick}
         >
           <Image src="/svg/refresh.svg" alt="" width="16" height="16" style={{ height: "16px" }} />
           <p className="ml-2 text-sm">답변 재생성</p>
