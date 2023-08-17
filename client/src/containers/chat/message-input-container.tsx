@@ -20,9 +20,13 @@ export default function MessageInputContainer({
 
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const resizeBox = (e: any) => {
-    e.target.style.height = "24px"
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`
+  const resizeBox = () => {
+    const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
+
+    if (userInputBox !== null) {
+      userInputBox.style.height = "24px"
+      userInputBox.style.height = `${Math.min(userInputBox.scrollHeight, 120)}px`
+    }
   }
 
   const makeHistory = () => {
@@ -112,8 +116,8 @@ export default function MessageInputContainer({
       setTempUserMessage(userInputValue)
       setIsGenerating(true)
       generateFoodieResponse(userInputValue, false)
-
       userInputBox!.value = ""
+      resizeBox()
     }
   }
 
@@ -122,7 +126,7 @@ export default function MessageInputContainer({
   }, [messages.length])
 
   useEffect(() => {
-    if (tempUserMessage === "") setDisplayRegenerate(true)
+    setDisplayRegenerate(tempUserMessage === "")
   }, [tempUserMessage])
 
   return (
@@ -142,12 +146,11 @@ export default function MessageInputContainer({
           className="w-full focus:outline-none pl-5 mr-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6"
           id="user-input-box"
           onChange={(e) => {
-            resizeBox(e)
             limitInputNumber(e, 500)
+            resizeBox()
           }}
           onKeyDown={(e) => {
             pressEnter(e, onSendClick)
-            resizeBox(e)
           }}
           placeholder="메시지를 입력해주세요"
         />

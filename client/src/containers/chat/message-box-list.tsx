@@ -4,8 +4,7 @@ import { ChatMessage } from "@/types/chat"
 
 export const scrollDownChatBox = () => {
   const chatBox = document.querySelector<HTMLElement>("#chat-main")
-
-  if (chatBox !== null && chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) <= 80) {
+  if (chatBox !== null && chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) <= 24) {
     chatBox.scrollTop = chatBox.scrollHeight
   }
 }
