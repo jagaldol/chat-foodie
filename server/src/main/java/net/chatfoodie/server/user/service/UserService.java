@@ -35,7 +35,7 @@ public class UserService {
 
     final private PasswordEncoder passwordEncoder;
 
-    public void join(UserRequest.JoinDto requestDto) {
+    public String join(UserRequest.JoinDto requestDto) {
 
         if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
             throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
@@ -58,6 +58,7 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
+        return JwtProvider.create(user);
     }
 
     public String issueJwtByLogin(UserRequest.LoginDto requestDto) {

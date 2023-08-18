@@ -40,10 +40,9 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDto requestDto, Errors errors) {
         validateBirthForm(requestDto.birth());
-
-        userService.join(requestDto);
+        String jwt = userService.join(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
 
     @PostMapping("/login")
