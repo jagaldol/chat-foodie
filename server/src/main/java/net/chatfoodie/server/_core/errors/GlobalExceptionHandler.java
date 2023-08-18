@@ -34,6 +34,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> internalServerError(Exception500 e) {
         return ResponseEntity.status(e.status()).body(e.body());
     }
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<?> customError(CustomException e) {
+        return ResponseEntity.status(e.status()).body(e.body());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> unknownServerError(Exception e) {
