@@ -14,7 +14,6 @@ export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
-  const [refresh, setRefresh] = useState(false)
 
   const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
@@ -33,6 +32,7 @@ export default function ChatUi() {
       return [...messagesState, saveMessage]
     })
   }
+
   const handleStreamMessage = (message: string, regenerate: boolean) => {
     if (!regenerate && message === "") {
       setTempUserMessage((prevState) => {
@@ -53,7 +53,21 @@ export default function ChatUi() {
           isFromChatbot: true,
         }
         if (userId === 0) addMessage(chatbotMessage)
-        else setRefresh((prev) => !prev)
+        else {
+          const headers = { Authorization: getJwtTokenFromStorage() }
+          const params = { size: 2 }
+          proxy
+            .get(`/chatrooms/${chatroomId}/messages`, { headers, params })
+            .then((res) => {
+              const newMessages: ChatMessage[] = res.data.response.body.messages
+              const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
+              const MessagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
+              setMessages((prev) => [...prev, ...MessagesToAdd])
+            })
+            .catch((res) => {
+              alert(res.response.data.errorMessage)
+            })
+        }
       }
       return message
     })
@@ -82,7 +96,7 @@ export default function ChatUi() {
           alert(res.response.data.errorMessage)
         })
     }
-  }, [chatroomId, refresh])
+  }, [chatroomId])
 
   return (
     <div className="flex flex-col min-h-full">
