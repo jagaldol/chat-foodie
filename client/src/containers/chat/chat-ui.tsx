@@ -14,6 +14,7 @@ export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
+  const [refresh, setRefresh] = useState(false)
 
   const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
@@ -33,7 +34,7 @@ export default function ChatUi() {
     })
   }
 
-  const handleStreamMessage = (message: string, regenerate: boolean) => {
+  const handleStreamMessage = async (message: string, regenerate: boolean) => {
     if (!regenerate && message === "") {
       setTempUserMessage((prevState) => {
         const userMessage: ChatMessage = {
@@ -45,6 +46,26 @@ export default function ChatUi() {
         return ""
       })
     }
+
+    let messagesToAdd: ChatMessage[] = []
+    if (message === "" && userId !== 0) {
+      if (chatroomId !== 0) {
+        const headers = { Authorization: getJwtTokenFromStorage() }
+        const params = { size: 2 }
+        const res = await proxy.get(`/chatrooms/${chatroomId}/messages`, { headers, params })
+        const newMessages: ChatMessage[] = res.data.response.body.messages
+        if (messages.length === 0) {
+          messagesToAdd = newMessages
+        } else {
+          const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
+          messagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
+        }
+      } else {
+        console.log("여기냐?")
+        setRefresh((prev) => !prev)
+      }
+    }
+
     setStreamingMessage((prevState) => {
       if (message === "") {
         const chatbotMessage: ChatMessage = {
@@ -54,19 +75,7 @@ export default function ChatUi() {
         }
         if (userId === 0) addMessage(chatbotMessage)
         else {
-          const headers = { Authorization: getJwtTokenFromStorage() }
-          const params = { size: 2 }
-          proxy
-            .get(`/chatrooms/${chatroomId}/messages`, { headers, params })
-            .then((res) => {
-              const newMessages: ChatMessage[] = res.data.response.body.messages
-              const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
-              const MessagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
-              setMessages((prev) => [...prev, ...MessagesToAdd])
-            })
-            .catch((res) => {
-              alert(res.response.data.errorMessage)
-            })
+          setMessages((prev) => [...prev, ...messagesToAdd])
         }
       }
       return message
@@ -96,27 +105,35 @@ export default function ChatUi() {
           alert(res.response.data.errorMessage)
         })
     }
-  }, [chatroomId])
+  }, [chatroomId, refresh])
+
+  useEffect(() => {
+    setMessages([])
+  }, [userId])
 
   return (
     <div className="flex flex-col min-h-full">
-      <label htmlFor="chatroomIdtemp" className="block w-80 h-16 mb-3">
-        <span className="block text-sm font-medium text-slate-700">임시 채팅방 선택창(진짜 있는 채팅방만 선택!!)</span>
-        <select
-          name="chatroomIdtemp"
-          className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-          onChange={(e) => {
-            setChatroomId(Number(e.currentTarget.value))
-          }}
-          value={chatroomId}
-        >
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-            <option value={num} key={num}>
-              {num}
-            </option>
-          ))}
-        </select>
-      </label>
+      {userId !== 0 ? (
+        <label htmlFor="chatroomIdtemp" className="block w-80 h-16 mb-3">
+          <span className="block text-sm font-medium text-slate-700">
+            임시 채팅방 선택창(진짜 있는 채팅방만 선택!!)
+          </span>
+          <select
+            name="chatroomIdtemp"
+            className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
+            onChange={(e) => {
+              setChatroomId(Number(e.currentTarget.value))
+            }}
+            value={chatroomId}
+          >
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+              <option value={num} key={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
       <MessageBoxListContainer
         messages={messages}
         tempUserMessage={tempUserMessage}
