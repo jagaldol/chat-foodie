@@ -1,7 +1,10 @@
 import Image from "next/image"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
+import { AuthContext } from "@/contexts/authContextProvider"
+import { ChatroomContext } from "@/contexts/chatroomContextProvider"
+import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 
 export default function MessageInputContainer({
   messages,
@@ -15,6 +18,9 @@ export default function MessageInputContainer({
   prepareRegenerate: () => void
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
+
+  const { userId, isLoad, needUpdate } = useContext(AuthContext)
+  const { chatroomId } = useContext(ChatroomContext)
 
   const resizeBox = () => {
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
@@ -52,21 +58,35 @@ export default function MessageInputContainer({
   }
 
   function generateFoodieResponse(userInputValue: string, regenerate: boolean) {
-    // const socket = io.connect(`${process.env.NEXT_PUBLIC_API_URL}/api/public-chat`)
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/api/public-chat`)
+    let url = `${process.env.NEXT_PUBLIC_WS_URL}/api`
+    if (userId === 0) {
+      url += "/public-chat"
+    } else {
+      url += `/chat?token=${getJwtTokenFromStorage()}`
+    }
+
+    const socket = new WebSocket(url)
 
     let successConnect = false
 
     socket.addEventListener("open", () => {
       // 서버로 메시지 전송
       successConnect = true
-      socket.send(
-        JSON.stringify({
+      let messageToSend: string
+      if (userId === 0) {
+        messageToSend = JSON.stringify({
           input: userInputValue,
           history: makeHistory(),
           regenerate,
-        }),
-      )
+        })
+      } else {
+        messageToSend = JSON.stringify({
+          input: userInputValue,
+          chatroomId: 1, // TODO: 나중에 chatroomId로 요청하게 변경
+          regenerate,
+        })
+      }
+      socket.send(messageToSend)
     })
 
     socket.addEventListener("message", (event) => {
@@ -102,7 +122,7 @@ export default function MessageInputContainer({
   }
 
   const onSendClick = () => {
-    if (isGenerating) return
+    if (!isLoad || isGenerating) return
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
 
     const userInputValue = userInputBox!.value
