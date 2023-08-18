@@ -70,7 +70,6 @@ export default function ChatUi() {
       <MessageInputContainer
         messages={messages}
         handleStreamMessage={handleStreamMessage}
-        tempUserMessage={tempUserMessage}
         setTempUserMessage={setTempUserMessage}
         prepareRegenerate={prepareRegenerate}
       />

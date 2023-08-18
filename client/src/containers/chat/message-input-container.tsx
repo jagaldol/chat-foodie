@@ -1,23 +1,19 @@
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 
 export default function MessageInputContainer({
   messages,
   handleStreamMessage,
-  tempUserMessage,
   setTempUserMessage,
   prepareRegenerate,
 }: {
   messages: ChatMessage[]
   handleStreamMessage: (message: string, regenerate: boolean) => void
-  tempUserMessage: string
   setTempUserMessage: (message: string) => void
   prepareRegenerate: () => void
 }) {
-  const [displayRegenerate, setDisplayRegenerate] = useState(false)
-
   const [isGenerating, setIsGenerating] = useState(false)
 
   const resizeBox = () => {
@@ -90,11 +86,10 @@ export default function MessageInputContainer({
           alert("서버 통신 중 오류가 발생했습니다.")
       }
       socket.close()
-      if (regenerate) setDisplayRegenerate(true)
-      setIsGenerating(false)
     })
 
     socket.addEventListener("close", () => {
+      setIsGenerating(false)
       if (!successConnect) alert("채팅 서버에 연결할 수 없습니다!")
     })
   }
@@ -102,7 +97,6 @@ export default function MessageInputContainer({
   const onRegenerateClick = () => {
     if (isGenerating) return
     setIsGenerating(true)
-    setDisplayRegenerate(false)
     prepareRegenerate()
     generateFoodieResponse("", true)
   }
@@ -121,21 +115,13 @@ export default function MessageInputContainer({
     }
   }
 
-  useEffect(() => {
-    if (messages.length === 0) setDisplayRegenerate(false)
-  }, [messages.length])
-
-  useEffect(() => {
-    setDisplayRegenerate(tempUserMessage === "")
-  }, [tempUserMessage])
-
   return (
     <div className="flex justify-center">
       <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative">
         <button
           type="button"
           className={`w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${
-            displayRegenerate ? "" : " invisible"
+            messages.length !== 0 && !isGenerating ? "" : " invisible"
           }`}
           onClick={onRegenerateClick}
         >
