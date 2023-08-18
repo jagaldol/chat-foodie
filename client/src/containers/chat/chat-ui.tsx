@@ -8,12 +8,15 @@ import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import proxy from "@/utils/proxy"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import { AuthContext } from "@/contexts/authContextProvider"
 
 export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
+  const [refresh, setRefresh] = useState(false)
 
+  const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
   const addMessage = (message: ChatMessage) => {
     setMessages((messagesState) => {
@@ -38,7 +41,7 @@ export default function ChatUi() {
           content: prevState,
           isFromChatbot: false,
         }
-        addMessage(userMessage)
+        if (userId === 0) addMessage(userMessage)
         return ""
       })
     }
@@ -49,7 +52,8 @@ export default function ChatUi() {
           content: prevState,
           isFromChatbot: true,
         }
-        addMessage(chatbotMessage)
+        if (userId === 0) addMessage(chatbotMessage)
+        else setRefresh((prev) => !prev)
       }
       return message
     })
@@ -64,15 +68,13 @@ export default function ChatUi() {
   }, [streamingMessage])
 
   useEffect(() => {
-    const currentChatroomId: number = chatroomId
-
-    if (currentChatroomId === 0) {
+    if (chatroomId === 0) {
       setMessages([])
     } else {
       const headers = { Authorization: getJwtTokenFromStorage() }
-      const params = { size: 2 }
+      const params = {}
       proxy
-        .get(`/chatrooms/${currentChatroomId}/messages`, { headers, params })
+        .get(`/chatrooms/${chatroomId}/messages`, { headers, params })
         .then((res) => {
           setMessages(res.data.response.body.messages)
         })
@@ -80,7 +82,7 @@ export default function ChatUi() {
           alert(res.response.data.errorMessage)
         })
     }
-  }, [chatroomId])
+  }, [chatroomId, refresh])
 
   return (
     <div className="flex flex-col min-h-full">
