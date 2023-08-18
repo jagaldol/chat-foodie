@@ -35,7 +35,7 @@ public class ChatroomService {
     final private UserRepository userRepository;
     final private MessageRepository messageRepository;
 
-    public void create(Long userId) {
+    public ChatroomResponse.CreateChatroomDto create(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("회원이 존재하지 않습니다"));
 
         String title = Utils.convertDateTimeToString(LocalDateTime.now()) + " 음식 추천";
@@ -46,7 +46,9 @@ public class ChatroomService {
                                 .build();
 
         try {
-            chatroomRepository.save(chatroom);
+            Chatroom createdChatroom = chatroomRepository.save(chatroom);
+            return new ChatroomResponse.CreateChatroomDto(createdChatroom);
+
         } catch (Exception e) {
             throw new Exception500("채팅방 생성 중 오류가 발생하였습니다.");
         }

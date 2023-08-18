@@ -22,8 +22,8 @@ public class ChatroomController {
 
     @PostMapping("/chatrooms")
     public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        chatroomService.create(userDetails.getId());
-        ApiUtils.Response<?> response = ApiUtils.success();
+        ChatroomResponse.CreateChatroomDto createChatroomDto = chatroomService.create(userDetails.getId());
+        ApiUtils.Response<?> response = ApiUtils.success(createChatroomDto);
         return ResponseEntity.ok().body(response);
     }
 
