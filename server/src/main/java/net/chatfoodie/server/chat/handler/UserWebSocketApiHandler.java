@@ -51,7 +51,7 @@ public class UserWebSocketApiHandler extends UserWebSocketBaseHandler {
     }
 
     @Override
-    protected ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session) {
+    protected ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session) throws IOException {
         Long userId = userWebSocketService.getUserId(session);
 
         return userWebSocketService.makeFoodieRequestDto(

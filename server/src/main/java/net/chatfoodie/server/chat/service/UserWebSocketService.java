@@ -120,15 +120,10 @@ public class UserWebSocketService {
         });
     }
 
-    public Long getUserId(WebSocketSession session) {
-        Authentication authentication = (Authentication) session.getPrincipal();
-
-        if (authentication == null) {
-            throw new RuntimeException();
-        }
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        return customUserDetails.getId();
+    public Long getUserId(WebSocketSession session) throws IOException {
+        String token = extractTokenFromSession(session);
+        DecodedJWT decodedJWT = JwtProvider.verify(token);
+        return decodedJWT.getClaim("id").asLong();
     }
 
     @Transactional
