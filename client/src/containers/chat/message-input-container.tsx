@@ -5,6 +5,7 @@ import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import proxy from "@/utils/proxy"
 
 export default function MessageInputContainer({
   messages,
@@ -19,8 +20,8 @@ export default function MessageInputContainer({
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const { userId, isLoad, needUpdate } = useContext(AuthContext)
-  const { chatroomId } = useContext(ChatroomContext)
+  const { userId, isLoad } = useContext(AuthContext)
+  const { chatroomId, setChatroomId } = useContext(ChatroomContext)
 
   const resizeBox = () => {
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
@@ -69,7 +70,7 @@ export default function MessageInputContainer({
 
     let successConnect = false
 
-    socket.addEventListener("open", () => {
+    socket.addEventListener("open", async () => {
       // 서버로 메시지 전송
       successConnect = true
       let messageToSend: string
@@ -80,9 +81,18 @@ export default function MessageInputContainer({
           regenerate,
         })
       } else {
+        let chatroomIdToSend = chatroomId
+        if (chatroomIdToSend === 0) {
+          const headers = {
+            Authorization: getJwtTokenFromStorage(),
+          }
+          const res = await proxy.post("/chatrooms", undefined, { headers })
+          chatroomIdToSend = res.data.response.chatroomId
+          setChatroomId(chatroomIdToSend)
+        }
         messageToSend = JSON.stringify({
           input: userInputValue,
-          chatroomId: 1, // TODO: 나중에 chatroomId로 요청하게 변경
+          chatroomId: chatroomIdToSend,
           regenerate,
         })
       }
