@@ -4,7 +4,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 import MessageInputContainer from "@/containers/chat/message-input-container"
 import MessageBoxListContainer from "@/containers/chat/message-box-list-container"
 import { ChatMessage, Cursor } from "@/types/chat"
-import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import proxy from "@/utils/proxy"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
@@ -83,10 +82,6 @@ export default function ChatUi() {
   const prepareRegenerate = () => {
     setMessages((prevState) => prevState.slice(0, -1))
   }
-
-  useEffect(() => {
-    scrollDownChatBox()
-  }, [streamingMessage])
 
   const getMessages = useCallback(
     (_cursor: Cursor) => {

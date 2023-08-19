@@ -1,13 +1,7 @@
 import Image from "next/image"
-import { useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ChatMessage, Cursor } from "@/types/chat"
-
-export const scrollDownChatBox = () => {
-  const chatBox = document.querySelector<HTMLElement>("#chat-main")
-  if (chatBox !== null && chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) <= 30) {
-    chatBox.scrollTop = chatBox.scrollHeight
-  }
-}
+import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 
 function MessageBox({ message }: { message: ChatMessage }) {
   useEffect(() => {
@@ -50,15 +44,33 @@ export default function MessageBoxList({
   cursor: Cursor
   getMessages: (_cursor: Cursor) => void
 }) {
+  const [prevScrollHeight, setPrevScrollHeight] = useState(0)
+
+  const { chatroomId } = useContext(ChatroomContext)
+
+  const scrollTraceDownChatBox = () => {
+    const chatBox = document.querySelector<HTMLElement>("#chat-main")
+    if (chatBox !== null && chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) <= 30) {
+      chatBox.scrollTop = chatBox.scrollHeight
+    }
+  }
+
+  useEffect(() => {
+    scrollTraceDownChatBox()
+  }, [streamingMessage])
+
   useEffect(() => {
     const chatBox = document.querySelector<HTMLElement>("#chat-main")
 
     if (chatBox !== null) {
       const handleScroll = () => {
-        const { scrollTop } = chatBox
+        const { scrollTop, scrollHeight } = chatBox
 
-        if (scrollTop === 0) {
+        if (scrollTop === 0 && chatroomId !== 0) {
           getMessages(cursor)
+          // TODO: 위에 메시지들 끼워넣고 올바른 위치로 스크롤 옮기기
+          chatBox.scrollTop = scrollHeight - prevScrollHeight
+          setPrevScrollHeight(scrollHeight)
         }
       }
 
@@ -69,7 +81,7 @@ export default function MessageBoxList({
       }
     }
     return () => {}
-  }, [cursor, getMessages])
+  }, [prevScrollHeight, chatroomId, cursor, getMessages])
 
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main">
