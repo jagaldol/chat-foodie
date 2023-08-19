@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import MessageInputContainer from "@/containers/chat/message-input-container"
 import MessageBoxListContainer from "@/containers/chat/message-box-list-container"
-import { ChatMessage } from "@/types/chat"
+import { ChatMessage, Cursor } from "@/types/chat"
 import { scrollDownChatBox } from "@/containers/chat/message-box-list"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import proxy from "@/utils/proxy"
@@ -14,6 +14,10 @@ export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
+
+  const getMessagesLength = 20
+
+  const [cursor, setCursor] = useState<Cursor>({ size: getMessagesLength })
 
   const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
@@ -84,26 +88,43 @@ export default function ChatUi() {
     scrollDownChatBox()
   }, [streamingMessage])
 
-  useEffect(() => {
-    if (chatroomId === 0) {
-      setMessages([])
-    } else {
+  const getMessages = useCallback(
+    (_cursor: Cursor) => {
+      if (_cursor.key === -1) return
       const headers = { Authorization: getJwtTokenFromStorage() }
-      const params = {}
+      const params = { ..._cursor }
       proxy
         .get(`/chatrooms/${chatroomId}/messages`, { headers, params })
         .then((res) => {
-          setMessages(res.data.response.body.messages)
+          const patchedMessages = res.data.response.body.messages
+          if (_cursor.key === undefined) {
+            setMessages(patchedMessages)
+          } else {
+            setMessages((prev) => [...patchedMessages, ...prev])
+          }
+          const nextCursor = res.data.response.nextCursorRequest
+          setCursor({ key: nextCursor.key, size: nextCursor.size })
         })
         .catch((res) => {
           alert(res.response.data.errorMessage)
         })
-    }
-  }, [chatroomId])
+    },
+    [chatroomId],
+  )
 
   useEffect(() => {
-    setMessages([])
-  }, [userId])
+    const defaultCursor = { size: getMessagesLength }
+    setCursor(defaultCursor)
+    if (chatroomId === 0) {
+      setMessages([])
+    } else {
+      getMessages(defaultCursor)
+    }
+  }, [chatroomId, getMessages])
+
+  useEffect(() => {
+    setChatroomId(0)
+  }, [userId, setChatroomId])
 
   return (
     <div className="flex flex-col min-h-full">
@@ -132,6 +153,8 @@ export default function ChatUi() {
         messages={messages}
         tempUserMessage={tempUserMessage}
         streamingMessage={streamingMessage}
+        cursor={cursor}
+        getMessages={getMessages}
       />
       <MessageInputContainer
         messages={messages}

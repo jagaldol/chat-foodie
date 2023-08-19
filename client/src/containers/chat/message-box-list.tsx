@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { useEffect } from "react"
-import { ChatMessage } from "@/types/chat"
+import { ChatMessage, Cursor } from "@/types/chat"
 
 export const scrollDownChatBox = () => {
   const chatBox = document.querySelector<HTMLElement>("#chat-main")
@@ -41,11 +41,36 @@ export default function MessageBoxList({
   messages,
   tempUserMessage,
   streamingMessage,
+  cursor,
+  getMessages,
 }: {
   messages: ChatMessage[]
   tempUserMessage: string
   streamingMessage: string
+  cursor: Cursor
+  getMessages: (_cursor: Cursor) => void
 }) {
+  useEffect(() => {
+    const chatBox = document.querySelector<HTMLElement>("#chat-main")
+
+    if (chatBox !== null) {
+      const handleScroll = () => {
+        const { scrollTop } = chatBox
+
+        if (scrollTop === 0) {
+          getMessages(cursor)
+        }
+      }
+
+      chatBox.addEventListener("scroll", handleScroll)
+
+      return () => {
+        chatBox.removeEventListener("scroll", handleScroll)
+      }
+    }
+    return () => {}
+  }, [cursor, getMessages])
+
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main">
       {messages.map((message) => {

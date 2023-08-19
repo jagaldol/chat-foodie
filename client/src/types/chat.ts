@@ -3,3 +3,8 @@ export interface ChatMessage {
   content: string
   isFromChatbot: boolean
 }
+
+export interface Cursor {
+  key?: number
+  size: number
+}
