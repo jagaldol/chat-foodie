@@ -14,7 +14,6 @@ export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
-  const [refresh, setRefresh] = useState(false)
 
   const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
@@ -34,7 +33,7 @@ export default function ChatUi() {
     })
   }
 
-  const handleStreamMessage = async (message: string, regenerate: boolean) => {
+  const handleStreamMessage = async (message: string, regenerate: boolean, chatroomIdToSend: number) => {
     if (!regenerate && message === "") {
       setTempUserMessage((prevState) => {
         const userMessage: ChatMessage = {
@@ -49,20 +48,15 @@ export default function ChatUi() {
 
     let messagesToAdd: ChatMessage[] = []
     if (message === "" && userId !== 0) {
-      if (chatroomId !== 0) {
-        const headers = { Authorization: getJwtTokenFromStorage() }
-        const params = { size: 2 }
-        const res = await proxy.get(`/chatrooms/${chatroomId}/messages`, { headers, params })
-        const newMessages: ChatMessage[] = res.data.response.body.messages
-        if (messages.length === 0) {
-          messagesToAdd = newMessages
-        } else {
-          const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
-          messagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
-        }
+      const headers = { Authorization: getJwtTokenFromStorage() }
+      const params = { size: 2 }
+      const res = await proxy.get(`/chatrooms/${chatroomIdToSend}/messages`, { headers, params })
+      const newMessages: ChatMessage[] = res.data.response.body.messages
+      if (messages.length === 0) {
+        messagesToAdd = newMessages
       } else {
-        console.log("여기냐?")
-        setRefresh((prev) => !prev)
+        const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
+        messagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
       }
     }
 
@@ -105,7 +99,7 @@ export default function ChatUi() {
           alert(res.response.data.errorMessage)
         })
     }
-  }, [chatroomId, refresh])
+  }, [chatroomId])
 
   useEffect(() => {
     setMessages([])

@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { useContext, useState } from "react"
+import { undefined } from "zod"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { AuthContext } from "@/contexts/authContextProvider"
@@ -14,7 +15,7 @@ export default function MessageInputContainer({
   prepareRegenerate,
 }: {
   messages: ChatMessage[]
-  handleStreamMessage: (message: string, regenerate: boolean) => void
+  handleStreamMessage: (message: string, regenerate: boolean, chatroomIdToSend: number) => void
   setTempUserMessage: (message: string) => void
   prepareRegenerate: () => void
 }) {
@@ -58,19 +59,29 @@ export default function MessageInputContainer({
     return history
   }
 
-  function generateFoodieResponse(userInputValue: string, regenerate: boolean) {
+  async function generateFoodieResponse(userInputValue: string, regenerate: boolean) {
     let url = `${process.env.NEXT_PUBLIC_WS_URL}/api`
+    let chatroomIdToSend = chatroomId
     if (userId === 0) {
       url += "/public-chat"
     } else {
       url += `/chat?token=${getJwtTokenFromStorage()}`
+
+      if (chatroomIdToSend === 0) {
+        const headers = {
+          Authorization: getJwtTokenFromStorage(),
+        }
+        const res = await proxy.post("/chatrooms", undefined, { headers })
+        chatroomIdToSend = res.data.response.chatroomId
+        setChatroomId(chatroomIdToSend)
+      }
     }
 
     const socket = new WebSocket(url)
 
     let successConnect = false
 
-    socket.addEventListener("open", async () => {
+    socket.addEventListener("open", () => {
       // 서버로 메시지 전송
       successConnect = true
       let messageToSend: string
@@ -81,15 +92,6 @@ export default function MessageInputContainer({
           regenerate,
         })
       } else {
-        let chatroomIdToSend = chatroomId
-        if (chatroomIdToSend === 0) {
-          const headers = {
-            Authorization: getJwtTokenFromStorage(),
-          }
-          const res = await proxy.post("/chatrooms", undefined, { headers })
-          chatroomIdToSend = res.data.response.chatroomId
-          setChatroomId(chatroomIdToSend)
-        }
         messageToSend = JSON.stringify({
           input: userInputValue,
           chatroomId: chatroomIdToSend,
@@ -103,11 +105,11 @@ export default function MessageInputContainer({
       const res = JSON.parse(event.data)
       switch (res.event) {
         case "text_stream": {
-          handleStreamMessage(res.response, regenerate)
+          handleStreamMessage(res.response, regenerate, chatroomIdToSend)
           return
         }
         case "stream_end":
-          handleStreamMessage("", regenerate)
+          handleStreamMessage("", regenerate, chatroomIdToSend)
           break
         case "error":
           alert(res.response)
@@ -128,7 +130,7 @@ export default function MessageInputContainer({
     if (isGenerating) return
     setIsGenerating(true)
     prepareRegenerate()
-    generateFoodieResponse("", true)
+    generateFoodieResponse("", true).then(() => {})
   }
 
   const onSendClick = () => {
@@ -139,7 +141,7 @@ export default function MessageInputContainer({
     if (userInputValue) {
       setTempUserMessage(userInputValue)
       setIsGenerating(true)
-      generateFoodieResponse(userInputValue, false)
+      generateFoodieResponse(userInputValue, false).then(() => {})
       userInputBox!.value = ""
       resizeBox()
     }
