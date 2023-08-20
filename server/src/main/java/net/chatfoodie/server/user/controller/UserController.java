@@ -68,6 +68,22 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/validate/loginId")
+    public ResponseEntity<?> validateLoginId(@RequestBody @Valid UserRequest.ValidateLoginIdDto requestDto,
+                                             Errors errors) {
+        userService.validateLoginId(requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/validate/email")
+    public ResponseEntity<?> validateEmail(@RequestBody @Valid UserRequest.ValidateEmailDto requestDto,
+                                             Errors errors) {
+        userService.validateEmail(requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok(response);
+    }
+
     private static void validateBirthForm(String birth) {
         if (birth != null) {
             List<Integer> birthSplit = Arrays.stream(birth.split("-"))

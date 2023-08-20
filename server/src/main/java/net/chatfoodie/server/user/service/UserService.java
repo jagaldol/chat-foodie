@@ -2,9 +2,7 @@ package net.chatfoodie.server.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.chatfoodie.server._core.errors.exception.Exception400;
-import net.chatfoodie.server._core.errors.exception.Exception404;
-import net.chatfoodie.server._core.errors.exception.Exception500;
+import net.chatfoodie.server._core.errors.exception.*;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.Utils;
@@ -42,11 +40,11 @@ public class UserService {
         }
         
         if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
-            throw new Exception400("이미 존재하는 아이디입니다");
+            throw new LoginIdAlreadyExistException("이미 존재하는 아이디입니다");
         }
 
         if (userRepository.findByEmail(requestDto.email()).isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다.");
+            throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(requestDto.password());
@@ -111,6 +109,18 @@ public class UserService {
 
         if (requestDto.birth() != null) {
             user.updateBirth(Utils.convertStringToDate(requestDto.birth()));
+        }
+    }
+
+    public void validateLoginId(UserRequest.ValidateLoginIdDto requestDto) {
+        if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
+            throw new LoginIdAlreadyExistException("이미 존재하는 아이디입니다");
+        }
+    }
+
+    public void validateEmail(UserRequest.ValidateEmailDto requestDto) {
+        if (userRepository.findByEmail(requestDto.email()).isPresent()) {
+            throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
     }
 }
