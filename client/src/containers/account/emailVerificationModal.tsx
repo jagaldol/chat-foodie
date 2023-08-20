@@ -1,3 +1,5 @@
+"use client"
+
 import { useContext, useEffect } from "react"
 import Modal from "@/components/modal"
 import TextField from "@/components/textField"
@@ -15,7 +17,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
       Authorization: getJwtTokenFromStorage(),
     }
     const requestData = {
-      verificationCode: e.currentTarget.querySelector<HTMLInputElement>(`[name='emailVerificationCode']`),
+      verificationCode: e.currentTarget.querySelector<HTMLInputElement>(`[name='emailVerificationCode']`)!.value,
     }
     proxy
       .post("/email-verifications/confirm", requestData, { headers })

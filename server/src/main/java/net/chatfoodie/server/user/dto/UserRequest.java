@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import net.chatfoodie.server._core.utils.Utils;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.User;
 
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class UserRequest {
                     .gender(gender)
                     .birth(birth == null ? null : Utils.convertStringToDate(birth))
                     .email(email)
+                    .role(Role.ROLE_PENDING)
                     .build();
         }
     }

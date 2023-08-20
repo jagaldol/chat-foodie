@@ -8,13 +8,7 @@ import { AuthContext } from "@/contexts/authContextProvider"
 import { limitInputNumber, generateYearOptions, generateDayOptions } from "@/utils/utils"
 import TextField from "@/components/textField"
 
-export default function JoinModal({
-  onClickClose,
-  setEmailVerificationModalOpend,
-}: {
-  onClickClose(): void
-  setEmailVerificationModalOpend: React.Dispatch<React.SetStateAction<boolean>>
-}) {
+export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   const [selectedMonth, setSelectedMonth] = useState(1)
   const [selectedYear, setSelectedYear] = useState(2000)
   const { needUpdate } = useContext(AuthContext)
@@ -225,7 +219,6 @@ export default function JoinModal({
             break
         }
       })
-    setEmailVerificationModalOpend(true)
   }
   return (
     <Modal onClickClose={onClickClose}>

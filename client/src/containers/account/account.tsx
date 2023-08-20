@@ -18,6 +18,8 @@ export default function Account() {
   useEffect(() => {
     if (userRole === "ROLE_PENDING") {
       setEmailVerificationModalOpend(true)
+    } else if (userRole === "ROLE_USER") {
+      setEmailVerificationModalOpend(false)
     }
   }, [userRole])
 
@@ -69,12 +71,7 @@ export default function Account() {
               <p className="text-sm mx-2.5 my-2 text-center">회원가입</p>
             </button>
             {loginModalOpened ? <LoginModal onClickClose={() => setLoginModalOpened(false)} /> : null}
-            {joinModalOpened ? (
-              <JoinModal
-                onClickClose={() => setJoinModalOpened(false)}
-                setEmailVerificationModalOpend={setEmailVerificationModalOpend}
-              />
-            ) : null}
+            {joinModalOpened ? <JoinModal onClickClose={() => setJoinModalOpened(false)} /> : null}
           </>
         )
       })()}
