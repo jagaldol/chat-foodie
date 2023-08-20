@@ -41,7 +41,7 @@ export default function JoinModal({
     }))
   }
 
-  const validateLoginId = () => {
+  const validateLoginId = async () => {
     const newErrors = { ...errors }
     let isValid = true
     if (formData.loginId.trim() === "") {
@@ -54,7 +54,20 @@ export default function JoinModal({
       newErrors.loginId = "영어, 숫자, _, . 만 가능합니다."
       isValid = false
     } else {
-      newErrors.loginId = ""
+      const requestData = {
+        loginId: formData.loginId,
+      }
+      try {
+        const postResponse = await proxy.post("/validate/loginId", requestData)
+        console.log(postResponse)
+        newErrors.loginId = ""
+      } catch (e: any) {
+        if (e.response.data.status === 461) {
+          isValid = false
+          newErrors.loginId = "이미 존재하는 아이디 입니다."
+        }
+        console.log(e)
+      }
     }
 
     setErrors((prev) => ({ ...prev, loginId: newErrors.loginId }))
@@ -111,7 +124,7 @@ export default function JoinModal({
     return isValid
   }
 
-  const validateEmail = () => {
+  const validateEmail = async () => {
     const newErrors = { ...errors }
     let isValid = true
 
@@ -125,21 +138,34 @@ export default function JoinModal({
       newErrors.email = "이메일은 최대 100자 이하여야 합니다."
       isValid = false
     } else {
-      newErrors.email = ""
+      const requestData = {
+        email: formData.email,
+      }
+      try {
+        const postResponse = await proxy.post("/validate/email", requestData)
+        console.log(postResponse)
+        newErrors.email = ""
+      } catch (e: any) {
+        if (e.response.data.status === 462) {
+          isValid = false
+          newErrors.email = "이미 존재하는 이메일 입니다."
+        }
+        console.log(e)
+      }
     }
 
     setErrors((prev) => ({ ...prev, email: newErrors.email }))
     return isValid
   }
 
-  const validateForm = () => {
+  const validateForm = async () => {
     let isValid = true
 
-    isValid = validateLoginId() && isValid
+    isValid = (await validateLoginId()) && isValid
     isValid = validatePassword() && isValid
     isValid = validatePasswordCheck() && isValid
     isValid = validateName() && isValid
-    isValid = validateEmail() && isValid
+    isValid = (await validateEmail()) && isValid
 
     return isValid
   }
@@ -187,7 +213,17 @@ export default function JoinModal({
         onClickClose()
       })
       .catch((res) => {
-        alert(res.response.data.errorMessage)
+        // alert(res.response.data.errorMessage)
+        switch (res.response.data.status) {
+          case 461:
+            setErrors({ ...errors, loginId: "이미 존재하는 아이디 입니다." })
+            break
+          case 462:
+            setErrors({ ...errors, loginId: "이미 존재하는 이메일 입니다." })
+            break
+          default:
+            break
+        }
       })
     setEmailVerificationModalOpend(true)
   }
