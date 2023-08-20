@@ -213,7 +213,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
             setErrors({ ...errors, loginId: "이미 존재하는 아이디 입니다." })
             break
           case 462:
-            setErrors({ ...errors, loginId: "이미 존재하는 이메일 입니다." })
+            setErrors({ ...errors, email: "이미 존재하는 이메일 입니다." })
             break
           default:
             break
