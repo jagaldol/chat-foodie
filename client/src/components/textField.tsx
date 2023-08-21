@@ -8,6 +8,7 @@ export default function TextField({
   value = undefined,
   required = false,
   error = undefined,
+  message = undefined,
   onChange = undefined,
   onBlur = undefined,
 }: {
@@ -18,6 +19,7 @@ export default function TextField({
   value?: string
   required?: boolean
   error?: string
+  message?: string
   onChange?: React.ChangeEventHandler<HTMLInputElement>
   onBlur?: React.FocusEventHandler<HTMLInputElement>
 }) {
@@ -36,6 +38,7 @@ export default function TextField({
         onBlur={onBlur}
         onChange={onChange}
       />
+      {message && <p className="block text-sm font-medium text-slate-700 mt-1">{message}</p>}
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </label>
   )
