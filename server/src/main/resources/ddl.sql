@@ -10,7 +10,10 @@ CREATE TABLE IF NOT EXISTS user_tb
     role VARCHAR(50) DEFAULT 'ROLE_PENDING' CHECK (role IN ('ROLE_PENDING','ROLE_USER')),
     created_at TIMESTAMP(6) DEFAULT NOW()
 );
-
+CREATE INDEX user_email_idx
+    ON user_tb (email);
+CREATE INDEX user_loginId_idx
+    ON user_tb (login_id);
 
 CREATE TABLE IF NOT EXISTS chatroom_tb
 (
@@ -30,6 +33,9 @@ CREATE TABLE IF NOT EXISTS message_tb
     created_at TIMESTAMP(6) DEFAULT NOW(),
     PRIMARY KEY (id)
 );
+CREATE INDEX message_chatroom_id_idx
+    ON message_tb (chatroom_id);
+
 
 CREATE TABLE IF NOT EXISTS favor_tb
 (
@@ -38,6 +44,9 @@ CREATE TABLE IF NOT EXISTS favor_tb
     food_id BIGINT,
     created_at TIMESTAMP(6) DEFAULT NOW()
 );
+CREATE INDEX favor_user_id_idx
+    ON favor_tb (user_id);
+
 
 CREATE TABLE IF NOT EXISTS food_tb
 (
@@ -62,6 +71,9 @@ CREATE TABLE IF NOT EXISTS chat_public_log_tb
     output TEXT NOT NULL,
     created_at TIMESTAMP(6) DEFAULT NOW()
 );
+CREATE INDEX chat_public_log_ip_created_at_idx
+    ON chat_public_log_tb (ip, created_at);
+
 
 CREATE TABLE IF NOT EXISTS email_verification_tb
 (
@@ -70,3 +82,5 @@ CREATE TABLE IF NOT EXISTS email_verification_tb
     verification_code VARCHAR(10) NOT NULL,
     created_at TIMESTAMP(6) DEFAULT NOW()
 );
+CREATE INDEX email_verification_email_idx
+    ON email_verification_tb (email);

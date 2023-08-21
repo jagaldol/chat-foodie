@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_tb")
+@Table(name = "user_tb",
+        indexes = {
+                @Index(name = "user_loginId_idx", columnList = "loginId"),
+                @Index(name = "user_email_idx", columnList = "email")
+        })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
