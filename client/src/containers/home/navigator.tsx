@@ -1,11 +1,12 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
 import Image from "next/image"
+import React, { useContext, useEffect, useState } from "react"
+import ChatroomBox from "@/containers/home/chatroomBox"
+import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 import { ChatRoom } from "@/types/chatroom"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
-import { pressEnter } from "@/utils/utils"
+import { AuthContext } from "@/contexts/authContextProvider"
 
 function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string; link: string }) {
   return (
@@ -18,123 +19,113 @@ function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string;
 
 export default function Navigator() {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
-  const [editingChatRoom, setEditingChatRoom] = useState<boolean>(false)
-  const [editedTitle, setEditedTitle] = useState<string | null>(null)
+  const { userId, isLoad } = useContext(AuthContext)
 
   const headers = {
     Authorization: getJwtTokenFromStorage(),
   }
 
-  const fetchChatRooms = () => {
-    proxy
-      .get("/chatrooms", { headers })
-      .then((res) => {
-        setChatRooms(res.data.response.chatrooms)
-      })
-      .catch((res) => {
-        alert(res.response.data.errorMessage)
-      })
+  const fetchChatRooms = async () => {
+    try {
+      const response = await proxy.get("/chatrooms", { headers })
+      setChatRooms(response.data.response.chatrooms)
+    } catch (error) {
+      console.error("Error fetching chat rooms:", error)
+      alert("채팅방 목록을 가져오는 도중 오류가 발생하였습니다.")
+    }
   }
 
   useEffect(() => {
     fetchChatRooms()
   }, [])
 
-  const handleEditChatRoomTitle = async (chatRoom: ChatRoom) => {
+  const createNewChatroom = async () => {
     try {
-      const requestData = {
-        title: editedTitle,
-      }
+      const response = await proxy.post("/chatrooms", {}, { headers })
 
-      const response = await proxy.put(`/chatrooms/${chatRoom.id}`, requestData, { headers })
       if (response.data.status === 200) {
-        setChatRooms((prevChatRooms) =>
-          prevChatRooms.map((room) => (room.id === chatRoom.id ? { ...room, title: chatRoom.title } : room)),
-        )
-        fetchChatRooms()
-        setEditingChatRoom(false)
-        setEditedTitle(null)
+        // Successfully created a new chatroom
+        fetchChatRooms() // Refresh the chatroom list
       } else {
-        alert("채팅방 제목 수정에 실패하였습니다.")
-      }
-    } catch (error) {
-      alert("오류")
-    }
-  }
-
-  const handleDeleteChatRoom = async (chatroomId: number) => {
-    try {
-      const response = await proxy.delete(`/chatrooms/${chatroomId}`, { headers })
-      if (response.data.status === 200) {
-        // 성공적으로 삭제되었으면 해당 채팅방을 chatRooms 배열에서 제거
-        setChatRooms((prevChatRooms) => prevChatRooms.filter((room) => room.id !== chatroomId))
-      } else {
-        alert("삭제에 실패하였습니다.")
+        alert("채팅방 생성에 실패하였습니다.")
       }
     } catch (error) {
       alert("오류가 발생하였습니다.")
     }
   }
 
-  return (
-    <nav className="flex flex-col min-w-[16rem] p-2.5 border-r-gray-200 border-r border-solid">
-      <a
-        type="button"
-        className="border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition"
-        href="/"
-      >
-        <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
-        <p className="ml-2 text-sm font-bold">새로운 대화</p>
-      </a>
-      <hr className="mt-2 border-gray-300" />
-      {chatRooms.map((chatRoom, index) => (
-        <div key={chatRoom.id} className="flex items-center mt-3 mb-3">
-          <Image src="/svg/message.svg" alt="message" height="12" width="12" />
-          {editingChatRoom ? (
-            <input
-              type="text"
-              value={editedTitle !== null ? editedTitle : chatRoom.title}
-              onChange={(e) => setEditedTitle(e.target.value)}
-              onKeyDown={(e) => {
-                if (editedTitle === "" || editedTitle === chatRoom.title) {
-                  pressEnter(e, () => setEditingChatRoom(false))
-                } else {
-                  pressEnter(e, () => handleEditChatRoomTitle(chatRoom))
-                }
-              }}
-              onBlur={() => {
-                if (editedTitle === "" || editedTitle === chatRoom.title) {
-                  setEditingChatRoom(false)
-                } else {
-                  handleEditChatRoomTitle(chatRoom)
-                }
-              }}
-              className="w-1/2 p-1 rounded-md border border-gray-300 focus:ring focus:ring-blue-200"
+  const handleEditChatRoomTitle = async (id: number, newTitle: string) => {
+    try {
+      const requestData = {
+        title: newTitle,
+      }
+
+      const response = await proxy.put(`/chatrooms/${id}`, requestData, { headers })
+      if (response.data.status === 200) {
+        fetchChatRooms()
+      } else {
+        alert("채팅방 제목 수정에 실패하였습니다.")
+      }
+    } catch (error) {
+      console.error("Error editing chat room title:", error)
+      alert("채팅방 제목 수정 도중 오류가 발생하였습니다.")
+    }
+  }
+
+  const handleDeleteChatRoom = async (id: number) => {
+    try {
+      const response = await proxy.delete(`/chatrooms/${id}`, { headers })
+      if (response.data.status === 200) {
+        fetchChatRooms()
+      } else {
+        alert("삭제에 실패하였습니다.")
+      }
+    } catch (error) {
+      console.error("Error deleting chat room:", error)
+      alert("채팅방 삭제 도중 오류가 발생하였습니다.")
+    }
+  }
+  if (!isLoad) return null
+  if (userId !== 0)
+    return (
+      <nav className="flex flex-col min-w-[16rem] p-2.5 border-r-gray-200 border-r border-solid">
+        <button
+          type="button"
+          className="border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition"
+          onClick={createNewChatroom}
+        >
+          <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
+          <p className="ml-2 text-sm font-bold">새로운 대화</p>
+        </button>
+        {chatRooms.map((chatRoom) => (
+          <ChatroomBox
+            key={chatRoom.id}
+            chatRoom={chatRoom}
+            onEdit={handleEditChatRoomTitle}
+            onDelete={handleDeleteChatRoom}
+          />
+        ))}
+        <hr className="mt-2 border-gray-300" />
+        <div className="grow" />
+        <div className="border-t-2 border-solid border-gray-400">
+          <div>
+            <NavFooterTool
+              iconSrc="/svg/github.svg"
+              text="View in github"
+              link="https://github.com/jagaldol/chat-foodie"
             />
-          ) : (
-            <p className="ml-2 text-sm font-bold">{chatRoom.title}</p>
-          )}
-          <div className="ml-auto flex items-center">
-            <Image
-              src="/svg/pen.svg"
-              alt="chat"
-              height="12"
-              width="12"
-              className="ml-3 cursor-pointer"
-              onClick={() => setEditingChatRoom(true)}
-            />
-            <Image
-              src="/svg/delete.svg"
-              alt="chat"
-              height="11"
-              width="12"
-              className="ml-3 mr-4 cursor-pointer"
-              onClick={() => handleDeleteChatRoom(chatRoom.id)}
+            <NavFooterTool
+              iconSrc="/svg/envelope-solid.svg"
+              text="chatfoodie2023@gmail.com"
+              link="mailto:chatfoodie2023@gmail.com"
             />
           </div>
-          {index !== chatRooms.length - 1 && <hr className="mt-2 border-gray-300" />}
         </div>
-      ))}
+      </nav>
+    )
+  return (
+    <nav className="flex flex-col min-w-[16rem] p-2.5 border-r-gray-200 border-r border-solid">
+      <hr className="mt-2 border-gray-300" />
       <div className="grow" />
       <div className="border-t-2 border-solid border-gray-400">
         <div>
