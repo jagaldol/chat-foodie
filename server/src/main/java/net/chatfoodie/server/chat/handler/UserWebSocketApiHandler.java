@@ -1,11 +1,15 @@
 package net.chatfoodie.server.chat.handler;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.service.UserWebSocketService;
+import net.chatfoodie.server.user.Role;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -14,6 +18,29 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class UserWebSocketApiHandler extends UserWebSocketBaseHandler {
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        String token;
+        try {
+            token = userWebSocketService.extractTokenFromSession(session);
+        } catch (Exception e) {
+            session.close();
+            return;
+        }
+        try {
+            DecodedJWT decodedJWT = JwtProvider.verify(token);
+            Role role = decodedJWT.getClaim("role").as(Role.class);
+            if (role != Role.ROLE_USER) throw new RuntimeException();
+        } catch (TokenExpiredException e) {
+            log.error("토큰 만료");
+            session.close();
+        } catch (Exception e) {
+            log.error("토큰 검증 실패");
+            session.close();
+        }
+        super.afterConnectionEstablished(session);
+    }
 
     public UserWebSocketApiHandler(UserWebSocketService userWebSocketService, ObjectMapper om) {
         super(userWebSocketService, om);
@@ -24,7 +51,7 @@ public class UserWebSocketApiHandler extends UserWebSocketBaseHandler {
     }
 
     @Override
-    protected ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session) {
+    protected ChatFoodieRequest.MessageDto toFoodieMessageDto(ChatUserRequest.MessageDtoInterface messageDto, WebSocketSession session) throws IOException {
         Long userId = userWebSocketService.getUserId(session);
 
         return userWebSocketService.makeFoodieRequestDto(

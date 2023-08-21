@@ -1,7 +1,12 @@
 import Image from "next/image"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { undefined } from "zod"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
+import { AuthContext } from "@/contexts/authContextProvider"
+import { ChatroomContext } from "@/contexts/chatroomContextProvider"
+import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import proxy from "@/utils/proxy"
 
 export default function MessageInputContainer({
   messages,
@@ -10,11 +15,14 @@ export default function MessageInputContainer({
   prepareRegenerate,
 }: {
   messages: ChatMessage[]
-  handleStreamMessage: (message: string, regenerate: boolean) => void
+  handleStreamMessage: (message: string, regenerate: boolean, chatroomIdToSend: number) => void
   setTempUserMessage: (message: string) => void
   prepareRegenerate: () => void
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
+
+  const { userId, isLoad } = useContext(AuthContext)
+  const { chatroomId, setChatroomId } = useContext(ChatroomContext)
 
   const resizeBox = () => {
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
@@ -51,33 +59,57 @@ export default function MessageInputContainer({
     return history
   }
 
-  function generateFoodieResponse(userInputValue: string, regenerate: boolean) {
-    // const socket = io.connect(`${process.env.NEXT_PUBLIC_API_URL}/api/public-chat`)
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}/api/public-chat`)
+  async function generateFoodieResponse(userInputValue: string, regenerate: boolean) {
+    let url = `${process.env.NEXT_PUBLIC_WS_URL}/api`
+    let chatroomIdToSend = chatroomId
+    if (userId === 0) {
+      url += "/public-chat"
+    } else {
+      url += `/chat?token=${getJwtTokenFromStorage()}`
+
+      if (chatroomIdToSend === 0) {
+        const headers = {
+          Authorization: getJwtTokenFromStorage(),
+        }
+        const res = await proxy.post("/chatrooms", undefined, { headers })
+        chatroomIdToSend = res.data.response.chatroomId
+        setChatroomId(chatroomIdToSend)
+      }
+    }
+
+    const socket = new WebSocket(url)
 
     let successConnect = false
 
     socket.addEventListener("open", () => {
       // 서버로 메시지 전송
       successConnect = true
-      socket.send(
-        JSON.stringify({
+      let messageToSend: string
+      if (userId === 0) {
+        messageToSend = JSON.stringify({
           input: userInputValue,
           history: makeHistory(),
           regenerate,
-        }),
-      )
+        })
+      } else {
+        messageToSend = JSON.stringify({
+          input: userInputValue,
+          chatroomId: chatroomIdToSend,
+          regenerate,
+        })
+      }
+      socket.send(messageToSend)
     })
 
     socket.addEventListener("message", (event) => {
       const res = JSON.parse(event.data)
       switch (res.event) {
         case "text_stream": {
-          handleStreamMessage(res.response, regenerate)
+          handleStreamMessage(res.response, regenerate, chatroomIdToSend)
           return
         }
         case "stream_end":
-          handleStreamMessage("", regenerate)
+          handleStreamMessage("", regenerate, chatroomIdToSend)
           break
         case "error":
           alert(res.response)
@@ -98,18 +130,18 @@ export default function MessageInputContainer({
     if (isGenerating) return
     setIsGenerating(true)
     prepareRegenerate()
-    generateFoodieResponse("", true)
+    generateFoodieResponse("", true).then(() => {})
   }
 
   const onSendClick = () => {
-    if (isGenerating) return
+    if (!isLoad || isGenerating) return
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
 
     const userInputValue = userInputBox!.value
     if (userInputValue) {
       setTempUserMessage(userInputValue)
       setIsGenerating(true)
-      generateFoodieResponse(userInputValue, false)
+      generateFoodieResponse(userInputValue, false).then(() => {})
       userInputBox!.value = ""
       resizeBox()
     }
@@ -117,7 +149,7 @@ export default function MessageInputContainer({
 
   return (
     <div className="flex justify-center">
-      <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative">
+      <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
         <button
           type="button"
           className={`w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${

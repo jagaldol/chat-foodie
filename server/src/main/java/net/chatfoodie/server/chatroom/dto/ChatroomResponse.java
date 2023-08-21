@@ -49,4 +49,12 @@ public class ChatroomResponse {
 
         }
     }
+
+    public record CreateChatroomDto(
+            Long chatroomId
+    ) {
+        public CreateChatroomDto(Chatroom chatroom) {
+            this(chatroom.getId());
+        }
+    }
 }

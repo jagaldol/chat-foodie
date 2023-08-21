@@ -1,5 +1,7 @@
 package net.chatfoodie.server.chat.service;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +12,7 @@ import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.CustomUserDetails;
+import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
@@ -23,6 +26,7 @@ import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.food.Food;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -116,15 +120,10 @@ public class UserWebSocketService {
         });
     }
 
-    public Long getUserId(WebSocketSession session) {
-        Authentication authentication = (Authentication) session.getPrincipal();
-
-        if (authentication == null) {
-            throw new RuntimeException();
-        }
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        return customUserDetails.getId();
+    public Long getUserId(WebSocketSession session) throws IOException {
+        String token = extractTokenFromSession(session);
+        DecodedJWT decodedJWT = JwtProvider.verify(token);
+        return decodedJWT.getClaim("id").asLong();
     }
 
     @Transactional
@@ -287,5 +286,23 @@ public class UserWebSocketService {
             log.error("ErrorMessage를 만드는 중 오류 발생했습니다.:" + message);
             return new TextMessage("{\"event\":\"error\",\"response\":\"서버 에러입니다.\"}");
         }
+    }
+
+    public String extractTokenFromSession(WebSocketSession session) throws IOException {
+        String queryString = Objects.requireNonNull(session.getUri()).getQuery();
+
+        if (queryString == null) {
+            log.info(session + "클라이언트의 토큰이 존재 하지 않음");
+            throw new RuntimeException();
+        }
+        String tokenParam = "token=";
+        int tokenParamIndex = queryString.indexOf(tokenParam);
+        if (tokenParamIndex == -1) {
+            throw new RuntimeException();
+        }
+        int tokenValueStartIndex = tokenParamIndex + tokenParam.length();
+        int tokenValueSplitIndex = queryString.indexOf('&', tokenValueStartIndex);
+        int tokenValueEndIndex = tokenValueSplitIndex == -1 ? queryString.length() : tokenValueSplitIndex;
+        return queryString.substring(tokenValueStartIndex, tokenValueEndIndex);
     }
 }

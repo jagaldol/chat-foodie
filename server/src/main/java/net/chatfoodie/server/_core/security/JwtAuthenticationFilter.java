@@ -1,6 +1,5 @@
 package net.chatfoodie.server._core.security;
 
-import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
@@ -50,14 +49,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug("인증 객체 생성됨");
-        } catch (SignatureVerificationException e) {
-            log.error("토큰 검증 실패");
         } catch (TokenExpiredException e) {
             log.error("토큰 만료");
+        } catch (Exception e) {
+            log.error("토큰 검증 실패");
         } finally {
             chain.doFilter(request, response);
         }
     }
-
-
 }
