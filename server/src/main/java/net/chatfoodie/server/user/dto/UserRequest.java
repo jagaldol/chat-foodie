@@ -43,6 +43,7 @@ public class UserRequest {
                     .gender(gender)
                     .birth(birth == null ? null : Utils.convertStringToDate(birth))
                     .email(email)
+                    .role(Role.ROLE_PENDING)
                     .build();
         }
     }
