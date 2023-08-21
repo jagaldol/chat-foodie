@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect } from "react"
+import { useContext, useState } from "react"
 import Modal from "@/components/modal"
 import TextField from "@/components/textField"
 import { AuthContext } from "@/contexts/authContextProvider"
@@ -10,6 +10,8 @@ import proxy from "@/utils/proxy"
 
 export default function EmailVerificationModal({ onClickClose }: { onClickClose(): void }) {
   const { needUpdate } = useContext(AuthContext)
+  const [disableButton, setDisableButton] = useState(false)
+  const [message, setMessage] = useState("인증 코드 전송 완료")
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -33,19 +35,23 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
       })
   }
 
-  useEffect(() => {
+  const sendVerificationCode = () => {
     const headers = {
       Authorization: getJwtTokenFromStorage(),
     }
+    setDisableButton(true)
+    setMessage("인증 코드 전송 중")
     proxy
       .post("/email-verifications", undefined, { headers })
       .then(() => {
-        alert("인증 번호가 전송되었습니다.")
+        setDisableButton(false)
+        setMessage("인증 코드 전송 완료")
       })
       .catch((res) => {
         alert(res.response.data.errorMessage)
       })
-  }, [])
+  }
+
   return (
     <Modal
       onClickClose={() => {
@@ -66,10 +72,19 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
                 limitInputNumber(e, 6)
               }}
               required
+              message={message}
             />
+            <button
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3 disabled:opacity-50"
+              type="button"
+              disabled={disableButton}
+              onClick={sendVerificationCode}
+            >
+              인증 코드 재전송
+            </button>
 
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3"
               type="submit"
             >
               이메일 인증하기
