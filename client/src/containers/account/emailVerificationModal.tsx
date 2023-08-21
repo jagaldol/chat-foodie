@@ -11,7 +11,7 @@ import proxy from "@/utils/proxy"
 export default function EmailVerificationModal({ onClickClose }: { onClickClose(): void }) {
   const { userId, needUpdate } = useContext(AuthContext)
   const [disableButton, setDisableButton] = useState(false)
-  const [message, setMessage] = useState("인증 코드 전송 완료")
+  const [message, setMessage] = useState("")
   const [email, setEmail] = useState("")
   const [modifiedEmail, setModifiedEmail] = useState("")
   const [emailError, setEmailError] = useState("")
@@ -77,8 +77,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
         email: modifiedEmail,
       }
       try {
-        const postResponse = await proxy.post("/validate/email", requestData)
-        console.log(postResponse)
+        await proxy.post("/validate/email", requestData)
         setEmailError("")
       } catch (e: any) {
         if (e.response.data.status === 462) {
@@ -141,17 +140,6 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
       setEmail(res.data.response.email)
       setModifiedEmail(res.data.response.email)
     })
-    setDisableButton(true)
-    setMessage("인증 코드 전송 중")
-    proxy
-      .post("/email-verifications", undefined, { headers })
-      .then(() => {
-        setDisableButton(false)
-        setMessage("인증 코드 전송 완료")
-      })
-      .catch((res) => {
-        alert(res.response.data.errorMessage)
-      })
   }, [])
 
   return (

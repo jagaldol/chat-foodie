@@ -136,8 +136,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         email: formData.email,
       }
       try {
-        const postResponse = await proxy.post("/validate/email", requestData)
-        console.log(postResponse)
+        proxy.post("/validate/email", requestData)
         newErrors.email = ""
       } catch (e: any) {
         if (e.response.data.status === 462) {
@@ -205,6 +204,16 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         saveJwt(jwt)
         needUpdate()
         onClickClose()
+
+        const headers = {
+          Authorization: jwt,
+        }
+        proxy
+          .post("/email-verifications", undefined, { headers })
+          .then(() => {})
+          .catch((response) => {
+            alert(response.response.data.errorMessage)
+          })
       })
       .catch((res) => {
         // alert(res.response.data.errorMessage)
