@@ -48,7 +48,7 @@ export default function Account() {
               >
                 <p className="text-sm mx-2.5 my-2 text-center">로그아웃</p>
               </button>
-              {emailVerificationModalOpend ? (
+              {emailVerificationModalOpend && userRole === "ROLE_PENDING" ? (
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
               ) : null}
             </>
