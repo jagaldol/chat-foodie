@@ -267,8 +267,8 @@ public class UserWebSocketService {
             reversedMessages.remove(reversedMessages.size() - 1);
 
         List<List<String>> history = new ArrayList<>();
-
-        history.add(favorMessages);
+        if (!favorMessages.isEmpty())
+            history.add(favorMessages);
 
         for(int i = reversedMessages.size() - 1; i >= 0; i -= 2) {
             history.add(List.of(reversedMessages.get(i), reversedMessages.get(i - 1)));
