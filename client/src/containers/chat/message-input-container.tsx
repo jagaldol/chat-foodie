@@ -11,12 +11,12 @@ import proxy from "@/utils/proxy"
 export default function MessageInputContainer({
   messages,
   handleStreamMessage,
-  setTempUserMessage,
+  addUserMessage,
   prepareRegenerate,
 }: {
   messages: ChatMessage[]
-  handleStreamMessage: (message: string, regenerate: boolean, chatroomIdToSend: number) => void
-  setTempUserMessage: (message: string) => void
+  handleStreamMessage: (message: string, chatroomIdToSend: number) => void
+  addUserMessage: (message: string) => void
   prepareRegenerate: () => void
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
@@ -105,11 +105,11 @@ export default function MessageInputContainer({
       const res = JSON.parse(event.data)
       switch (res.event) {
         case "text_stream": {
-          handleStreamMessage(res.response, regenerate, chatroomIdToSend)
+          handleStreamMessage(res.response, chatroomIdToSend)
           return
         }
         case "stream_end":
-          handleStreamMessage("", regenerate, chatroomIdToSend)
+          handleStreamMessage("", chatroomIdToSend)
           break
         case "error":
           alert(res.response)
@@ -139,7 +139,7 @@ export default function MessageInputContainer({
 
     const userInputValue = userInputBox!.value
     if (userInputValue) {
-      setTempUserMessage(userInputValue)
+      addUserMessage(userInputValue)
       setIsGenerating(true)
       generateFoodieResponse(userInputValue, false).then(() => {})
       userInputBox!.value = ""

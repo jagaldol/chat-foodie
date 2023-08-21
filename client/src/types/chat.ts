@@ -1,5 +1,6 @@
 export interface ChatMessage {
-  id: number
+  key: number
+  id?: number
   content: string
   isFromChatbot: boolean
 }

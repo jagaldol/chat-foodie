@@ -31,13 +31,9 @@ function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: Forwa
 }
 
 export default function MessageBoxList({
-  messages,
-  tempUserMessage,
-  streamingMessage, // cursor, getMessages,
+  messages, // cursor, getMessages,
 }: {
   messages: ChatMessage[]
-  tempUserMessage: string
-  streamingMessage: string
   // cursor: Cursor
   // getMessages: (_cursor: Cursor) => void
 }) {
@@ -57,7 +53,7 @@ export default function MessageBoxList({
 
   useEffect(() => {
     scrollTraceDownChatBox()
-  }, [streamingMessage])
+  }, [messages])
 
   // useEffect(() => {
   //   const instance = chatBox.current!
@@ -82,14 +78,8 @@ export default function MessageBoxList({
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main" ref={chatBox}>
       {messages.map((message) => {
-        return <MessageBox message={message} key={message.id} chatBox={chatBox} />
+        return <MessageBox message={message} key={message.key} chatBox={chatBox} />
       })}
-      {tempUserMessage !== "" ? (
-        <MessageBox message={{ id: 0, content: tempUserMessage, isFromChatbot: false }} chatBox={chatBox} />
-      ) : null}
-      {streamingMessage !== "" ? (
-        <MessageBox message={{ id: 0, content: streamingMessage, isFromChatbot: true }} chatBox={chatBox} />
-      ) : null}
     </div>
   )
 }
