@@ -103,10 +103,13 @@ public class ChatroomService {
     }
 
     private List<Message> getMessages(Long chatroomId, CursorRequest cursorRequest) {
-        Pageable pageable = PageRequest.of(0, cursorRequest.getSize());
+        if (cursorRequest.hasSize()) {
+            Pageable pageable = PageRequest.of(0, cursorRequest.size());
 
-        if (cursorRequest.hasKey())
-            return messageRepository.findAllByChatroomIdAndIdLessThanOrderByIdDesc(chatroomId, cursorRequest.key(), pageable);
-        return messageRepository.findAllByChatroomIdOrderByIdDesc(chatroomId, pageable);
+            if (cursorRequest.hasKey())
+                return messageRepository.findAllByChatroomIdAndIdLessThanOrderByIdDesc(chatroomId, cursorRequest.key(), pageable);
+            return messageRepository.findAllByChatroomIdOrderByIdDesc(chatroomId, pageable);
+        }
+        return messageRepository.findAllByChatroomIdOrderByIdDesc(chatroomId);
     }
 }
