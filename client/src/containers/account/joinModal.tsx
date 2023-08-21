@@ -274,6 +274,20 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
             />
 
             <TextField
+              label="이메일"
+              type="text"
+              name="email"
+              placeholder="example@domain.com"
+              required
+              onChange={(e) => {
+                limitInputNumber(e, 100)
+                handleChange(e)
+              }}
+              onBlur={() => validateEmail()}
+              error={errors.email}
+            />
+
+            <TextField
               label="이름"
               type="text"
               name="name"
@@ -339,20 +353,6 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
                 <p className=" py-2 ">일</p>
               </div>
             </label>
-
-            <TextField
-              label="이메일"
-              type="text"
-              name="email"
-              placeholder="example@domain.com"
-              required
-              onChange={(e) => {
-                limitInputNumber(e, 100)
-                handleChange(e)
-              }}
-              onBlur={() => validateEmail()}
-              error={errors.email}
-            />
 
             <button
               className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
