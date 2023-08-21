@@ -234,13 +234,15 @@ server of chatFoodie.
 
 #### POST /api/chatrooms
 
-새로운 대화방 생성
+새로운 대화방 생성 - 생성된 대화방의 번호를 리턴해준다.
 
 * Response Body
   ```json
   {
     "status": 200,
-    "response": null,
+    "response": {
+        "chatroomId": 4
+    },
     "errorMessage": null
   }
   ```
@@ -317,15 +319,16 @@ server of chatFoodie.
 * 처음 요청 시 key에 값 없이 요청 : 제일 최근의 대화부터 size만큼 메시지를 전달하고 `nextCursorRequest`로 다음 요청에 필요한 파라미터를 전달
 * 전달받은 `nextCursorRequest`의 값을 사용하여 요청 시 이어서 대화내역 확인 가능
 * 더 이상 가져올 메시지가 없을 시, `nextCurosorRequest.key`에 `-1` 이 담겨서 리턴
+* size 별도 설정 안 했을 시, 전체 메시지 불러옴 
 
 <br />
 
 * Query String
 
-| Param | Description             |
-|-------|-------------------------|
-| key   | 페이지를 나누는 기준             |
-| size  | 한번에 받아올 데이터의 개수(기본값 20) |
+| Param | Description     |
+|-------|-----------------|
+| key   | 페이지를 나누는 기준     |
+| size  | 한번에 받아올 데이터의 개수 |
 
 * Response Body
   ```json
@@ -432,9 +435,11 @@ server of chatFoodie.
   }
   ```
 
-### WebSocket /api/chat
+### WebSocket /api/chat?token=
 
 (회원 전용 메서드)사용자의 입력을 전달하고 답변을 스트리밍으로 돌려 받음
+
+url의 query parameter로 token 값을 전달받음
 
 * 하루 채팅 제한 존재 X
 * 서버에서 회원 선호도를 추가하여 챗봇에게 전달하게 된다.

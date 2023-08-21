@@ -1,21 +1,14 @@
 import Image from "next/image"
-import { useEffect } from "react"
+import { ForwardedRef, useEffect, useRef } from "react"
 import { ChatMessage } from "@/types/chat"
 
-export const scrollDownChatBox = () => {
-  const chatBox = document.querySelector<HTMLElement>("#chat-main")
-  if (chatBox !== null && chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) <= 30) {
-    chatBox.scrollTop = chatBox.scrollHeight
-  }
-}
-
-function MessageBox({ message }: { message: ChatMessage }) {
+function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: ForwardedRef<HTMLDivElement> }) {
   useEffect(() => {
-    const chatBox = document.querySelector<HTMLElement>("#chat-main")
-    if (chatBox !== null) {
-      chatBox.scrollTop = chatBox.scrollHeight
+    if (typeof chatBox !== "function" && chatBox?.current) {
+      const instance = chatBox.current
+      instance.scrollTop = instance.scrollHeight
     }
-  }, [])
+  }, [chatBox])
 
   return (
     <div
@@ -40,22 +33,62 @@ function MessageBox({ message }: { message: ChatMessage }) {
 export default function MessageBoxList({
   messages,
   tempUserMessage,
-  streamingMessage,
+  streamingMessage, // cursor, getMessages,
 }: {
   messages: ChatMessage[]
   tempUserMessage: string
   streamingMessage: string
+  // cursor: Cursor
+  // getMessages: (_cursor: Cursor) => void
 }) {
+  // const [prevScrollHeight, setPrevScrollHeight] = useState(0)
+
+  // const { chatroomId } = useContext(ChatroomContext)
+
+  const chatBox = useRef<HTMLDivElement>(null)
+
+  const scrollTraceDownChatBox = () => {
+    if (chatBox.current) {
+      if (chatBox.current.scrollHeight - (chatBox.current.scrollTop + chatBox.current.clientHeight) <= 30) {
+        chatBox.current.scrollTop = chatBox.current.scrollHeight
+      }
+    }
+  }
+
+  useEffect(() => {
+    scrollTraceDownChatBox()
+  }, [streamingMessage])
+
+  // useEffect(() => {
+  //   const instance = chatBox.current!
+  //   const handleScroll = () => {
+  //     const { scrollTop, scrollHeight } = instance
+  //
+  //     if (scrollTop === 0 && chatroomId !== 0) {
+  //       getMessages(cursor)
+  //       // TODO: 위에 메시지들 끼워넣고 올바른 위치로 스크롤 옮기기
+  //       instance.scrollTop = scrollHeight - prevScrollHeight
+  //       setPrevScrollHeight(scrollHeight)
+  //     }
+  //   }
+  //
+  //   instance.addEventListener("scroll", handleScroll)
+  //
+  //   return () => {
+  //     instance.removeEventListener("scroll", handleScroll)
+  //   }
+  // }, [prevScrollHeight, chatroomId, cursor, getMessages])
+
   return (
-    <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main">
+    <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main" ref={chatBox}>
       {messages.map((message) => {
-        return <MessageBox message={message} key={message.id} />
+        return <MessageBox message={message} key={message.id} chatBox={chatBox} />
       })}
       {tempUserMessage !== "" ? (
-        <MessageBox message={{ id: 0, content: tempUserMessage, isFromChatbot: false }} />
+        <MessageBox message={{ id: 0, content: tempUserMessage, isFromChatbot: false }} chatBox={chatBox} />
       ) : null}
       {streamingMessage !== "" ? (
-        <MessageBox message={{ id: 0, content: streamingMessage, isFromChatbot: true }} />
+        <MessageBox message={{ id: 0, content: streamingMessage, isFromChatbot: true }} chatBox={chatBox} />
       ) : null}
     </div>
   )

@@ -6,8 +6,8 @@ public record CursorRequest(
 ) {
     public static final Long NONE_KEY = -1L;
 
-    public Integer getSize() {
-        return size == null ? 20 : size;
+    public Boolean hasSize() {
+        return size != null;
     }
 
     public Boolean hasKey() {
