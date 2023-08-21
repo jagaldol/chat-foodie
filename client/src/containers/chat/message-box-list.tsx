@@ -82,13 +82,13 @@ export default function MessageBoxList({
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main" ref={chatBox}>
       {messages.map((message) => {
-        return <MessageBox message={message} key={message.id} chatBox={chatBox} />
+        return <MessageBox message={message} key={message.key} chatBox={chatBox} />
       })}
       {tempUserMessage !== "" ? (
-        <MessageBox message={{ id: 0, content: tempUserMessage, isFromChatbot: false }} chatBox={chatBox} />
+        <MessageBox message={{ key: 0, content: tempUserMessage, isFromChatbot: false }} chatBox={chatBox} />
       ) : null}
       {streamingMessage !== "" ? (
-        <MessageBox message={{ id: 0, content: streamingMessage, isFromChatbot: true }} chatBox={chatBox} />
+        <MessageBox message={{ key: 0, content: streamingMessage, isFromChatbot: true }} chatBox={chatBox} />
       ) : null}
     </div>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
 import MessageInputContainer from "@/containers/chat/message-input-container"
 import MessageBoxListContainer from "@/containers/chat/message-box-list-container"
 import { ChatMessage, Cursor } from "@/types/chat"
@@ -13,6 +13,7 @@ export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [tempUserMessage, setTempUserMessage] = useState<string>("")
   const [streamingMessage, setStreamingMessage] = useState<string>("")
+  const messageNextKey = useRef<number>(1)
 
   const getMessagesLength = 20
 
@@ -23,15 +24,9 @@ export default function ChatUi() {
   const addMessage = (message: ChatMessage) => {
     setMessages((messagesState) => {
       const saveMessage = { ...message }
-      if (saveMessage.id === 0) {
-        if (messagesState.length === 0) {
-          // 없으면 1부터 시작
-          saveMessage.id = 1
-        } else {
-          // 가장 마지막보다 1크게 부여
-          saveMessage.id = messagesState[messagesState.length - 1].id + 1
-        }
-      }
+
+      saveMessage.key = messageNextKey.current
+      messageNextKey.current += 1
       return [...messagesState, saveMessage]
     })
   }
@@ -40,7 +35,7 @@ export default function ChatUi() {
     if (!regenerate && message === "") {
       setTempUserMessage((prevState) => {
         const userMessage: ChatMessage = {
-          id: 0,
+          key: 0,
           content: prevState,
           isFromChatbot: false,
         }
@@ -58,7 +53,7 @@ export default function ChatUi() {
       if (messages.length === 0) {
         messagesToAdd = newMessages
       } else {
-        const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
+        const skipIndex = newMessages.map((m) => m.key).indexOf(messages.at(-1)!.key)
         messagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
       }
     }
@@ -66,7 +61,7 @@ export default function ChatUi() {
     setStreamingMessage((prevState) => {
       if (message === "") {
         const chatbotMessage: ChatMessage = {
-          id: 0,
+          key: 0,
           content: prevState,
           isFromChatbot: true,
         }
