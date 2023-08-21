@@ -3,7 +3,7 @@
 import React, { useState, useContext } from "react"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
-import { getJwtTokenFromStorage, saveJwt } from "@/utils/jwtDecoder"
+import { saveJwt } from "@/utils/jwtDecoder"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { limitInputNumber, generateYearOptions, generateDayOptions } from "@/utils/utils"
 import TextField from "@/components/textField"
@@ -205,17 +205,6 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         saveJwt(jwt)
         needUpdate()
         onClickClose()
-      })
-      .then(() => {
-        const headers = {
-          Authorization: getJwtTokenFromStorage(),
-        }
-        proxy
-          .post("/email-verifications", undefined, { headers })
-          .then(() => {})
-          .catch((res) => {
-            alert(res.response.data.errorMessage)
-          })
       })
       .catch((res) => {
         // alert(res.response.data.errorMessage)
