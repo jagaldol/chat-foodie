@@ -52,15 +52,13 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         loginId: formData.loginId,
       }
       try {
-        const postResponse = await proxy.post("/validate/loginId", requestData)
-        console.log(postResponse)
+        await proxy.post("/validate/loginId", requestData)
         newErrors.loginId = ""
       } catch (e: any) {
         if (e.response.data.status === 461) {
           isValid = false
           newErrors.loginId = "이미 존재하는 아이디 입니다."
         }
-        console.log(e)
       }
     }
 
@@ -136,14 +134,13 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         email: formData.email,
       }
       try {
-        proxy.post("/validate/email", requestData)
+        await proxy.post("/validate/email", requestData)
         newErrors.email = ""
       } catch (e: any) {
         if (e.response.data.status === 462) {
           isValid = false
           newErrors.email = "이미 존재하는 이메일 입니다."
         }
-        console.log(e)
       }
     }
 
@@ -219,10 +216,10 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
         // alert(res.response.data.errorMessage)
         switch (res.response.data.status) {
           case 461:
-            setErrors({ ...errors, loginId: "이미 존재하는 아이디 입니다." })
+            setErrors((prev) => ({ ...prev, loginId: "이미 존재하는 아이디 입니다." }))
             break
           case 462:
-            setErrors({ ...errors, email: "이미 존재하는 이메일 입니다." })
+            setErrors((prev) => ({ ...prev, email: "이미 존재하는 이메일 입니다." }))
             break
           default:
             break

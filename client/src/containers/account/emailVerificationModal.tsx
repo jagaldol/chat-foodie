@@ -88,7 +88,6 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
             isValid = true
           }
         }
-        console.log(e)
       }
     }
 
@@ -136,7 +135,6 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
       Authorization: getJwtTokenFromStorage(),
     }
     proxy.get(`/users/${userId}`, { headers }).then((res) => {
-      console.log(res)
       setEmail(res.data.response.email)
       setModifiedEmail(res.data.response.email)
     })
