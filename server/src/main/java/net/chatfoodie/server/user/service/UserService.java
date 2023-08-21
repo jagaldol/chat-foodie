@@ -2,14 +2,13 @@ package net.chatfoodie.server.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.chatfoodie.server._core.errors.exception.Exception400;
-import net.chatfoodie.server._core.errors.exception.Exception404;
-import net.chatfoodie.server._core.errors.exception.Exception500;
+import net.chatfoodie.server._core.errors.exception.*;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.dto.UserResponse;
@@ -35,18 +34,18 @@ public class UserService {
 
     final private PasswordEncoder passwordEncoder;
 
-    public void join(UserRequest.JoinDto requestDto) {
+    public String join(UserRequest.JoinDto requestDto) {
 
         if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
             throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
         }
         
         if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
-            throw new Exception400("이미 존재하는 아이디입니다");
+            throw new LoginIdAlreadyExistException("이미 존재하는 아이디입니다");
         }
 
         if (userRepository.findByEmail(requestDto.email()).isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다.");
+            throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(requestDto.password());
@@ -54,7 +53,7 @@ public class UserService {
         var user = requestDto.createUser(encodedPassword);
 
         try {
-            userRepository.save(user);
+            return JwtProvider.create(userRepository.save(user));
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
@@ -110,6 +109,23 @@ public class UserService {
 
         if (requestDto.birth() != null) {
             user.updateBirth(Utils.convertStringToDate(requestDto.birth()));
+        }
+
+        if (requestDto.email() != null) {
+            user.updateEmail(requestDto.email());
+            user.updateRole(Role.ROLE_PENDING);
+        }
+    }
+
+    public void validateLoginId(UserRequest.ValidateLoginIdDto requestDto) {
+        if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
+            throw new LoginIdAlreadyExistException("이미 존재하는 아이디입니다");
+        }
+    }
+
+    public void validateEmail(UserRequest.ValidateEmailDto requestDto) {
+        if (userRepository.findByEmail(requestDto.email()).isPresent()) {
+            throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
     }
 }

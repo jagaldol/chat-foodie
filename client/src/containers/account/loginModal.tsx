@@ -5,55 +5,66 @@ import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
 import { AuthContext } from "@/contexts/authContextProvider"
+import TextField from "@/components/textField"
+import { limitInputNumber } from "@/utils/utils"
 
 export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
   const { needUpdate } = useContext(AuthContext)
 
   return (
     <Modal onClickClose={onClickClose}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          const idInput = e.currentTarget.querySelector("[name='id']") as HTMLInputElement
-          const id = idInput.value
-          const passwordInput = e.currentTarget.querySelector("[name='password']") as HTMLInputElement
-          const password = passwordInput.value
-          proxy
-            .post("/login", {
-              loginId: id,
-              password,
-            })
-            .then((res) => {
-              const jwt = res.headers.authorization
-              saveJwt(jwt)
-              alert("로그인 성공")
-              needUpdate()
-              onClickClose()
-            })
-            .catch((res) => {
-              alert(res.response.data.errorMessage)
-            })
-        }}
-      >
-        <label className="flex items-center" htmlFor="id">
-          <p className="mr-9 w-12">ID</p>
-          <input name="id" className="grow border border-solid border-black rounded my-3" />
-        </label>
-        <label className="flex items-center" htmlFor="password">
-          <p className="mr-9 w-12">Password</p>
-          <input name="password" className="grow border border-solid border-black rounded my-3" />
-        </label>
-        <div className="flex justify-center m">
-          <button
-            className="w-full bg-main-theme text-white px-3 py-1 rounded"
-            type="submit"
-            onClick={() => {}}
-            value="버튼"
-          >
-            로그인
-          </button>
-        </div>
-      </form>
+      <div className="p-5 h-0 grow">
+        <form
+          className="max-h-full"
+          onSubmit={(e) => {
+            e.preventDefault()
+            const idInput = e.currentTarget.querySelector<HTMLInputElement>("[name='loginId']")
+            const id = idInput!.value
+            const passwordInput = e.currentTarget.querySelector<HTMLInputElement>("[name='password']")
+            const password = passwordInput!.value
+            proxy
+              .post("/login", {
+                loginId: id,
+                password,
+              })
+              .then((res) => {
+                const jwt = res.headers.authorization
+                saveJwt(jwt)
+                alert("로그인 성공")
+                needUpdate()
+                onClickClose()
+              })
+              .catch((res) => {
+                alert(res.response.data.errorMessage)
+              })
+          }}
+        >
+          <div className="flex flex-col items-center">
+            <TextField
+              label="아이디"
+              type="text"
+              name="loginId"
+              placeholder="아이디를 입력하세요"
+              onChange={(e) => limitInputNumber(e, 40)}
+            />
+            <TextField
+              label="비밀번호"
+              type="password"
+              name="password"
+              placeholder="비밀번호를 입력하세요"
+              onChange={(e) => limitInputNumber(e, 64)}
+            />
+            <div className="flex justify-center m">
+              <button
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
+                type="submit"
+              >
+                로그인
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </Modal>
   )
 }

@@ -78,8 +78,9 @@ public class SecurityConfig {
 
         // 10. 인증, 권한 필터 설정
         http.authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/api/chatrooms/**", "/api/users/**").hasRole("USER")
-                                .requestMatchers("/api/email-verifications/**").hasAnyRole("PENDING", "USER")
+                        authorize.requestMatchers("/api/chatrooms/**").hasRole("USER")
+                                .requestMatchers("/api/email-verifications/**", "/api/users/**").hasAnyRole("PENDING", "USER")
+                                .requestMatchers("/api/validate/**").permitAll()
                                 .anyRequest().permitAll()
         );
 

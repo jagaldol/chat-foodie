@@ -1,17 +1,27 @@
 "use client"
 
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import LoginModal from "@/containers/account/loginModal"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { deleteJwt } from "@/utils/jwtDecoder"
 import JoinModal from "@/containers/account/joinModal"
 import ProfileModal from "@/containers/account/profileModal"
+import EmailVerificationModal from "./emailVerificationModal"
 
 export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)
-  const [JoinModalOpened, setJoinModalOpened] = useState(false)
-  const { userId, isLoad, needUpdate } = useContext(AuthContext)
+  const [joinModalOpened, setJoinModalOpened] = useState(false)
+  const [emailVerificationModalOpend, setEmailVerificationModalOpend] = useState(false)
+  const { userId, isLoad, userRole, needUpdate } = useContext(AuthContext)
   const [profileModalOpened, setProfileModalOpened] = useState(false)
+
+  useEffect(() => {
+    if (userRole === "ROLE_PENDING") {
+      setEmailVerificationModalOpend(true)
+    } else if (userRole === "ROLE_USER") {
+      setEmailVerificationModalOpend(false)
+    }
+  }, [userRole])
 
   return (
     <div className="flex flex-wrap justify-end items-center h-min">
@@ -38,6 +48,9 @@ export default function Account() {
               >
                 <p className="text-sm mx-2.5 my-2 text-center">로그아웃</p>
               </button>
+              {emailVerificationModalOpend && userRole === "ROLE_PENDING" ? (
+                <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
+              ) : null}
             </>
           )
         }
@@ -58,7 +71,7 @@ export default function Account() {
               <p className="text-sm mx-2.5 my-2 text-center">회원가입</p>
             </button>
             {loginModalOpened ? <LoginModal onClickClose={() => setLoginModalOpened(false)} /> : null}
-            {JoinModalOpened ? <JoinModal onClickClose={() => setJoinModalOpened(false)} /> : null}
+            {joinModalOpened ? <JoinModal onClickClose={() => setJoinModalOpened(false)} /> : null}
           </>
         )
       })()}
