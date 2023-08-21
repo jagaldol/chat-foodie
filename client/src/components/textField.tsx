@@ -9,6 +9,7 @@ export default function TextField({
   required = false,
   error = undefined,
   message = undefined,
+  disabled = undefined,
   onChange = undefined,
   onBlur = undefined,
 }: {
@@ -20,6 +21,7 @@ export default function TextField({
   required?: boolean
   error?: string
   message?: string
+  disabled?: boolean
   onChange?: React.ChangeEventHandler<HTMLInputElement>
   onBlur?: React.FocusEventHandler<HTMLInputElement>
 }) {
@@ -33,10 +35,11 @@ export default function TextField({
         type={type}
         name={name}
         value={value}
-        className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
+        className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1 disabled:opacity-50"
         placeholder={placeholder}
         onBlur={onBlur}
         onChange={onChange}
+        disabled={disabled}
       />
       {message && <p className="block text-sm font-medium text-slate-700 mt-1">{message}</p>}
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
