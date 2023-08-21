@@ -41,7 +41,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserWebSocketService {

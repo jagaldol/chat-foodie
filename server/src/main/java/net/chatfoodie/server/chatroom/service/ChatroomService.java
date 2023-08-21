@@ -35,6 +35,7 @@ public class ChatroomService {
     final private UserRepository userRepository;
     final private MessageRepository messageRepository;
 
+    @Transactional
     public ChatroomResponse.CreateChatroomDto create(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("회원이 존재하지 않습니다"));
 
