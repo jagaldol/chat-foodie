@@ -11,8 +11,6 @@ import { AuthContext } from "@/contexts/authContextProvider"
 
 export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [tempUserMessage, setTempUserMessage] = useState<string>("")
-  const [streamingMessage, setStreamingMessage] = useState<string>("")
   const messageNextKey = useRef<number>(1)
 
   const getMessagesLength = 20
@@ -30,56 +28,54 @@ export default function ChatUi() {
       return newMessage
     })
   }
-  const addMessage = (message: ChatMessage) => {
+  const addMessage = (message: string, isFromChatbot: boolean) => {
     setMessages((messagesState) => {
-      return [...messagesState, ...toChatMessageFormat([message])]
+      const chatMessage: ChatMessage = {
+        key: 0,
+        content: message,
+        isFromChatbot,
+      }
+      return [...messagesState, ...toChatMessageFormat([chatMessage])]
     })
   }
 
-  const handleStreamMessage = async (message: string, regenerate: boolean, chatroomIdToSend: number) => {
+  const handleStreamMessage = async (message: string, chatroomIdToSend: number) => {
     const finishStreaming = message === ""
-    if (!regenerate && finishStreaming) {
-      setTempUserMessage((prevState) => {
-        if (userId === 0) {
-          const userMessage: ChatMessage = {
-            key: 0,
-            content: prevState,
-            isFromChatbot: false,
-          }
-          addMessage(userMessage)
-        }
-        return ""
-      })
-    }
 
-    let messagesToAdd: ChatMessage[] = []
-    if (message === "" && userId !== 0) {
+    if (!finishStreaming) {
+      setMessages((prevState) => {
+        const lastMessage = prevState[prevState.length - 1]
+        if (lastMessage && lastMessage.isFromChatbot) {
+          lastMessage.content = message
+          return [...prevState.slice(0, -1), lastMessage]
+        }
+        const chatMessage: ChatMessage = {
+          key: 0,
+          content: message,
+          isFromChatbot: true,
+        }
+        return [...prevState, ...toChatMessageFormat([chatMessage])]
+      })
+    } else if (userId !== 0) {
       const headers = { Authorization: getJwtTokenFromStorage() }
       const params = { size: 2 }
       const res = await proxy.get(`/chatrooms/${chatroomIdToSend}/messages`, { headers, params })
-      const newMessages: ChatMessage[] = res.data.response.body.messages
-      if (messages.length === 0) {
-        messagesToAdd = newMessages
-      } else {
-        const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
-        messagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
-      }
-    }
 
-    setStreamingMessage((prevState) => {
-      if (message === "") {
-        const chatbotMessage: ChatMessage = {
-          key: 0,
-          content: prevState,
-          isFromChatbot: true,
-        }
-        if (userId === 0) addMessage(chatbotMessage)
-        else {
-          setMessages((prev) => [...prev, ...toChatMessageFormat(messagesToAdd)])
-        }
-      }
-      return message
-    })
+      const newMessages: ChatMessage[] = res.data.response.body.messages
+
+      setMessages((prevState) => {
+        const keyOfNeedToSync = prevState.filter((m) => m.id === undefined).map((m) => m.key)
+
+        const messagesToAdd = newMessages
+          .filter((m) => !prevState.map((prev) => prev.id).includes(m.id))
+          .map((m, index) => {
+            const ret = m
+            ret.key = keyOfNeedToSync[index]
+            return ret
+          })
+        return [...prevState.filter((m) => m.id), ...messagesToAdd]
+      })
+    }
   }
 
   const prepareRegenerate = () => {
@@ -98,7 +94,10 @@ export default function ChatUi() {
         .then((res) => {
           const patchedMessages = res.data.response.body.messages
           if (_cursor.key === undefined) {
-            setMessages(toChatMessageFormat(patchedMessages))
+            setMessages((prev) => {
+              const remain = prev.filter((chatMessage) => chatMessage.id === undefined)
+              return [...toChatMessageFormat(patchedMessages), ...remain]
+            })
           } else {
             setMessages((prev) => [...toChatMessageFormat(patchedMessages), ...prev])
           }
@@ -152,15 +151,13 @@ export default function ChatUi() {
       ) : null}
       <MessageBoxListContainer
         messages={messages}
-        tempUserMessage={tempUserMessage}
-        streamingMessage={streamingMessage}
         // cursor={cursor}
         // getMessages={getMessages}
       />
       <MessageInputContainer
         messages={messages}
         handleStreamMessage={handleStreamMessage}
-        setTempUserMessage={setTempUserMessage}
+        addUserMessage={(message: string) => addMessage(message, false)}
         prepareRegenerate={prepareRegenerate}
       />
     </div>
