@@ -1,4 +1,4 @@
-import { ChatMessage, Cursor } from "@/types/chat"
+import { ChatMessage } from "@/types/chat"
 import MessageBoxList from "@/containers/chat/message-box-list"
 
 export default function MessageBoxListContainer({

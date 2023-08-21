@@ -21,25 +21,33 @@ export default function ChatUi() {
 
   const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
+
+  const toChatMessageFormat = (messageList: ChatMessage[]): ChatMessage[] => {
+    return messageList.map((message) => {
+      const newMessage = { ...message }
+      newMessage.key = messageNextKey.current
+      messageNextKey.current += 1
+      return newMessage
+    })
+  }
   const addMessage = (message: ChatMessage) => {
     setMessages((messagesState) => {
-      const saveMessage = { ...message }
-
-      saveMessage.key = messageNextKey.current
-      messageNextKey.current += 1
-      return [...messagesState, saveMessage]
+      return [...messagesState, ...toChatMessageFormat([message])]
     })
   }
 
   const handleStreamMessage = async (message: string, regenerate: boolean, chatroomIdToSend: number) => {
-    if (!regenerate && message === "") {
+    const finishStreaming = message === ""
+    if (!regenerate && finishStreaming) {
       setTempUserMessage((prevState) => {
-        const userMessage: ChatMessage = {
-          key: 0,
-          content: prevState,
-          isFromChatbot: false,
+        if (userId === 0) {
+          const userMessage: ChatMessage = {
+            key: 0,
+            content: prevState,
+            isFromChatbot: false,
+          }
+          addMessage(userMessage)
         }
-        if (userId === 0) addMessage(userMessage)
         return ""
       })
     }
@@ -53,7 +61,7 @@ export default function ChatUi() {
       if (messages.length === 0) {
         messagesToAdd = newMessages
       } else {
-        const skipIndex = newMessages.map((m) => m.key).indexOf(messages.at(-1)!.key)
+        const skipIndex = newMessages.map((m) => m.id).indexOf(messages.at(-1)!.id)
         messagesToAdd = skipIndex === -1 ? newMessages : newMessages.slice(skipIndex)
       }
     }
@@ -67,7 +75,7 @@ export default function ChatUi() {
         }
         if (userId === 0) addMessage(chatbotMessage)
         else {
-          setMessages((prev) => [...prev, ...messagesToAdd])
+          setMessages((prev) => [...prev, ...toChatMessageFormat(messagesToAdd)])
         }
       }
       return message
@@ -90,9 +98,9 @@ export default function ChatUi() {
         .then((res) => {
           const patchedMessages = res.data.response.body.messages
           if (_cursor.key === undefined) {
-            setMessages(patchedMessages)
+            setMessages(toChatMessageFormat(patchedMessages))
           } else {
-            setMessages((prev) => [...patchedMessages, ...prev])
+            setMessages((prev) => [...toChatMessageFormat(patchedMessages), ...prev])
           }
           // const nextCursor = res.data.response.nextCursorRequest
           // setCursor({ key: nextCursor.key, size: nextCursor.size })
