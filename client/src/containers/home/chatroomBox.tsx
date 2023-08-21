@@ -51,7 +51,7 @@ export default function ChatroomBox({
 
   return (
     <div className="flex items-center mt-3 mb-3" ref={containerRef}>
-      <Image src="/svg/message.svg" alt="message" height="12" width="12" />
+      <Image src="/svg/message.svg" alt="message" height="12" width="12" className="ml-3.5 mr-3.5" />
       {editing ? (
         <input
           type="text"
@@ -61,13 +61,23 @@ export default function ChatroomBox({
             pressEnter(e, () => handleEditChatRoomTitle())
           }}
           onBlur={handleEditChatRoomTitle}
-          className="w-1/2 p-1 rounded-md border border-gray-300 focus:ring focus:ring-blue-200"
+          className="w-[calc(100% - 60px)] h-[20px] rounded-md border border-gray-300 "
+          style={{
+            maxWidth: "150px",
+            overflow: "hidden", // 일정 길이 이상일 때 숨김
+            whiteSpace: "nowrap", // 줄 바꿈 방지
+          }}
         />
       ) : (
         <button
           type="button"
           onClick={handleChatRoomClick}
-          className="ml-2 text-sm font-bold bg-transparent border-none cursor-pointer"
+          className="ml-2 text-sm font-bold bg-transparent border-none cursor-pointer "
+          style={{
+            maxWidth: "150px",
+            overflow: "hidden", // 일정 길이 이상일 때 숨김
+            whiteSpace: "nowrap", // 줄 바꿈 방지
+          }}
         >
           {chatRoom.title}
         </button>
@@ -86,6 +96,7 @@ export default function ChatroomBox({
           alt="chat"
           height="11"
           width="12"
+          style={{ height: "11px" }}
           className="ml-3 mr-4 cursor-pointer"
           onClick={() => onDelete(chatRoom.id)}
         />

@@ -7,6 +7,7 @@ import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 import { ChatRoom } from "@/types/chatroom"
 import { AuthContext } from "@/contexts/authContextProvider"
+import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 
 function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string; link: string }) {
   return (
@@ -20,6 +21,7 @@ function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string;
 export default function Navigator() {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
   const { userId, isLoad } = useContext(AuthContext)
+  const { setChatroomId } = useContext(ChatroomContext)
 
   const headers = {
     Authorization: getJwtTokenFromStorage(),
@@ -34,18 +36,22 @@ export default function Navigator() {
       alert("채팅방 목록을 가져오는 도중 오류가 발생하였습니다.")
     }
   }
-
   useEffect(() => {
     fetchChatRooms()
-  }, [])
+  }, [chatRooms])
 
   const createNewChatroom = async () => {
     try {
       const response = await proxy.post("/chatrooms", {}, { headers })
 
       if (response.data.status === 200) {
-        // Successfully created a new chatroom
-        fetchChatRooms() // Refresh the chatroom list
+        const newChatRoomId = response.data.response.chatroomId
+
+        // 채팅방 목록 업데이트
+        fetchChatRooms()
+        console.log(newChatRoomId)
+        // 새로운 채팅방으로 이동
+        setChatroomId(newChatRoomId)
       } else {
         alert("채팅방 생성에 실패하였습니다.")
       }
@@ -62,7 +68,7 @@ export default function Navigator() {
 
       const response = await proxy.put(`/chatrooms/${id}`, requestData, { headers })
       if (response.data.status === 200) {
-        fetchChatRooms()
+        console.log("채팅방 수정")
       } else {
         alert("채팅방 제목 수정에 실패하였습니다.")
       }
@@ -85,6 +91,24 @@ export default function Navigator() {
       alert("채팅방 삭제 도중 오류가 발생하였습니다.")
     }
   }
+
+  const handleDeleteAllChatRooms = async () => {
+    try {
+      // Use array iteration to delete each chat room
+      await Promise.all(
+        chatRooms.map(async (chatRoom) => {
+          await proxy.delete(`/chatrooms/${chatRoom.id}`, { headers })
+        }),
+      )
+
+      // Update the chat room list
+      fetchChatRooms()
+    } catch (error) {
+      console.error("Error deleting chat rooms:", error)
+      alert("대화방 삭제 도중 오류가 발생하였습니다.")
+    }
+  }
+
   if (!isLoad) return null
   if (userId !== 0)
     return (
@@ -97,18 +121,25 @@ export default function Navigator() {
           <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
           <p className="ml-2 text-sm font-bold">새로운 대화</p>
         </button>
+        <hr className="mt-8" />
         {chatRooms.map((chatRoom) => (
-          <ChatroomBox
-            key={chatRoom.id}
-            chatRoom={chatRoom}
-            onEdit={handleEditChatRoomTitle}
-            onDelete={handleDeleteChatRoom}
-          />
+          <React.Fragment key={chatRoom.id}>
+            <hr className="border-gray-300" />
+            <ChatroomBox
+              key={chatRoom.id}
+              chatRoom={chatRoom}
+              onEdit={handleEditChatRoomTitle}
+              onDelete={handleDeleteChatRoom}
+            />
+          </React.Fragment>
         ))}
-        <hr className="mt-2 border-gray-300" />
         <div className="grow" />
         <div className="border-t-2 border-solid border-gray-400">
           <div>
+            <button type="button" className="flex mt-7 ml-2.5 items-center" onClick={handleDeleteAllChatRooms}>
+              <Image src="/svg/delete-all.svg" alt="delete-all" height="16" width="16" />
+              <p className="ml-2 text-sm">대화 전체 삭제</p>
+            </button>
             <NavFooterTool
               iconSrc="/svg/github.svg"
               text="View in github"
@@ -125,6 +156,14 @@ export default function Navigator() {
     )
   return (
     <nav className="flex flex-col min-w-[16rem] p-2.5 border-r-gray-200 border-r border-solid">
+      <button
+        type="button"
+        className="border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition"
+        onClick={createNewChatroom}
+      >
+        <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
+        <p className="ml-2 text-sm font-bold">새로운 대화</p>
+      </button>
       <hr className="mt-2 border-gray-300" />
       <div className="grow" />
       <div className="border-t-2 border-solid border-gray-400">
