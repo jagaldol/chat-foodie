@@ -8,6 +8,7 @@ import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.dto.UserResponse;
@@ -108,6 +109,11 @@ public class UserService {
 
         if (requestDto.birth() != null) {
             user.updateBirth(Utils.convertStringToDate(requestDto.birth()));
+        }
+
+        if (requestDto.email() != null) {
+            user.updateEmail(requestDto.email());
+            user.updateRole(Role.ROLE_PENDING);
         }
     }
 

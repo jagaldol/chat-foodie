@@ -60,7 +60,10 @@ public class UserRequest {
         String name,
         Boolean gender,
         @Pattern(regexp = "^[12]\\d{3}-(0?[1-9]|1[0-2])-(0?[1-9]|[1-2][0-9]|3[01])$", message = "올바른 날짜가 아닙니다.(형식: 0000-00-00)")
-        String birth
+        String birth,
+        @Size(max = 100, message = "최대 100자까지 입니다.")
+        @Pattern(regexp = "^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,}$", message = "이메일 형식이 아닙니다.")
+        String email
     ) {  }
 
     public record ValidateLoginIdDto(
