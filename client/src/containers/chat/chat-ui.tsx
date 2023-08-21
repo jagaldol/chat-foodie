@@ -16,7 +16,7 @@ export default function ChatUi() {
 
   const getMessagesLength = 20
 
-  const [cursor, setCursor] = useState<Cursor>({ size: getMessagesLength })
+  // const [cursor, setCursor] = useState<Cursor>({ size: getMessagesLength })
 
   const { userId } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
@@ -87,7 +87,9 @@ export default function ChatUi() {
     (_cursor: Cursor) => {
       if (_cursor.key === -1) return
       const headers = { Authorization: getJwtTokenFromStorage() }
-      const params = { ..._cursor }
+      const params = {
+        // ..._cursor
+      }
       proxy
         .get(`/chatrooms/${chatroomId}/messages`, { headers, params })
         .then((res) => {
@@ -97,8 +99,8 @@ export default function ChatUi() {
           } else {
             setMessages((prev) => [...patchedMessages, ...prev])
           }
-          const nextCursor = res.data.response.nextCursorRequest
-          setCursor({ key: nextCursor.key, size: nextCursor.size })
+          // const nextCursor = res.data.response.nextCursorRequest
+          // setCursor({ key: nextCursor.key, size: nextCursor.size })
         })
         .catch((res) => {
           alert(res.response.data.errorMessage)
@@ -109,7 +111,7 @@ export default function ChatUi() {
 
   useEffect(() => {
     const defaultCursor = { size: getMessagesLength }
-    setCursor(defaultCursor)
+    // setCursor(defaultCursor)
     if (chatroomId === 0) {
       setMessages([])
     } else {
@@ -119,6 +121,7 @@ export default function ChatUi() {
 
   useEffect(() => {
     setChatroomId(0)
+    setMessages([])
   }, [userId, setChatroomId])
 
   return (
@@ -148,8 +151,8 @@ export default function ChatUi() {
         messages={messages}
         tempUserMessage={tempUserMessage}
         streamingMessage={streamingMessage}
-        cursor={cursor}
-        getMessages={getMessages}
+        // cursor={cursor}
+        // getMessages={getMessages}
       />
       <MessageInputContainer
         messages={messages}

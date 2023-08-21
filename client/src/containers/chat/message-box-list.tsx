@@ -1,15 +1,12 @@
 import Image from "next/image"
-import { ForwardedRef, useContext, useEffect, useRef, useState } from "react"
-import { ChatMessage, Cursor } from "@/types/chat"
-import { ChatroomContext } from "@/contexts/chatroomContextProvider"
+import { ForwardedRef, useEffect, useRef } from "react"
+import { ChatMessage } from "@/types/chat"
 
 function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: ForwardedRef<HTMLDivElement> }) {
   useEffect(() => {
-    console.log("실행")
     if (typeof chatBox !== "function" && chatBox?.current) {
-      console.log("내부 진입")
-      // eslint-disable-next-line no-param-reassign
-      chatBox.current.scrollTop = chatBox.current.scrollHeight
+      const instance = chatBox.current
+      instance.scrollTop = instance.scrollHeight
     }
   }, [chatBox])
 
@@ -36,19 +33,17 @@ function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: Forwa
 export default function MessageBoxList({
   messages,
   tempUserMessage,
-  streamingMessage,
-  cursor,
-  getMessages,
+  streamingMessage, // cursor, getMessages,
 }: {
   messages: ChatMessage[]
   tempUserMessage: string
   streamingMessage: string
-  cursor: Cursor
-  getMessages: (_cursor: Cursor) => void
+  // cursor: Cursor
+  // getMessages: (_cursor: Cursor) => void
 }) {
-  const [prevScrollHeight, setPrevScrollHeight] = useState(0)
+  // const [prevScrollHeight, setPrevScrollHeight] = useState(0)
 
-  const { chatroomId } = useContext(ChatroomContext)
+  // const { chatroomId } = useContext(ChatroomContext)
 
   const chatBox = useRef<HTMLDivElement>(null)
 
@@ -64,30 +59,30 @@ export default function MessageBoxList({
     scrollTraceDownChatBox()
   }, [streamingMessage])
 
-  useEffect(() => {
-    const instance = chatBox.current!
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight } = instance
-
-      if (scrollTop === 0 && chatroomId !== 0) {
-        getMessages(cursor)
-        // TODO: 위에 메시지들 끼워넣고 올바른 위치로 스크롤 옮기기
-        instance.scrollTop = scrollHeight - prevScrollHeight
-        setPrevScrollHeight(scrollHeight)
-      }
-    }
-
-    instance.addEventListener("scroll", handleScroll)
-
-    return () => {
-      instance.removeEventListener("scroll", handleScroll)
-    }
-  }, [prevScrollHeight, chatroomId, cursor, getMessages])
+  // useEffect(() => {
+  //   const instance = chatBox.current!
+  //   const handleScroll = () => {
+  //     const { scrollTop, scrollHeight } = instance
+  //
+  //     if (scrollTop === 0 && chatroomId !== 0) {
+  //       getMessages(cursor)
+  //       // TODO: 위에 메시지들 끼워넣고 올바른 위치로 스크롤 옮기기
+  //       instance.scrollTop = scrollHeight - prevScrollHeight
+  //       setPrevScrollHeight(scrollHeight)
+  //     }
+  //   }
+  //
+  //   instance.addEventListener("scroll", handleScroll)
+  //
+  //   return () => {
+  //     instance.removeEventListener("scroll", handleScroll)
+  //   }
+  // }, [prevScrollHeight, chatroomId, cursor, getMessages])
 
   return (
     <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main" ref={chatBox}>
       {messages.map((message) => {
-        return <MessageBox message={message} key={message.id} chatBox={null} />
+        return <MessageBox message={message} key={message.id} chatBox={chatBox} />
       })}
       {tempUserMessage !== "" ? (
         <MessageBox message={{ id: 0, content: tempUserMessage, isFromChatbot: false }} chatBox={chatBox} />
