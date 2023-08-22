@@ -75,7 +75,7 @@ export default function ChatroomBox({
           <button
             type="button"
             onClick={handleChatRoomClick}
-            className="ml-2 text-sm font-bold bg-transparent border-none cursor-pointer "
+            className="text-left flex-grow ml-2 text-sm font-bold bg-transparent border-none cursor-pointer "
             style={{
               maxWidth: "150px",
               overflow: "hidden", // 일정 길이 이상일 때 숨김

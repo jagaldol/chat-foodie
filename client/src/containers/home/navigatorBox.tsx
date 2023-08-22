@@ -9,15 +9,6 @@ import proxy from "@/utils/proxy"
 import ChatroomBox from "@/containers/home/chatroomBox"
 import { ChatRoom } from "@/types/chatroom"
 
-function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string; link: string }) {
-  return (
-    <a className="flex mt-7 ml-2.5 items-center" href={link}>
-      <Image src={iconSrc} alt="" height="16" width="16" style={{ height: "16px" }} />
-      <p className="ml-2 text-sm">{text}</p>
-    </a>
-  )
-}
-
 export default function NavigatorBox() {
   const { userId, isLoad } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
@@ -46,28 +37,6 @@ export default function NavigatorBox() {
   useEffect(() => {
     if (userId === 0) setChatRooms([])
   }, [userId])
-
-  const createNewChatroom = async () => {
-    try {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
-      const response = await proxy.post("/chatrooms", {}, { headers })
-
-      if (response.data.status === 200) {
-        const newChatRoomId = response.data.response.chatroomId
-
-        // 채팅방 목록 업데이트
-        console.log(newChatRoomId)
-        // 새로운 채팅방으로 이동
-        setChatroomId(newChatRoomId)
-      } else {
-        alert("채팅방 생성에 실패하였습니다.")
-      }
-    } catch (error) {
-      alert("오류가 발생하였습니다.")
-    }
-  }
 
   const handleEditChatRoomTitle = async (id: number, newTitle: string) => {
     try {
@@ -132,28 +101,22 @@ export default function NavigatorBox() {
   if (!isLoad) return null
   if (userId !== 0)
     return (
-      <div className="h-[840px]">
-        <button
-          type="button"
-          className="w-[266px] border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition"
-          onClick={createNewChatroom}
-        >
-          <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
-          <p className="ml-2 text-sm font-bold">새로운 대화</p>
-        </button>
+      <div>
         <hr className="mt-8" />
-        <div className="h-[630px] overflow-scroll">
-          {chatRooms.map((chatRoom) => (
-            <React.Fragment key={chatRoom.id}>
-              <hr className="border-gray-300" />
-              <ChatroomBox
-                key={chatRoom.id}
-                chatRoom={chatRoom}
-                onEdit={handleEditChatRoomTitle}
-                onDelete={handleDeleteChatRoom}
-              />
-            </React.Fragment>
-          ))}
+        <div className="h-0 flex-grow">
+          <div className="mb-2 max-h-full overflow-y-scroll custom-scroll-bar-6px">
+            {chatRooms.map((chatRoom) => (
+              <React.Fragment key={chatRoom.id}>
+                <hr className="border-gray-300" />
+                <ChatroomBox
+                  key={chatRoom.id}
+                  chatRoom={chatRoom}
+                  onEdit={handleEditChatRoomTitle}
+                  onDelete={handleDeleteChatRoom}
+                />
+              </React.Fragment>
+            ))}
+          </div>
         </div>
         <div className="fixed bottom-0 left-0 w-full border-t-2 border-solid border-gray-400 bg-white" />
         <div className="border-t-2 border-solid border-gray-400">
@@ -162,47 +125,15 @@ export default function NavigatorBox() {
               <Image src="/svg/delete-all.svg" alt="delete-all" height="16" width="16" />
               <p className="ml-2 text-sm">대화 전체 삭제</p>
             </button>
-            <NavFooterTool
-              iconSrc="/svg/github.svg"
-              text="View in github"
-              link="https://github.com/jagaldol/chat-foodie"
-            />
-            <NavFooterTool
-              iconSrc="/svg/envelope-solid.svg"
-              text="chatfoodie2023@gmail.com"
-              link="mailto:chatfoodie2023@gmail.com"
-            />
           </div>
         </div>
       </div>
     )
   return (
-    <div className="h-[840px]">
-      <a
-        type="button"
-        className="border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition"
-        href="/"
-      >
-        <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
-        <p className="ml-2 text-sm font-bold">새로운 대화</p>
-      </a>
-      <div className="h-[700px]" />
+    <div className="h-full flex flex-col">
+      <div className="flex-grow" />
       <hr className="mt-2 border-gray-300" />
-      <div className="grow" />
-      <div className="border-t-2 border-solid border-gray-400">
-        <div>
-          <NavFooterTool
-            iconSrc="/svg/github.svg"
-            text="View in github"
-            link="https://github.com/jagaldol/chat-foodie"
-          />
-          <NavFooterTool
-            iconSrc="/svg/envelope-solid.svg"
-            text="chatfoodie2023@gmail.com"
-            link="mailto:chatfoodie2023@gmail.com"
-          />
-        </div>
-      </div>
+      <div className="border-t-2 border-solid border-gray-400" />
     </div>
   )
 }
