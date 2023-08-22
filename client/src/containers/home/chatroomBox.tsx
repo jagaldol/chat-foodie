@@ -25,6 +25,7 @@ export default function ChatroomBox({
   const handleEditChatRoomTitle = () => {
     if (editedTitle.trim() !== "") {
       // 수정 로직 처리
+      setEditedTitle(editedTitle.trim())
       onEdit(chatRoom.id, editedTitle)
     }
     setEditing(false)
@@ -53,7 +54,7 @@ export default function ChatroomBox({
   if (!isLoad) return null
   if (userId !== 0)
     return (
-      <div className="flex items-center py-3 border-t-gray-300 border-t" ref={containerRef}>
+      <div className="flex items-center border-t-gray-300 border-t text-sm font-bold text-left" ref={containerRef}>
         <Image src="/svg/message.svg" alt="message" height="12" width="12" className="ml-3.5 mr-3.5" />
         {editing ? (
           <input
@@ -64,7 +65,7 @@ export default function ChatroomBox({
               pressEnter(e, () => handleEditChatRoomTitle())
             }}
             onBlur={handleEditChatRoomTitle}
-            className="w-[calc(100% - 60px)] h-[20px] rounded-md border border-gray-300 "
+            className="pl-[7px] my-[3px] py-2 rounded-md border border-gray-300 text-left"
             style={{
               maxWidth: "150px",
               overflow: "hidden", // 일정 길이 이상일 때 숨김
@@ -75,7 +76,7 @@ export default function ChatroomBox({
           <button
             type="button"
             onClick={handleChatRoomClick}
-            className="text-left flex-grow ml-2 text-sm font-bold bg-transparent border-none cursor-pointer "
+            className="text-left flex-grow pl-2 bg-transparent border-none cursor-pointer py-3"
             style={{
               maxWidth: "150px",
               overflow: "hidden", // 일정 길이 이상일 때 숨김

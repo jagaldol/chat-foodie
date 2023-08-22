@@ -35,6 +35,7 @@ export default function NavigatorBox() {
     } catch (error) {
       alert("채팅방 제목 수정 도중 오류가 발생하였습니다.")
     }
+    fetchChatRooms().then(() => {})
   }
   const handleDeleteChatRoom = async (id: number) => {
     if (id === chatroomId) setChatroomId(0)
