@@ -24,7 +24,7 @@ public class Chatroom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)

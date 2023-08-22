@@ -29,6 +29,7 @@ import net.chatfoodie.server.food.Food;
 import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserWebSocketService {
@@ -143,7 +143,14 @@ public class UserWebSocketService {
     }
 
     private String getClientIp(WebSocketSession session) {
-        return Objects.requireNonNull(session.getRemoteAddress()).getAddress().getHostAddress();
+        HttpHeaders headers = session.getHandshakeHeaders();
+        String realIp = headers.getFirst("X-Real-IP");
+
+        if (realIp != null && !realIp.isEmpty()) {
+            return realIp;
+        } else {
+            return Objects.requireNonNull(session.getRemoteAddress()).getAddress().getHostAddress();
+        }
     }
 
     private void sendMessageToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, MyFunction function) throws IOException {
@@ -268,8 +275,8 @@ public class UserWebSocketService {
             reversedMessages.remove(reversedMessages.size() - 1);
 
         List<List<String>> history = new ArrayList<>();
-
-        history.add(favorMessages);
+        if (!favorMessages.isEmpty())
+            history.add(favorMessages);
 
         for(int i = reversedMessages.size() - 1; i >= 0; i -= 2) {
             history.add(List.of(reversedMessages.get(i), reversedMessages.get(i - 1)));

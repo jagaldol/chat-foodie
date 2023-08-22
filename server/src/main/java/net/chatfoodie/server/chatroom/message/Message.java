@@ -28,9 +28,10 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY)
     private Chatroom chatroom;
 
+    @Column(nullable = false)
     private boolean isFromChatbot;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @ColumnDefault(value = "now()")

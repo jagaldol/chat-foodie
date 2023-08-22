@@ -34,6 +34,7 @@ public class UserService {
 
     final private PasswordEncoder passwordEncoder;
 
+    @Transactional
     public String join(UserRequest.JoinDto requestDto) {
 
         if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {

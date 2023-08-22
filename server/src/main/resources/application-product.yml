@@ -5,9 +5,6 @@ server:
       force: true
   port: 8080
 spring:
-  profiles:
-    active:
-      - settings
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
