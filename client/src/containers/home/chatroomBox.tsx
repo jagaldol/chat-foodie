@@ -53,7 +53,7 @@ export default function ChatroomBox({
   if (!isLoad) return null
   if (userId !== 0)
     return (
-      <div className="flex items-center mt-3 mb-3" ref={containerRef}>
+      <div className="flex items-center py-3 border-t-gray-300 border-t" ref={containerRef}>
         <Image src="/svg/message.svg" alt="message" height="12" width="12" className="ml-3.5 mr-3.5" />
         {editing ? (
           <input

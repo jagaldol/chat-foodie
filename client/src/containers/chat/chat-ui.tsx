@@ -128,27 +128,6 @@ export default function ChatUi() {
 
   return (
     <div className="flex flex-col min-h-full">
-      {userId !== 0 ? (
-        <label htmlFor="chatroomIdtemp" className="block w-80 h-16 mb-3">
-          <span className="block text-sm font-medium text-slate-700">
-            임시 채팅방 선택창(진짜 있는 채팅방만 선택!!)
-          </span>
-          <select
-            name="chatroomIdtemp"
-            className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
-            onChange={(e) => {
-              setChatroomId(Number(e.currentTarget.value))
-            }}
-            value={chatroomId}
-          >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-              <option value={num} key={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-        </label>
-      ) : null}
       <MessageBoxListContainer
         messages={messages}
         // cursor={cursor}
