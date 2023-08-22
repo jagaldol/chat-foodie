@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useRef, useState } from "react"
 import { pressEnter } from "@/utils/utils"
 import { ChatRoom } from "@/types/chatroom"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
+import { AuthContext } from "@/contexts/authContextProvider"
 
 export default function ChatroomBox({
   chatRoom,
@@ -18,6 +19,7 @@ export default function ChatroomBox({
   const [editing, setEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(chatRoom.title)
   const { setChatroomId } = useContext(ChatroomContext)
+  const { userId, isLoad } = useContext(AuthContext)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const handleEditChatRoomTitle = () => {
@@ -48,59 +50,60 @@ export default function ChatroomBox({
       document.removeEventListener("mousedown", handleContainerClick)
     }
   }, [])
-
-  return (
-    <div className="flex items-center mt-3 mb-3" ref={containerRef}>
-      <Image src="/svg/message.svg" alt="message" height="12" width="12" className="ml-3.5 mr-3.5" />
-      {editing ? (
-        <input
-          type="text"
-          value={editedTitle}
-          onChange={(e) => setEditedTitle(e.target.value)}
-          onKeyDown={(e) => {
-            pressEnter(e, () => handleEditChatRoomTitle())
-          }}
-          onBlur={handleEditChatRoomTitle}
-          className="w-[calc(100% - 60px)] h-[20px] rounded-md border border-gray-300 "
-          style={{
-            maxWidth: "150px",
-            overflow: "hidden", // 일정 길이 이상일 때 숨김
-            whiteSpace: "nowrap", // 줄 바꿈 방지
-          }}
-        />
-      ) : (
-        <button
-          type="button"
-          onClick={handleChatRoomClick}
-          className="ml-2 text-sm font-bold bg-transparent border-none cursor-pointer "
-          style={{
-            maxWidth: "150px",
-            overflow: "hidden", // 일정 길이 이상일 때 숨김
-            whiteSpace: "nowrap", // 줄 바꿈 방지
-          }}
-        >
-          {chatRoom.title}
-        </button>
-      )}
-      <div className="ml-auto flex items-center">
-        <Image
-          src="/svg/pen.svg"
-          alt="chat"
-          height="12"
-          width="12"
-          className="ml-3 cursor-pointer"
-          onClick={() => setEditing(true)}
-        />
-        <Image
-          src="/svg/delete.svg"
-          alt="chat"
-          height="11"
-          width="12"
-          style={{ height: "11px" }}
-          className="ml-3 mr-4 cursor-pointer"
-          onClick={() => onDelete(chatRoom.id)}
-        />
+  if (!isLoad) return null
+  if (userId !== 0)
+    return (
+      <div className="flex items-center mt-3 mb-3" ref={containerRef}>
+        <Image src="/svg/message.svg" alt="message" height="12" width="12" className="ml-3.5 mr-3.5" />
+        {editing ? (
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            onKeyDown={(e) => {
+              pressEnter(e, () => handleEditChatRoomTitle())
+            }}
+            onBlur={handleEditChatRoomTitle}
+            className="w-[calc(100% - 60px)] h-[20px] rounded-md border border-gray-300 "
+            style={{
+              maxWidth: "150px",
+              overflow: "hidden", // 일정 길이 이상일 때 숨김
+              whiteSpace: "nowrap", // 줄 바꿈 방지
+            }}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={handleChatRoomClick}
+            className="ml-2 text-sm font-bold bg-transparent border-none cursor-pointer "
+            style={{
+              maxWidth: "150px",
+              overflow: "hidden", // 일정 길이 이상일 때 숨김
+              whiteSpace: "nowrap", // 줄 바꿈 방지
+            }}
+          >
+            {chatRoom.title}
+          </button>
+        )}
+        <div className="ml-3 flex items-center">
+          <Image
+            src="/svg/pen.svg"
+            alt="chat"
+            height="12"
+            width="12"
+            className="ml-2 cursor-pointer"
+            onClick={() => setEditing(true)}
+          />
+          <Image
+            src="/svg/delete.svg"
+            alt="chat"
+            height="11"
+            width="12"
+            style={{ height: "11px" }}
+            className="ml-3  cursor-pointer"
+            onClick={() => onDelete(chatRoom.id)}
+          />
+        </div>
       </div>
-    </div>
-  )
+    )
 }
