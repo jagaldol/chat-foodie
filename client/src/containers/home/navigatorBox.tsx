@@ -19,7 +19,7 @@ function NavFooterTool({ iconSrc, text, link }: { iconSrc: string; text: string;
 }
 
 export default function NavigatorBox() {
-  const { userId, isLoad, needUpdate } = useContext(AuthContext)
+  const { userId, isLoad } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
 
@@ -28,6 +28,7 @@ export default function NavigatorBox() {
       const headers = {
         Authorization: getJwtTokenFromStorage(),
       }
+      console.log(headers)
       const response = await proxy.get("/chatrooms", { headers })
       if (response.data.response.chatrooms === null) return
       setChatRooms(response.data.response.chatrooms)
@@ -35,9 +36,16 @@ export default function NavigatorBox() {
       console.error("Error fetching chat rooms:", error)
     }
   }
+
   useEffect(() => {
     if (userId !== 0) fetchChatRooms()
-  }, [chatRooms, userId])
+    console.log(chatroomId)
+    console.log(userId)
+  }, [chatroomId, userId])
+
+  useEffect(() => {
+    if (userId === 0) setChatRooms([])
+  }, [userId])
 
   const createNewChatroom = async () => {
     try {
@@ -69,7 +77,7 @@ export default function NavigatorBox() {
       const headers = {
         Authorization: getJwtTokenFromStorage(),
       }
-
+      fetchChatRooms()
       const response = await proxy.put(`/chatrooms/${id}`, requestData, { headers })
       if (response.data.status === 200) {
         console.log("채팅방 수정")
@@ -98,6 +106,7 @@ export default function NavigatorBox() {
       console.error("Error deleting chat room:", error)
       alert("채팅방 삭제 도중 오류가 발생하였습니다.")
     }
+    fetchChatRooms()
   }
 
   const handleDeleteAllChatRooms = async () => {
@@ -111,12 +120,12 @@ export default function NavigatorBox() {
           await proxy.delete(`/chatrooms/${chatRoom.id}`, { headers })
         }),
       )
-
       // Update the chat room list
     } catch (error) {
       console.error("Error deleting chat rooms:", error)
       alert("대화방 삭제 도중 오류가 발생하였습니다.")
     }
+    fetchChatRooms()
     setChatroomId(0)
   }
 
