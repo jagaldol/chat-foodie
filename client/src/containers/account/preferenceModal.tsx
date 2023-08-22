@@ -69,7 +69,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
                     } mb-9 rounded-md overflow-hidden`}
                   >
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_API_URL}${food.imageUrl}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/api${food.imageUrl}`}
                       alt={food.name}
                       width={150}
                       height={100}
