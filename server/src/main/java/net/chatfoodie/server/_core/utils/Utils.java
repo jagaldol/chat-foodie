@@ -30,7 +30,7 @@ public class Utils {
     }
 
     public static String convertDateTimeToString(LocalDateTime localDateTime) {
-        return localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+        return localDateTime.format(DateTimeFormatter.ofPattern("MM.dd a hh:mm"));
     }
 
     public static boolean validateDayOfDateString(int year, int month, int day) {

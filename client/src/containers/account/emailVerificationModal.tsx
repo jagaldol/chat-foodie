@@ -138,7 +138,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
       setEmail(res.data.response.email)
       setModifiedEmail(res.data.response.email)
     })
-  }, [])
+  }, [userId])
 
   return (
     <Modal

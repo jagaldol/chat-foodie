@@ -38,7 +38,7 @@ public class ChatroomService {
     public ChatroomResponse.CreateChatroomDto create(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("회원이 존재하지 않습니다"));
 
-        String title = Utils.convertDateTimeToString(LocalDateTime.now()) + " 음식 추천";
+        String title = Utils.convertDateTimeToString(LocalDateTime.now()) + " 대화";
 
         Chatroom chatroom = Chatroom.builder()
                                 .title(title)
