@@ -9,6 +9,7 @@ import { deleteJwt } from "@/utils/jwtDecoder"
 import JoinModal from "@/containers/account/joinModal"
 import ProfileModal from "@/containers/account/profileModal"
 import DropDown from "@/containers/account/dropDown"
+import PreferenceModal from "./preferenceModal"
 
 export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)
@@ -17,6 +18,7 @@ export default function Account() {
   const { userId, isLoad, userRole, needUpdate } = useContext(AuthContext)
   const [profileModalOpened, setProfileModalOpened] = useState(false)
   const [dropDownOpened, setDropDownOpened] = useState(false)
+  const [preferenceModalOpened, setPreferenceModalOpened] = useState(false)
 
   useEffect(() => {
     if (userRole === "ROLE_PENDING") {
@@ -44,12 +46,17 @@ export default function Account() {
               </button>
 
               {profileModalOpened ? <ProfileModal onClickClose={() => setProfileModalOpened(false)} /> : null}
-
+              {preferenceModalOpened ? <PreferenceModal onClickClose={() => setPreferenceModalOpened(false)} /> : null}
               {emailVerificationModalOpend && userRole === "ROLE_PENDING" ? (
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
               ) : null}
 
-              <DropDown isOpened={dropDownOpened} setIsOpened={setDropDownOpened} />
+              <DropDown
+                isOpened={dropDownOpened}
+                setIsOpened={setDropDownOpened}
+                setPreferenceModalOpened={setPreferenceModalOpened}
+                setProfileModalOpened={setProfileModalOpened}
+              />
             </>
           )
         }
