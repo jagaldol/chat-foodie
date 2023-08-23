@@ -1,12 +1,14 @@
 "use client"
 
+import Image from "next/image"
 import { useContext, useEffect, useState } from "react"
+import EmailVerificationModal from "@/containers/account/emailVerificationModal"
 import LoginModal from "@/containers/account/loginModal"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { deleteJwt } from "@/utils/jwtDecoder"
 import JoinModal from "@/containers/account/joinModal"
 import ProfileModal from "@/containers/account/profileModal"
-import EmailVerificationModal from "./emailVerificationModal"
+import DropDown from "@/containers/account/dropDown"
 
 export default function Account() {
   const [loginModalOpened, setLoginModalOpened] = useState(false)
@@ -14,6 +16,7 @@ export default function Account() {
   const [emailVerificationModalOpend, setEmailVerificationModalOpend] = useState(false)
   const { userId, isLoad, userRole, needUpdate } = useContext(AuthContext)
   const [profileModalOpened, setProfileModalOpened] = useState(false)
+  const [dropDownOpened, setDropDownOpened] = useState(false)
 
   useEffect(() => {
     if (userRole === "ROLE_PENDING") {
@@ -31,26 +34,22 @@ export default function Account() {
           return (
             <>
               <button
-                type="button"
-                className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded hover:cursor-pointer"
-                onClick={() => setProfileModalOpened(true)}
-              >
-                <p className="text-sm mx-2.5 my-2 text-center">회원 정보</p>
-              </button>
-              {profileModalOpened ? <ProfileModal onClickClose={() => setProfileModalOpened(false)} /> : null}
-              <button
-                type="button"
                 className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded hover:cursor-pointer"
                 onClick={() => {
-                  deleteJwt()
-                  needUpdate()
+                  setDropDownOpened(!dropDownOpened)
                 }}
+                type="button"
               >
-                <p className="text-sm mx-2.5 my-2 text-center">로그아웃</p>
+                <Image src="/svg/user.svg" alt="user" width={30} height={30} />
               </button>
+
+              {profileModalOpened ? <ProfileModal onClickClose={() => setProfileModalOpened(false)} /> : null}
+
               {emailVerificationModalOpend && userRole === "ROLE_PENDING" ? (
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
               ) : null}
+
+              <DropDown isOpened={dropDownOpened} />
             </>
           )
         }
