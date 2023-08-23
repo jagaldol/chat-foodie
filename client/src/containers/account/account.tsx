@@ -49,7 +49,7 @@ export default function Account() {
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
               ) : null}
 
-              <DropDown isOpened={dropDownOpened} />
+              <DropDown isOpened={dropDownOpened} setIsOpened={setDropDownOpened} />
             </>
           )
         }

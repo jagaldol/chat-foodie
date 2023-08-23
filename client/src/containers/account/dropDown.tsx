@@ -1,6 +1,11 @@
 "use client"
 
-export default function DropDown({ isOpened }: { isOpened: boolean }) {
+import { useContext } from "react"
+import { AuthContext } from "@/contexts/authContextProvider"
+import { deleteJwt } from "@/utils/jwtDecoder"
+
+export default function DropDown({ isOpened, setIsOpened }: { isOpened: boolean; setIsOpened: any }) {
+  const { needUpdate } = useContext(AuthContext)
   return (
     <div
       className={`absolute top-0 right-0 mr-9 mt-[85px] w-35 z-40 bg-[#C5C5D1] rounded p-2.5 transition-all duration-300 ${
@@ -16,7 +21,15 @@ export default function DropDown({ isOpened }: { isOpened: boolean }) {
         <button type="button" className="text-sm text-center text-white bg-main-theme w-[120px] h-[36px] rounded p-2 ">
           선호 음식 변경
         </button>
-        <button type="button" className="text-sm text-center text-white bg-main-theme w-[120px] h-[36px] rounded p-2 ">
+        <button
+          type="button"
+          className="text-sm text-center text-white bg-main-theme w-[120px] h-[36px] rounded p-2 "
+          onClick={() => {
+            deleteJwt()
+            needUpdate()
+            setIsOpened(false)
+          }}
+        >
           로그아웃
         </button>
       </div>
