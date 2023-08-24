@@ -16,20 +16,20 @@ export default function ProfileModal({ onClickClose }: { onClickClose(): void })
           />
         </div>
       ) : null}
-      <Modal onClickClose={onClickClose}>
+      <Modal onClickClose={onClickClose} description="회원정보">
         <div className="p-4 relative">
           {/* 회원 정보 표시 */}
           {/* ... */}
 
           {/* 개인정보 수정 버튼 */}
-          <button type="button" className="bg-blue-500 text-white rounded-md px-4 py-2 mt-4">
+          <button type="button" className="bg-main-theme text-white rounded p-2">
             개인정보 수정
           </button>
 
           {/* 선호도 저장 버튼 */}
           <button
             type="button"
-            className="bg-green-500 text-white rounded-md px-4 py-2 mt-2"
+            className="bg-main-theme text-white rounded p-2"
             onClick={() => setPreferenceModalOpened(true)}
           >
             선호도 저장

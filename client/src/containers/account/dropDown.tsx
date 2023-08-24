@@ -32,7 +32,7 @@ export default function DropDown({
             setProfileModalOpened(true)
           }}
         >
-          개인정보 변경
+          회원정보
         </button>
         <button
           type="button"
