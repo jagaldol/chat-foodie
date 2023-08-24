@@ -13,7 +13,7 @@ export default function Header() {
           </div>
           <h1 className={`text-5xl text-main-theme font-bold ml-1 ${titleFont.className}`}>Chatfoodie</h1>
         </a>
-        <p className="text-sm text-center">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
+        <p className="text-sm text-center whitespace-nowrap">음식 추천의 전문가 foodie와 채팅을 해보세요!</p>
       </div>
       <div className="basis-1/3">
         <Account />

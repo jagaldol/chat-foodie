@@ -193,13 +193,6 @@ server of chatFoodie.
 
 이메일 인증 코드 전송
 
-* Request Body
-  ```json
-  {
-    "email": "user@example.com"
-  }
-  ```
-
 * Response Body
   ```json
   {
@@ -216,7 +209,6 @@ server of chatFoodie.
 * Request Body
   ```json
   {
-    "email": "user@example.com",
     "verificationCode": "123456"
   }
   ```
