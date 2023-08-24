@@ -10,6 +10,7 @@ import ProfileModal from "@/containers/account/profileModal"
 import DropDown from "@/containers/account/dropDown"
 import proxy from "@/utils/proxy"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import EditProfileModal from "@/containers/account/editProfileModal"
 import PreferenceModal from "./preferenceModal"
 
 export default function Account() {
@@ -20,6 +21,7 @@ export default function Account() {
   const [profileModalOpened, setProfileModalOpened] = useState(false)
   const [dropDownOpened, setDropDownOpened] = useState(false)
   const [preferenceModalOpened, setPreferenceModalOpened] = useState(false)
+  const [editProfileModalOpened, setEditProfileModalOpened] = useState(false)
   const [userName, setUserName] = useState("")
 
   useEffect(() => {
@@ -65,12 +67,16 @@ export default function Account() {
                 <ProfileModal
                   onClickClose={() => setProfileModalOpened(false)}
                   onClickEditEmail={() => setEmailVerificationModalOpend(true)}
+                  onClickEditProfile={() => setEditProfileModalOpened(true)}
                 />
               ) : null}
-              {preferenceModalOpened ? <PreferenceModal onClickClose={() => setPreferenceModalOpened(false)} /> : null}
+              {editProfileModalOpened ? (
+                <EditProfileModal onClickClose={() => setEditProfileModalOpened(false)} />
+              ) : null}
               {emailVerificationModalOpend ? (
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
               ) : null}
+              {preferenceModalOpened ? <PreferenceModal onClickClose={() => setPreferenceModalOpened(false)} /> : null}
 
               <DropDown
                 isOpened={dropDownOpened}

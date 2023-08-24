@@ -19,9 +19,11 @@ function ProfileItem({ label, value }: { label: string; value: string }) {
 export default function ProfileModal({
   onClickClose,
   onClickEditEmail,
+  onClickEditProfile,
 }: {
   onClickClose(): void
   onClickEditEmail(): void
+  onClickEditProfile(): void
 }) {
   const [profile, setProfile] = useState({
     loginId: "",
@@ -78,6 +80,7 @@ export default function ProfileModal({
             type="button"
             className="bg-main-theme text-white rounded p-2"
             onClick={() => {
+              onClickEditProfile()
               onClickClose()
             }}
           >
