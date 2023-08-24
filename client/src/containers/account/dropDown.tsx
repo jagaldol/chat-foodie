@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Dispatch, SetStateAction, useContext } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { deleteJwt } from "@/utils/jwtDecoder"
 
@@ -15,6 +15,15 @@ export default function DropDown({
   setProfileModalOpened: Dispatch<SetStateAction<boolean>>
 }) {
   const { needUpdate } = useContext(AuthContext)
+  useEffect(() => {
+    const handleClick = () => {
+      if (isOpened) setIsOpened(false)
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => {
+      document.removeEventListener("mousedown", handleClick)
+    }
+  }, [isOpened, setIsOpened])
   return (
     <div
       className={`absolute top-0 right-0 mr-9 mt-24 w-[180px] z-20 py-2 rounded bg-gray-200 transition-all duration-300 ${
