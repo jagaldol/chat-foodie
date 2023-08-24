@@ -61,9 +61,14 @@ export default function Account() {
                 <Image className="shrink-0" src="/svg/dots.svg" alt="dots" width={24} height={24} />
               </button>
 
-              {profileModalOpened ? <ProfileModal onClickClose={() => setProfileModalOpened(false)} /> : null}
+              {profileModalOpened ? (
+                <ProfileModal
+                  onClickClose={() => setProfileModalOpened(false)}
+                  onClickEditEmail={() => setEmailVerificationModalOpend(true)}
+                />
+              ) : null}
               {preferenceModalOpened ? <PreferenceModal onClickClose={() => setPreferenceModalOpened(false)} /> : null}
-              {emailVerificationModalOpend && userRole === "ROLE_PENDING" ? (
+              {emailVerificationModalOpend ? (
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
               ) : null}
 
