@@ -53,11 +53,11 @@ export default function NavigatorBox() {
   useEffect(() => {
     if (userId !== 0 && userRole !== "ROLE_PENDING") fetchChatRooms().then(() => {})
     else setChatRooms([])
-  }, [chatroomId, userId])
+  }, [chatroomId, userId, userRole])
 
   useEffect(() => {
     if (userId !== 0 && userRole !== "ROLE_PENDING") fetchChatRooms().then(() => {})
-  }, [update, userId])
+  }, [update, userId, userRole])
 
   return isLoad && userId !== 0 ? (
     <div className="grow flex flex-col">
