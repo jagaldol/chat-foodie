@@ -67,11 +67,20 @@ export default function ProfileModal({
           <button
             type="button"
             className="bg-main-theme text-white rounded p-2 mr-5"
-            onClick={() => onClickEditEmail()}
+            onClick={() => {
+              onClickEditEmail()
+              onClickClose()
+            }}
           >
             이메일 변경
           </button>
-          <button type="button" className="bg-main-theme text-white rounded p-2">
+          <button
+            type="button"
+            className="bg-main-theme text-white rounded p-2"
+            onClick={() => {
+              onClickClose()
+            }}
+          >
             개인정보 수정
           </button>
         </div>

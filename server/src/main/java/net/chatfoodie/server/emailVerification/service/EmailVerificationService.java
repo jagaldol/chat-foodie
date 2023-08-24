@@ -63,8 +63,8 @@ public class EmailVerificationService {
     }
 
     private void sendEmail(String email, String code) {
-        String subject = "chatfoodie 회원가입 인증번호입니다.";
-        String text = "회원가입을 위한 인증번호는 " + code + "입니다. </br>";
+        String subject = "chatfoodie 이메일 인증번호입니다.";
+        String text = "이메일 인증을 위한 인증번호는 " + code + "입니다. </br>";
 
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

@@ -229,7 +229,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   return (
     <Modal onClickClose={onClickClose}>
       <div className="p-5 h-0 grow">
-        <form className="overflow-y-scroll custom-scroll-bar-10px max-h-full" onSubmit={handleSubmit}>
+        <form className="overflow-y-scroll custom-scroll-bar-10px max-h-full -mr-[10px]" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
             <TextField
               label="아이디"

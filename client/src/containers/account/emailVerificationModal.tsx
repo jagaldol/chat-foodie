@@ -9,7 +9,7 @@ import { limitInputNumber } from "@/utils/utils"
 import proxy from "@/utils/proxy"
 
 export default function EmailVerificationModal({ onClickClose }: { onClickClose(): void }) {
-  const { userId, needUpdate } = useContext(AuthContext)
+  const { userId, userRole, needUpdate } = useContext(AuthContext)
   const [disableButton, setDisableButton] = useState(false)
   const [message, setMessage] = useState("")
   const [email, setEmail] = useState("")
@@ -111,13 +111,19 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
     return isValid
   }
 
-  const modifyEmail = () => {
+  const modifyEmail = async () => {
     if (modifiedEmail === email) {
+      setEmailError("동일한 이메일로 변경할 수 없습니다")
       return
     }
 
-    if (!validateEmail()) {
+    if (!(await validateEmail())) {
       alert("이메일 주소를 확인해 주세요")
+      return
+    }
+
+    if (userRole !== "ROLE_PENDING") {
+      if (!confirm("이메일 변경하면 인증하기 전까지 로그인할 수 없습니다.\n 변경하시겠습니까?")) return
     }
 
     const headers = {
@@ -126,7 +132,6 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
     const requestData = {
       email: modifiedEmail,
     }
-    setEmail(modifiedEmail)
     proxy.put(`/users/${userId}`, requestData, { headers }).then(() => {
       setEmail(modifiedEmail)
       setModifyMessage("이메일 변경 완료")
@@ -147,13 +152,16 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
   return (
     <Modal
       onClickClose={() => {
-        alert("로그아웃 됩니다.")
-        deleteJwt()
-        needUpdate()
+        if (userRole === "ROLE_PENDING") {
+          alert("로그아웃 됩니다.")
+          deleteJwt()
+          needUpdate()
+        }
+        onClickClose()
       }}
     >
       <div className="p-5 h-0 grow">
-        <form className="overflow-y-scroll custom-scroll-bar-10px max-h-full" onSubmit={handleSubmit}>
+        <form className="overflow-y-scroll custom-scroll-bar-10px max-h-full -mr-[10px]" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
             <TextField
               label="이메일 확인"
