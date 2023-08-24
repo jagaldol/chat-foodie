@@ -8,6 +8,8 @@ import { AuthContext } from "@/contexts/authContextProvider"
 import JoinModal from "@/containers/account/joinModal"
 import ProfileModal from "@/containers/account/profileModal"
 import DropDown from "@/containers/account/dropDown"
+import proxy from "@/utils/proxy"
+import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import PreferenceModal from "./preferenceModal"
 
 export default function Account() {
@@ -18,7 +20,18 @@ export default function Account() {
   const [profileModalOpened, setProfileModalOpened] = useState(false)
   const [dropDownOpened, setDropDownOpened] = useState(false)
   const [preferenceModalOpened, setPreferenceModalOpened] = useState(false)
+  const [userName, setUserName] = useState("")
 
+  useEffect(() => {
+    if (userId !== 0) {
+      const headers = {
+        Authorization: getJwtTokenFromStorage(),
+      }
+      proxy.get(`/users/${userId}`, { headers }).then((res) => {
+        setUserName(res.data.response.name)
+      })
+    }
+  }, [userId])
   useEffect(() => {
     if (userRole === "ROLE_PENDING") {
       setEmailVerificationModalOpend(true)
@@ -35,15 +48,15 @@ export default function Account() {
           return (
             <>
               <button
-                className="flex flex-row gap-2 items-center justify-center w-[180px] p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 hover:cursor-pointer"
+                className="flex flex-row gap-3 items-center justify-center w-[180px] p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 hover:cursor-pointer"
                 onClick={() => {
                   setDropDownOpened(!dropDownOpened)
                 }}
                 type="button"
               >
-                <Image className="shrink-0" src="/svg/user.svg" alt="user" width={28} height={28} />
+                <Image className="shrink-0 rounded-sm" src="/svg/user.svg" alt="user" width={28} height={28} />
 
-                <div className="grow text-left font-bold">회원 이름</div>
+                <div className="grow text-left font-bold">{userName}</div>
 
                 <Image className="shrink-0" src="/svg/dots.svg" alt="dots" width={24} height={24} />
               </button>
