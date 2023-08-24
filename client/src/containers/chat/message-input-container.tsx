@@ -160,7 +160,11 @@ export default function MessageInputContainer({
         type="button"
         key={question} // 고유한 값인 question을 key로 사용
         className="px-4 py-2 text-orange-500 rounded-lg border border-black hover:bg-orange-500 hover:text-white hover:border-white"
-        onClick={() => addUserMessage(question)}
+        onClick={() => {
+          addUserMessage(question)
+          setIsGenerating(true)
+          generateFoodieResponse(question, false).then(() => {})
+        }}
       >
         {question}
       </button>
