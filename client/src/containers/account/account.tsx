@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react"
 import EmailVerificationModal from "@/containers/account/emailVerificationModal"
 import LoginModal from "@/containers/account/loginModal"
 import { AuthContext } from "@/contexts/authContextProvider"
-import { deleteJwt } from "@/utils/jwtDecoder"
 import JoinModal from "@/containers/account/joinModal"
 import ProfileModal from "@/containers/account/profileModal"
 import DropDown from "@/containers/account/dropDown"
@@ -36,7 +35,7 @@ export default function Account() {
           return (
             <>
               <button
-                className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded hover:cursor-pointer"
+                className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded overflow-hidden hover:cursor-pointer"
                 onClick={() => {
                   setDropDownOpened(!dropDownOpened)
                 }}

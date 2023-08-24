@@ -1,5 +1,3 @@
-"use client"
-
 import { Dispatch, SetStateAction, useContext } from "react"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { deleteJwt } from "@/utils/jwtDecoder"
