@@ -35,7 +35,7 @@ export default function TextField({
         type={type}
         name={name}
         value={value}
-        className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1 disabled:opacity-50"
+        className="mt-1 px-3 py-2 h-10 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1 disabled:opacity-50"
         placeholder={placeholder}
         onBlur={onBlur}
         onChange={onChange}

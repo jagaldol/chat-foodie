@@ -56,6 +56,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
         setMessage("인증 코드 전송 완료")
       })
       .catch((res) => {
+        setMessage("")
         alert(res.response.data.errorMessage)
       })
   }
@@ -100,6 +101,9 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
     if (verificationCode.length !== 6) {
       isValid = false
       setCodeError("인증 코드는 6자리여야 합니다.")
+    } else if (!/^\d{6}$/.test(verificationCode)) {
+      isValid = false
+      setCodeError("숫자만 입력하세요.")
     } else {
       setCodeError("")
     }
@@ -173,30 +177,32 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
             >
               이메일 주소 변경
             </button>
-            <TextField
-              label="이메일 인증 코드"
-              type="text"
-              name="emailVerificationCode"
-              placeholder="인증 코드를 입력하세요(6자리)"
-              onChange={(e) => {
-                limitInputNumber(e, 6)
-                setVerificationCode(e.target.value)
-              }}
-              onBlur={() => validateCode()}
-              required
-              value={verificationCode}
-              error={codeError}
-              message={message}
-            />
-            <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3 disabled:opacity-50"
-              type="button"
-              disabled={disableButton}
-              onClick={sendVerificationCode}
-            >
-              인증 코드 재전송
-            </button>
 
+            <div className="flex flex-row w-80 space-x-2">
+              <TextField
+                label="이메일 인증 코드"
+                type="text"
+                name="emailVerificationCode"
+                placeholder="인증 코드를 입력하세요(6자리)"
+                onChange={(e) => {
+                  limitInputNumber(e, 6)
+                  setVerificationCode(e.target.value)
+                }}
+                onBlur={() => validateCode()}
+                required
+                value={verificationCode}
+                error={codeError}
+                message={message}
+              />
+              <button
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-3 rounded w-1/3 h-10 mt-6 disabled:opacity-50"
+                type="button"
+                disabled={disableButton}
+                onClick={sendVerificationCode}
+              >
+                재전송
+              </button>
+            </div>
             <button
               className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3"
               type="submit"
