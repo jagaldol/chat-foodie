@@ -11,10 +11,10 @@ import DropDown from "@/containers/account/dropDown"
 import PreferenceModal from "./preferenceModal"
 
 export default function Account() {
+  const { userId, isLoad, userRole } = useContext(AuthContext)
   const [loginModalOpened, setLoginModalOpened] = useState(false)
   const [joinModalOpened, setJoinModalOpened] = useState(false)
   const [emailVerificationModalOpend, setEmailVerificationModalOpend] = useState(false)
-  const { userId, isLoad, userRole, needUpdate } = useContext(AuthContext)
   const [profileModalOpened, setProfileModalOpened] = useState(false)
   const [dropDownOpened, setDropDownOpened] = useState(false)
   const [preferenceModalOpened, setPreferenceModalOpened] = useState(false)
@@ -35,13 +35,17 @@ export default function Account() {
           return (
             <>
               <button
-                className="flex items-center justify-center mr-9 my-1 bg-main-theme text-white rounded overflow-hidden hover:cursor-pointer"
+                className="flex flex-row gap-2 items-center justify-center w-[180px] p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 hover:cursor-pointer"
                 onClick={() => {
                   setDropDownOpened(!dropDownOpened)
                 }}
                 type="button"
               >
-                <Image src="/svg/user.svg" alt="user" width={30} height={30} />
+                <Image className="shrink-0" src="/svg/user.svg" alt="user" width={28} height={28} />
+
+                <div className="grow text-left font-bold">회원 이름</div>
+
+                <Image className="shrink-0" src="/svg/dots.svg" alt="dots" width={24} height={24} />
               </button>
 
               {profileModalOpened ? <ProfileModal onClickClose={() => setProfileModalOpened(false)} /> : null}
