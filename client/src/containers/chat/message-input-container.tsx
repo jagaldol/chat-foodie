@@ -159,7 +159,7 @@ export default function MessageInputContainer({
       <button
         type="button"
         key={question} // 고유한 값인 question을 key로 사용
-        className="px-4 py-2 text-orange-500 rounded-lg border border-black"
+        className="px-4 py-2 text-orange-500 rounded-lg border border-black hover:bg-orange-500 hover:text-white hover:border-white"
         onClick={() => addUserMessage(question)}
       >
         {question}
