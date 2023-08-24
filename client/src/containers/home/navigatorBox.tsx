@@ -9,7 +9,7 @@ import ChatroomBox from "@/containers/home/chatroomBox"
 import { ChatRoom } from "@/types/chatroom"
 
 export default function NavigatorBox() {
-  const { userId, isLoad } = useContext(AuthContext)
+  const { userId, isLoad, userRole } = useContext(AuthContext)
   const { chatroomId, setChatroomId, update } = useContext(ChatroomContext)
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
 
@@ -51,12 +51,12 @@ export default function NavigatorBox() {
   }
 
   useEffect(() => {
-    if (userId !== 0) fetchChatRooms().then(() => {})
+    if (userId !== 0 && userRole !== "ROLE_PENDING") fetchChatRooms().then(() => {})
     else setChatRooms([])
   }, [chatroomId, userId])
 
   useEffect(() => {
-    if (userId !== 0) fetchChatRooms().then(() => {})
+    if (userId !== 0 && userRole !== "ROLE_PENDING") fetchChatRooms().then(() => {})
   }, [update, userId])
 
   return isLoad && userId !== 0 ? (
