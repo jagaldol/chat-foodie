@@ -54,7 +54,7 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
               placeholder="비밀번호를 입력하세요"
               onChange={(e) => limitInputNumber(e, 64)}
             />
-            <div className="flex justify-center m">
+            <div className="flex justify-center">
               <button
                 className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
                 type="submit"

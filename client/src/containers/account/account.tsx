@@ -10,16 +10,18 @@ import ProfileModal from "@/containers/account/profileModal"
 import DropDown from "@/containers/account/dropDown"
 import proxy from "@/utils/proxy"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import EditProfileModal from "@/containers/account/editProfileModal"
 import PreferenceModal from "./preferenceModal"
 
 export default function Account() {
   const { userId, isLoad, userRole } = useContext(AuthContext)
   const [loginModalOpened, setLoginModalOpened] = useState(false)
   const [joinModalOpened, setJoinModalOpened] = useState(false)
-  const [emailVerificationModalOpend, setEmailVerificationModalOpend] = useState(false)
+  const [emailVerificationModalOpened, setEmailVerificationModalOpened] = useState(false)
   const [profileModalOpened, setProfileModalOpened] = useState(false)
   const [dropDownOpened, setDropDownOpened] = useState(false)
   const [preferenceModalOpened, setPreferenceModalOpened] = useState(false)
+  const [editProfileModalOpened, setEditProfileModalOpened] = useState(false)
   const [userName, setUserName] = useState("")
 
   useEffect(() => {
@@ -33,12 +35,14 @@ export default function Account() {
     }
   }, [userId])
   useEffect(() => {
-    if (userRole === "ROLE_PENDING") {
-      setEmailVerificationModalOpend(true)
-    } else if (userRole === "ROLE_USER") {
-      setEmailVerificationModalOpend(false)
+    if (isLoad) {
+      if (userId !== 0 && userRole === "ROLE_PENDING") {
+        setEmailVerificationModalOpened(true)
+      } else if (userId !== 0 && userRole === "ROLE_USER") {
+        setEmailVerificationModalOpened(false)
+      }
     }
-  }, [userRole])
+  }, [isLoad, userId, userRole])
 
   return (
     <div className="flex flex-wrap justify-end items-center h-min">
@@ -61,11 +65,20 @@ export default function Account() {
                 <Image className="shrink-0" src="/svg/dots.svg" alt="dots" width={24} height={24} />
               </button>
 
-              {profileModalOpened ? <ProfileModal onClickClose={() => setProfileModalOpened(false)} /> : null}
-              {preferenceModalOpened ? <PreferenceModal onClickClose={() => setPreferenceModalOpened(false)} /> : null}
-              {emailVerificationModalOpend && userRole === "ROLE_PENDING" ? (
-                <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpend(false)} />
+              {profileModalOpened ? (
+                <ProfileModal
+                  onClickClose={() => setProfileModalOpened(false)}
+                  onClickEditEmail={() => setEmailVerificationModalOpened(true)}
+                  onClickEditProfile={() => setEditProfileModalOpened(true)}
+                />
               ) : null}
+              {editProfileModalOpened ? (
+                <EditProfileModal onClickClose={() => setEditProfileModalOpened(false)} />
+              ) : null}
+              {emailVerificationModalOpened ? (
+                <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpened(false)} />
+              ) : null}
+              {preferenceModalOpened ? <PreferenceModal onClickClose={() => setPreferenceModalOpened(false)} /> : null}
 
               <DropDown
                 isOpened={dropDownOpened}
