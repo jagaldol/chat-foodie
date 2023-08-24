@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect, useRef } from "react"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { deleteJwt } from "@/utils/jwtDecoder"
 
@@ -15,13 +15,16 @@ export default function DropDown({
   setProfileModalOpened: Dispatch<SetStateAction<boolean>>
 }) {
   const { needUpdate } = useContext(AuthContext)
+  const dropDownRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const handleClick = () => {
-      if (isOpened) setIsOpened(false)
+    const handleClickOutside = (event: any) => {
+      if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+        setIsOpened(false)
+      }
     }
-    document.addEventListener("mousedown", handleClick)
+    document.addEventListener("click", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClick)
+      document.removeEventListener("click", handleClickOutside)
     }
   }, [isOpened, setIsOpened])
   return (
@@ -29,6 +32,7 @@ export default function DropDown({
       className={`absolute top-0 right-0 mr-9 mt-24 w-[180px] z-20 py-2 rounded bg-gray-200 transition-all duration-300 ${
         isOpened ? "opacity-100 visible" : "opacity-0 invisible -translate-y-[4%]"
       }`}
+      ref={dropDownRef}
     >
       <div className="flex flex-col items-center">
         <button
