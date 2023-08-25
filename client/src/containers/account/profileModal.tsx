@@ -84,7 +84,7 @@ export default function ProfileModal({
               onClickClose()
             }}
           >
-            개인정보 수정
+            회원정보 수정
           </button>
         </div>
       </div>
