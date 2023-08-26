@@ -130,10 +130,13 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
     const requestData = {
       email: modifiedEmail,
     }
-    proxy.put(`/users/${userId}`, requestData, { headers }).then(() => {
+    proxy.put(`/users/${userId}`, requestData, { headers }).then((res) => {
       setEmail(modifiedEmail)
       setModifyMessage("이메일 변경 완료")
       sendVerificationCode()
+      const jwt = res.headers.authorization
+      saveJwt(jwt)
+      needUpdate()
     })
   }
 
