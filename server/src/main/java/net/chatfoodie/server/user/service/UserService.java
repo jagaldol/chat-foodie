@@ -79,7 +79,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long id, UserRequest.UpdateDto requestDto) {
+    public String updateUser(Long id, UserRequest.UpdateDto requestDto) {
         var user = userRepository.findById(id).orElseThrow(() -> new Exception500("개인 정보 변경 중 오류가 발생했습니다. 다시 시도해주세요."));
 
         // loginId 존재 시
@@ -116,6 +116,7 @@ public class UserService {
             user.updateEmail(requestDto.email());
             user.updateRole(Role.ROLE_PENDING);
         }
+        return JwtProvider.create(user);
     }
 
     public void validateLoginId(UserRequest.ValidateLoginIdDto requestDto) {

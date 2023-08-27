@@ -63,9 +63,9 @@ public class UserController {
 
         validateBirthForm(requestDto.birth());
 
-        userService.updateUser(id, requestDto);
+        String jwt = userService.updateUser(id, requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
 
     @PostMapping("/validate/loginId")

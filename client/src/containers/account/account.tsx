@@ -52,7 +52,9 @@ export default function Account() {
           return (
             <>
               <button
-                className="flex flex-row gap-3 items-center justify-center w-[180px] p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 hover:cursor-pointer"
+                className={`flex flex-row gap-3 items-center justify-center w-[180px] p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 hover:cursor-pointer transition-colors duration-300 ${
+                  dropDownOpened ? "bg-gray-200" : ""
+                }`}
                 onClick={() => {
                   setDropDownOpened(!dropDownOpened)
                 }}

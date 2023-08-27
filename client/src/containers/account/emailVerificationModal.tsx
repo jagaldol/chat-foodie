@@ -78,16 +78,14 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
         email: modifiedEmail,
       }
       try {
-        await proxy.post("/validate/email", requestData)
-        setEmailError("")
+        if (modifiedEmail !== email) {
+          await proxy.post("/validate/email", requestData)
+          setEmailError("")
+        }
       } catch (e: any) {
         if (e.response.data.status === 462) {
           isValid = false
           setEmailError("이미 존재하는 이메일 입니다.")
-          if (modifiedEmail === email) {
-            setEmailError("")
-            isValid = true
-          }
         }
       }
     }
@@ -132,10 +130,13 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
     const requestData = {
       email: modifiedEmail,
     }
-    proxy.put(`/users/${userId}`, requestData, { headers }).then(() => {
+    proxy.put(`/users/${userId}`, requestData, { headers }).then((res) => {
       setEmail(modifiedEmail)
       setModifyMessage("이메일 변경 완료")
       sendVerificationCode()
+      const jwt = res.headers.authorization
+      saveJwt(jwt)
+      needUpdate()
     })
   }
 
