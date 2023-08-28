@@ -17,12 +17,26 @@ export default function Navigator() {
 
   const isTablet = useMediaQuery({ maxWidth: 1024 })
 
+  const onClickInnerButton = () => {
+    if (isTablet) setIsNavigatorOpen(false)
+  }
+
   useEffect(() => {
+    const outsideListener = ({ target }: MouseEvent) => {
+      if (
+        !(navbarRef.current?.contains(target as HTMLElement) || navOpenButton.current?.contains(target as HTMLElement))
+      ) {
+        setIsNavigatorOpen(false)
+      }
+    }
     if (isTablet) {
       setIsNavigatorOpen(false)
+      window.addEventListener("click", outsideListener)
     } else {
       setIsNavigatorOpen(true)
+      window.removeEventListener("click", outsideListener)
     }
+    return () => window.removeEventListener("click", outsideListener)
   }, [isTablet])
 
   useEffect(() => {
@@ -46,7 +60,7 @@ export default function Navigator() {
       >
         <div className="h-full flex flex-col">
           <div className="mb-8 h-11 flex flex-row items-center justify-center gap-2">
-            <CreateChatRoomButton />
+            <CreateChatRoomButton onClickInnerButton={onClickInnerButton} />
             <div>
               <div className="drawer-content">
                 <button
@@ -60,7 +74,7 @@ export default function Navigator() {
             </div>
           </div>
           <div className="grow flex">
-            <NavigatorBox />
+            <NavigatorBox onClickInnerButton={onClickInnerButton} />
           </div>
           <div className="border-t-2 border-solid border-gray-400">
             <DeleteAllChatroomButton />

@@ -11,10 +11,12 @@ export default function ChatroomBox({
   chatRoom,
   onEdit,
   onDelete,
+  onClickInnerButton,
 }: {
   chatRoom: ChatRoom
-  onEdit: (id: number, newTitle: string) => void
-  onDelete: (id: number) => void
+  onEdit(id: number, newTitle: string): void
+  onDelete(id: number): void
+  onClickInnerButton(): void
 }) {
   const [editing, setEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(chatRoom.title)
@@ -78,7 +80,10 @@ export default function ChatroomBox({
         ) : (
           <button
             type="button"
-            onClick={handleChatRoomClick}
+            onClick={() => {
+              handleChatRoomClick()
+              onClickInnerButton()
+            }}
             className="text-left flex-grow pl-2 bg-transparent border-none cursor-pointer py-3"
             style={{
               maxWidth: "150px",
