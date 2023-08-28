@@ -32,7 +32,7 @@ export default function Navigator() {
     <>
       <nav
         ref={navbarRef}
-        className={`flex flex-col min-w-[288px] py-9 px-2.5 border-r-gray-200 border-r border-solid transition-all ease-in-out duration-300 bg-white ${
+        className={`absolute h-screen z-10 flex flex-col min-w-[288px] py-9 px-2.5 border-r-gray-200 border-r border-solid transition-all ease-in-out duration-300 bg-white ${
           isNavigatorOpen ? "translate-x-0" : "-translate-x-full -mr-[288px]"
         }
       `}

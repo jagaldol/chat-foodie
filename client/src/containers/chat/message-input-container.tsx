@@ -174,9 +174,11 @@ export default function MessageInputContainer({
   return (
     <div className="flex flex-col items-center">
       {messages.length === 0 && (
-        <div className="justify-center w-[60%] grid grid-cols-2 gap-4 mb-2 ">{renderExampleButtons()}</div>
+        <div className="justify-center w-[50%] max-lg:w-[70%] max-md:w-[90%] grid grid-cols-2 gap-4 mb-2 ">
+          {renderExampleButtons()}
+        </div>
       )}
-      <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
+      <div className="flex justify-center mt-3 mb-6 w-[50%] max-lg:w-[70%] max-md:w-[90%] border-2 border-solid border-gray-400 rounded py-3 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
         <button
           type="button"
           className={`w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${
