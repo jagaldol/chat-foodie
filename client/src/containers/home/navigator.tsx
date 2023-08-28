@@ -16,7 +16,7 @@ export default function Navigator() {
   }
 
   return isNavigatorOpen ? (
-    <nav className="flex flex-col w-[288px] p-2.5 border-r-gray-200 border-r border-solid ">
+    <nav className="flex flex-col min-w-[288px] p-2.5 border-r-gray-200 border-r border-solid ">
       <div className="h-full flex flex-col">
         <div className="mb-8 h-11 flex flex-row items-center justify-center gap-2">
           <CreateChatRoomButton />
