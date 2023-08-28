@@ -16,15 +16,11 @@ export default function Navigator() {
   }
 
   return isNavigatorOpen ? (
-    <nav className="flex flex-col min-w-[18rem] p-2.5 border-r-gray-200 border-r border-solid">
+    <nav className="flex flex-col min-w-[288px] p-2.5 border-r-gray-200 border-r border-solid ">
       <div className="h-full flex flex-col">
-        <div className="flex flex-row">
-          <div className="mb-8 border-solid border border-gray-300 rounded-md w-[80%] h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition">
-            <CreateChatRoomButton />
-          </div>
-          <div className="ml-4 mb-8 border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition">
-            <Drawer onClick={toggleNavigator} />
-          </div>
+        <div className="mb-8 h-11 flex flex-row items-center justify-center gap-2">
+          <CreateChatRoomButton />
+          <Drawer onClick={toggleNavigator} />
         </div>
         <div className="grow flex">
           <NavigatorBox />
@@ -36,10 +32,8 @@ export default function Navigator() {
       </div>
     </nav>
   ) : (
-    <nav className="left-2 top-[30px] absolute">
-      <div className="mb-8 border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition">
-        <Drawer onClick={toggleNavigator} />
-      </div>
+    <nav className="left-2 top-[38px] absolute">
+      <Drawer onClick={toggleNavigator} />
     </nav>
   )
 }

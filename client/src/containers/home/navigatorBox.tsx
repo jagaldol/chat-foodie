@@ -62,7 +62,7 @@ export default function NavigatorBox() {
   return isLoad && userId !== 0 ? (
     <div className="grow flex flex-col">
       <div className="grow h-0">
-        <div className="max-h-full overflow-y-scroll custom-scroll-bar-6px">
+        <div className="max-h-full overflow-x-hidden overflow-y-scroll custom-scroll-bar-6px -mr-[6px]">
           {chatRooms.map((chatRoom) => (
             <ChatroomBox
               key={chatRoom.id}
