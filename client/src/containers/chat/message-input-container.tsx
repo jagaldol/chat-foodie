@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { useContext, useState } from "react"
 import { undefined } from "zod"
+import { Mobile } from "@/utils/useMediaQuery"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { AuthContext } from "@/contexts/authContextProvider"
@@ -23,6 +24,7 @@ export default function MessageInputContainer({
 
   const { userId, isLoad } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
+  const isMobile = Mobile()
 
   const resizeBox = () => {
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
@@ -148,14 +150,15 @@ export default function MessageInputContainer({
   }
 
   const exampleQuestions = [
-    "오늘은 매콤한 음식이 먹고싶은데 메뉴 추천 해줘",
-    "고기가 많이 들어있는 음식을 추천해줘",
     "부모님이랑 먹기 좋은 음식 추천해줘",
     "여름에 먹기 좋은 음식 추천해줘",
+    "오늘은 매콤한 음식이 먹고싶은데 메뉴 추천 해줘",
+    "고기가 많이 들어있는 음식을 추천해줘",
   ]
 
   const renderExampleButtons = () => {
-    return exampleQuestions.map((question) => (
+    const maxButtons = isMobile ? 2 : exampleQuestions.length
+    return exampleQuestions.slice(0, maxButtons).map((question) => (
       <button
         type="button"
         key={question} // 고유한 값인 question을 key로 사용
@@ -174,7 +177,11 @@ export default function MessageInputContainer({
   return (
     <div className="flex flex-col items-center">
       {messages.length === 0 && (
-        <div className="justify-center w-[50%] max-lg:w-[70%] max-md:w-[90%] grid grid-cols-2 gap-4 mb-2 ">
+        <div
+          className={`justify-center w-[50%] max-lg:w-[70%] max-md:w-[90%] grid ${
+            isMobile ? "grid-cols-1" : "grid-cols-2"
+          } gap-4 mb-2 `}
+        >
           {renderExampleButtons()}
         </div>
       )}
