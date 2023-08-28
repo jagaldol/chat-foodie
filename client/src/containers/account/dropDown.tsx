@@ -43,7 +43,14 @@ export default function DropDown({
             setIsOpened(false)
           }}
         >
-          <Image className="shrink-0" src="/svg/user_without_bg.svg" alt="user_without_bg" width={16} height={16} />
+          <Image
+            className="shrink-0"
+            src="/svg/user_without_bg.svg"
+            alt="user_without_bg"
+            width={16}
+            height={16}
+            style={{ height: "16px" }}
+          />
           <div className="grow text-left">회원정보</div>
         </button>
         <button
