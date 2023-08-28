@@ -104,7 +104,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
                 setCurrentPage(currentPage + 1)
               }
             }}
-            className="w-80 h-12 bg-main-theme text-white rounded-md mb-1"
+            className="w-80 h-12 p-2 bg-orange-400 hover:bg-main-theme font-semibold text-white rounded-md mb-1"
           >
             Continue({currentPage}/5)
           </button>

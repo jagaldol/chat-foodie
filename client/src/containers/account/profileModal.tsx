@@ -68,7 +68,7 @@ export default function ProfileModal({
         <div className="flex justify-end">
           <button
             type="button"
-            className="bg-main-theme text-white rounded p-2 mr-5"
+            className="bg-orange-400 hover:bg-main-theme text-white font-semibold rounded p-2 mr-5 h-12"
             onClick={() => {
               onClickEditEmail()
               onClickClose()
@@ -78,7 +78,7 @@ export default function ProfileModal({
           </button>
           <button
             type="button"
-            className="bg-main-theme text-white rounded p-2"
+            className="bg-orange-400 hover:bg-main-theme text-white font-semibold rounded p-2 h-12"
             onClick={() => {
               onClickEditProfile()
               onClickClose()
