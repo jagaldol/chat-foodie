@@ -17,7 +17,7 @@ export default function Header() {
             Chatfoodie
           </h1>
         </a>
-        <p className="text-sm max-md:text-xs text-center whitespace-nowrap">
+        <p className="text-sm max-md:text-[10px] text-center whitespace-nowrap">
           음식 추천의 전문가 foodie와 채팅을 해보세요!
         </p>
       </div>

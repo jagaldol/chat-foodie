@@ -26,7 +26,7 @@ export default function TextField({
   onBlur?: React.FocusEventHandler<HTMLInputElement>
 }) {
   const requiredClass = `block text-sm font-medium text-slate-700 max-md:text-xs ${
-    required ? "after:content-['*'] fafter:ml-0.5 after:text-red-500" : ""
+    required ? "after:content-['*'] after:ml-0.5 after:text-red-500" : ""
   }`
   return (
     <label htmlFor={name} className="flex flex-col w-80 max-md:w-64 mb-3">

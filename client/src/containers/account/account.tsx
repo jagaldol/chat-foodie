@@ -103,19 +103,20 @@ export default function Account() {
           <>
             <button
               type="button"
-              className="flex items-center justify-center mr-9 my-1 bg-orange-400 hover:bg-main-theme text-white rounded hover:cursor-pointer font-semibold"
+              className="flex items-center justify-center mr-16 max-md:mr-4 bg-orange-400 hover:bg-main-theme text-white rounded hover:cursor-pointer font-semibold"
               onClick={() => setLoginModalOpened(true)}
             >
-              <p className="text-sm mx-2.5 my-2 text-center">로그인</p>
+              <p className="text-sm mx-2.5 my-2 max-md:mx-1.5 max-md:my-1.5 text-center max-md:text-xs">로그인</p>
             </button>
-            <button
-              type="button"
-              className="flex items-center justify-center mr-9 my-1 bg-orange-400 hover:bg-main-theme text-white rounded hover:cursor-pointer font-semibold"
-              onClick={() => setJoinModalOpened(true)}
-            >
-              <p className="text-sm mx-2.5 my-2 text-center">회원가입</p>
-            </button>
-            {loginModalOpened ? <LoginModal onClickClose={() => setLoginModalOpened(false)} /> : null}
+            {loginModalOpened ? (
+              <LoginModal
+                onClickClose={() => setLoginModalOpened(false)}
+                onClickJoin={() => {
+                  setLoginModalOpened(false)
+                  setJoinModalOpened(true)
+                }}
+              />
+            ) : null}
             {joinModalOpened ? <JoinModal onClickClose={() => setJoinModalOpened(false)} /> : null}
           </>
         )
