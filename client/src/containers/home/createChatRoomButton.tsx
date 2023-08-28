@@ -33,7 +33,7 @@ export default function CreateChatRoomButton({ onClickInnerButton }: { onClickIn
       }}
     >
       <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
-      <p className="ml-2 text-sm font-bold">새로운 대화</p>
+      <p className="ml-2 text-sm font-bold max-md:text-xs">새로운 대화</p>
     </button>
   )
 }

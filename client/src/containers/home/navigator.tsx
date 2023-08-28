@@ -53,25 +53,21 @@ export default function Navigator() {
     <>
       <nav
         ref={navbarRef}
-        className={`absolute h-full z-10 flex flex-col min-w-[288px] py-9 px-2.5 border-r-gray-200 border-r border-solid transition-all ease-in-out duration-300 bg-white ${
+        className={`absolute h-full z-10 flex flex-col min-w-[288px] py-9 max-md:pb-5 px-2.5 border-r-gray-200 border-r border-solid transition-all ease-in-out duration-300 bg-white ${
           isNavigatorOpen ? "translate-x-0" : "-translate-x-full -mr-[288px]"
         }
       `}
       >
         <div className="h-full flex flex-col">
-          <div className="mb-8 h-11 flex flex-row items-center justify-center gap-2">
+          <div className="mb-8 max-md:mb-5 h-11 max-md:h-9 flex flex-row items-center justify-center gap-2">
             <CreateChatRoomButton onClickInnerButton={onClickInnerButton} />
-            <div>
-              <div className="drawer-content">
-                <button
-                  type="button"
-                  className="drawer-close-button border border-gray-300 rounded h-11 w-11 hover:bg-gray-100 transition flex items-center justify-center"
-                  onClick={() => setIsNavigatorOpen(false)}
-                >
-                  <Image src="/svg/drawer.svg" alt="drawer" height="20" width="20" />
-                </button>
-              </div>
-            </div>
+            <button
+              type="button"
+              className="drawer-close-button border border-gray-300 rounded h-full w-11 max-md:w-9 hover:bg-gray-100 transition flex items-center justify-center"
+              onClick={() => setIsNavigatorOpen(false)}
+            >
+              <Image src="/svg/drawer.svg" alt="drawer" height="20" width="20" />
+            </button>
           </div>
           <div className="grow flex">
             <NavigatorBox onClickInnerButton={onClickInnerButton} />
@@ -83,17 +79,13 @@ export default function Navigator() {
         </div>
       </nav>
       <div className="left-4 top-5 absolute" ref={navOpenButton}>
-        <div>
-          <div className="drawer-content">
-            <button
-              type="button"
-              className="drawer-close-button border border-gray-300 rounded h-11 w-11 max-md:h-7 max-md:w-7 hover:bg-gray-100 transition flex items-center justify-center"
-              onClick={() => setIsNavigatorOpen(true)}
-            >
-              <Image src="/svg/drawer.svg" alt="drawer" height="20" width="20" />
-            </button>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="drawer-close-button border border-gray-300 rounded h-11 w-11 max-md:h-7 max-md:w-7 hover:bg-gray-100 transition flex items-center justify-center"
+          onClick={() => setIsNavigatorOpen(true)}
+        >
+          <Image src="/svg/drawer.svg" alt="drawer" height="20" width="20" />
+        </button>
       </div>
     </>
   )

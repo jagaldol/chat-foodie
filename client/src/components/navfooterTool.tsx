@@ -5,9 +5,9 @@ import React from "react"
 
 export default function NavFooterTool({ iconSrc, text, func }: { iconSrc: string; text: string; func: () => void }) {
   return (
-    <button type="button" className="flex mt-7 ml-2.5 items-center" onClick={func}>
+    <button type="button" className="flex mt-7 max-md:mt-5 ml-2.5 items-center" onClick={func}>
       <Image src={iconSrc} alt="" height="16" width="16" style={{ height: "16px" }} />
-      <p className="ml-2 text-sm">{text}</p>
+      <p className="ml-2 text-sm max-md:text-xs">{text}</p>
     </button>
   )
 }
