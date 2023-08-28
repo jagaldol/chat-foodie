@@ -12,7 +12,7 @@ export default function Modal({
   description?: string
 }) {
   return (
-    <div className="bg-black/5 h-screen w-screen z-30 flex fixed left-0 top-0 items-center justify-center">
+    <div className="bg-black/5 h-full w-full z-30 flex fixed left-0 top-0 items-center justify-center">
       <div className="flex flex-col w-[500px] h-[650px] bg-white drop-shadow p-5 max-md:w-[348px] max-md:h-[540px] max-md:p-3">
         <div className="flex justify-end">
           <Image
