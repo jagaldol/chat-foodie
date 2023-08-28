@@ -12,7 +12,7 @@ export default function Navigator() {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(true)
 
   const toggleNavigator = () => {
-    setIsNavigatorOpen(!isNavigatorOpen)
+    setIsNavigatorOpen((prev) => !prev)
   }
 
   return isNavigatorOpen ? (
@@ -23,7 +23,7 @@ export default function Navigator() {
             <CreateChatRoomButton />
           </div>
           <div className="ml-4 mb-8 border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition">
-            <Drawer isOpen={isNavigatorOpen} onClose={toggleNavigator} />
+            <Drawer onClick={toggleNavigator} />
           </div>
         </div>
         <div className="grow flex">
@@ -38,7 +38,7 @@ export default function Navigator() {
   ) : (
     <nav className="left-2 top-[30px] absolute">
       <div className="mb-8 border-solid border border-gray-300 rounded-md h-11 flex items-center hover:bg-gray-100 hover:border-gray-200 transition">
-        <Drawer isOpen={isNavigatorOpen} onClose={toggleNavigator} />
+        <Drawer onClick={toggleNavigator} />
       </div>
     </nav>
   )
