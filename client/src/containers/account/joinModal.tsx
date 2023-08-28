@@ -355,7 +355,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
             </label>
 
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12"
               type="submit"
             >
               회원가입

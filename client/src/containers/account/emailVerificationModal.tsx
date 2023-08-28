@@ -182,7 +182,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
             <button
               type="button"
               onClick={() => modifyEmail()}
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 mb-3"
             >
               이메일 주소 변경
             </button>
@@ -204,7 +204,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
                 message={message}
               />
               <button
-                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-3 rounded w-1/3 h-10 mt-6 disabled:opacity-50"
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-1/3 h-10 mt-6 disabled:opacity-50"
                 type="button"
                 disabled={disableButton}
                 onClick={sendVerificationCode}
@@ -213,7 +213,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
               </button>
             </div>
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 mb-3"
               type="submit"
             >
               이메일 인증하기
