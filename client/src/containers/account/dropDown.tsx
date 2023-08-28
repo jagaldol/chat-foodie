@@ -29,7 +29,7 @@ export default function DropDown({
   }, [isOpened, setIsOpened])
   return (
     <div
-      className={`absolute top-0 right-0 mr-9 mt-24 w-[180px] z-20 py-2 rounded bg-gray-200 transition-all duration-300 ${
+      className={`absolute top-[52px] right-9 max-md:top-9 max-md:right-4 w-[180px] max-lg:w-[160px] z-20 py-2 rounded bg-gray-200 transition-all duration-300 ${
         isOpened ? "opacity-100 visible" : "opacity-0 invisible -translate-y-[4%]"
       }`}
       ref={dropDownRef}
@@ -43,7 +43,14 @@ export default function DropDown({
             setIsOpened(false)
           }}
         >
-          <Image className="shrink-0" src="/svg/user_without_bg.svg" alt="user_without_bg" width={16} height={16} />
+          <Image
+            className="shrink-0"
+            src="/svg/user_without_bg.svg"
+            alt="user_without_bg"
+            width={16}
+            height={16}
+            style={{ height: "16px" }}
+          />
           <div className="grow text-left">회원정보</div>
         </button>
         <button

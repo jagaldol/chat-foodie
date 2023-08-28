@@ -8,7 +8,7 @@ import { AuthContext } from "@/contexts/authContextProvider"
 import TextField from "@/components/textField"
 import { limitInputNumber } from "@/utils/utils"
 
-export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
+export default function LoginModal({ onClickClose, onClickJoin }: { onClickClose(): void; onClickJoin(): void }) {
   const { needUpdate } = useContext(AuthContext)
 
   return (
@@ -30,7 +30,6 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
               .then((res) => {
                 const jwt = res.headers.authorization
                 saveJwt(jwt)
-                alert("로그인 성공")
                 needUpdate()
                 onClickClose()
               })
@@ -56,11 +55,19 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
             />
             <div className="flex justify-center">
               <button
-                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
                 type="submit"
               >
                 로그인
               </button>
+            </div>
+            <div>
+              <div className="flex mt-3">
+                <p className="max-md:text-xs mr-2">계정이 없으신가요?</p>
+                <button type="button" onClick={onClickJoin}>
+                  <p className="max-md:text-xs underline">회원가입하기</p>
+                </button>
+              </div>
             </div>
           </div>
         </form>

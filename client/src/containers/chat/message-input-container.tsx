@@ -1,12 +1,12 @@
 import Image from "next/image"
 import { useContext, useState } from "react"
-import { undefined } from "zod"
 import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
+import Mobile from "@/utils/mobile"
 
 export default function MessageInputContainer({
   messages,
@@ -23,12 +23,13 @@ export default function MessageInputContainer({
 
   const { userId, isLoad } = useContext(AuthContext)
   const { chatroomId, setChatroomId } = useContext(ChatroomContext)
+  const isMobile = Mobile()
 
   const resizeBox = () => {
     const userInputBox = document.querySelector<HTMLTextAreaElement>("#user-input-box")
 
     if (userInputBox !== null) {
-      userInputBox.style.height = "24px"
+      userInputBox.style.height = isMobile ? "20px" : "24px"
       userInputBox.style.height = `${Math.min(userInputBox.scrollHeight, 120)}px`
     }
   }
@@ -148,18 +149,19 @@ export default function MessageInputContainer({
   }
 
   const exampleQuestions = [
-    "오늘은 매콤한 음식이 먹고싶은데 메뉴 추천 해줘",
-    "고기가 많이 들어있는 음식을 추천해줘",
     "부모님이랑 먹기 좋은 음식 추천해줘",
+    "매콤한 음식이 먹고싶은데 메뉴 추천 해줘",
+    "고기가 많이 들어있는 음식을 추천해줘",
     "여름에 먹기 좋은 음식 추천해줘",
   ]
 
   const renderExampleButtons = () => {
-    return exampleQuestions.map((question) => (
+    const maxButtons = isMobile ? 2 : exampleQuestions.length
+    return exampleQuestions.slice(0, maxButtons).map((question) => (
       <button
         type="button"
         key={question} // 고유한 값인 question을 key로 사용
-        className="px-4 py-2 text-orange-500 rounded-lg border border-black hover:bg-orange-500 hover:text-white hover:border-white"
+        className="px-4 py-2 text-orange-500 rounded-lg border border-black hover:bg-orange-500 hover:text-white hover:border-white max-md:text-sm"
         onClick={() => {
           addUserMessage(question)
           setIsGenerating(true)
@@ -173,10 +175,16 @@ export default function MessageInputContainer({
 
   return (
     <div className="flex flex-col items-center">
-      {messages.length === 0 && (
-        <div className="justify-center w-[60%] grid grid-cols-2 gap-4 mb-2 ">{renderExampleButtons()}</div>
+      {isLoad && messages.length === 0 && (
+        <div
+          className={`justify-center w-[50%] max-lg:w-[70%] max-md:w-[90%] grid ${
+            isMobile ? "grid-cols-1" : "grid-cols-2"
+          } gap-4 mb-2 `}
+        >
+          {renderExampleButtons()}
+        </div>
       )}
-      <div className="flex justify-center mt-3 mb-6 w-[60%] border-2 border-solid border-gray-400 rounded py-3 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
+      <div className="flex justify-center items-center mt-3 mb-6 max-md:mb-2 w-[50%] max-lg:w-[70%] max-md:w-[90%] border-2 border-solid border-gray-400 rounded py-3 max-md:py-2 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
         <button
           type="button"
           className={`w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${
@@ -188,7 +196,7 @@ export default function MessageInputContainer({
           <p className="ml-2 text-sm">답변 재생성</p>
         </button>
         <textarea
-          className="w-full focus:outline-none pl-5 mr-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6"
+          className="w-full focus:outline-none pl-5 mr-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6 max-md:text-sm max-md:h-5"
           id="user-input-box"
           onChange={(e) => {
             limitInputNumber(e, 500)

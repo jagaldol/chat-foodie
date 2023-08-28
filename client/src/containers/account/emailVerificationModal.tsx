@@ -182,12 +182,12 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
             <button
               type="button"
               onClick={() => modifyEmail()}
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 mb-3 max-md:w-64 max-md:h-10 max-md:font-normal"
             >
               이메일 주소 변경
             </button>
 
-            <div className="flex flex-row w-80 space-x-2">
+            <div className="flex flex-row w-80 space-x-2 max-md:w-64">
               <TextField
                 label="이메일 인증 코드"
                 type="text"
@@ -204,7 +204,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
                 message={message}
               />
               <button
-                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-3 rounded w-1/3 h-10 mt-6 disabled:opacity-50"
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-1/3 h-10 mt-6 disabled:opacity-50 max-md:mt-5 max-md:font-normal max-md:h-9 max-md:text-sm"
                 type="button"
                 disabled={disableButton}
                 onClick={sendVerificationCode}
@@ -213,7 +213,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
               </button>
             </div>
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 mb-3"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 mb-3 max-md:w-64 max-md:h-10 max-md:font-normal"
               type="submit"
             >
               이메일 인증하기

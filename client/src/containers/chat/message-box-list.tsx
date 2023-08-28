@@ -14,8 +14,8 @@ function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: Forwa
     <div
       className={`${message.isFromChatbot ? "bg-gray-100 " : ""}pt-10 pb-14 flex justify-center items-center w-full`}
     >
-      <div className="w-[60%] flex">
-        <div className={`${message.isFromChatbot ? "bg-white " : ""} min-w-[30px] mr-10 h-fit`}>
+      <div className="w-[50%] max-lg:w-[70%] max-md:w-[90%] flex">
+        <div className={`${message.isFromChatbot ? "bg-white " : ""} min-w-[30px] mr-10 max-md:mr-5 h-fit`}>
           <Image
             src={`${message.isFromChatbot ? "/svg/logo.svg" : "/svg/user.svg"}`}
             alt="icon"
@@ -24,7 +24,7 @@ function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: Forwa
             style={{ height: "30px" }}
           />
         </div>
-        <p className="break-all whitespace-pre-line">{message.content}</p>
+        <p className="break-all whitespace-pre-line max-md:text-sm">{message.content}</p>
       </div>
     </div>
   )
@@ -76,7 +76,11 @@ export default function MessageBoxList({
   // }, [prevScrollHeight, chatroomId, cursor, getMessages])
 
   return (
-    <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main" ref={chatBox}>
+    <div
+      className="w-full overflow-y-scroll max-md:custom-scroll-bar-6px custom-scroll-bar-10px h-full"
+      id="chat-main"
+      ref={chatBox}
+    >
       {messages.map((message) => {
         return <MessageBox message={message} key={message.key} chatBox={chatBox} />
       })}

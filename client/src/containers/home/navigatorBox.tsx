@@ -8,7 +8,7 @@ import proxy from "@/utils/proxy"
 import ChatroomBox from "@/containers/home/chatroomBox"
 import { ChatRoom } from "@/types/chatroom"
 
-export default function NavigatorBox() {
+export default function NavigatorBox({ onClickInnerButton }: { onClickInnerButton(): void }) {
   const { userId, isLoad, userRole } = useContext(AuthContext)
   const { chatroomId, setChatroomId, update } = useContext(ChatroomContext)
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
@@ -69,6 +69,7 @@ export default function NavigatorBox() {
               chatRoom={chatRoom}
               onEdit={handleEditChatRoomTitle}
               onDelete={handleDeleteChatRoom}
+              onClickInnerButton={onClickInnerButton}
             />
           ))}
         </div>

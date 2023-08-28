@@ -7,7 +7,7 @@ import proxy from "@/utils/proxy"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import { AuthContext } from "@/contexts/authContextProvider"
 
-export default function CreateChatRoomButton() {
+export default function CreateChatRoomButton({ onClickInnerButton }: { onClickInnerButton(): void }) {
   const { userId } = useContext(AuthContext)
   const { setChatroomId } = useContext(ChatroomContext)
   const createNewChatroom = async () => {
@@ -29,6 +29,7 @@ export default function CreateChatRoomButton() {
       onClick={() => {
         if (userId !== 0) createNewChatroom().then()
         else window.location.href = "/"
+        onClickInnerButton()
       }}
     >
       <Image src="/svg/add.svg" alt="add" height="20" width="20" className="ml-4" />
