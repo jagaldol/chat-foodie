@@ -18,4 +18,5 @@ const Mobile = () => {
 
   return mobile
 }
-export { Mobile, useMediaQuery }
+
+export default Mobile

@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ChatroomProvider>
           <body className={`${notoSans.className} flex box-border min-h-screen`}>
             <Navigator />
-            <main className="flex grow flex-col pt-7 pb-7">
+            <main className="flex grow flex-col py-7 max-md:py-3">
               <Header />
               <section className="grow">{children}</section>
               <Footer />

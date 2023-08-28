@@ -8,7 +8,6 @@ import NavigatorBox from "@/containers/home/navigatorBox"
 import NavigatorToolBox from "@/containers/home/navigatorToollBox"
 import CreateChatRoomButton from "@/containers/home/createChatRoomButton"
 import DeleteAllChatroomButton from "@/containers/home/deleteAllChatroomButton"
-import Drawer from "@/containers/home/drawer"
 
 export default function Navigator() {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false)
@@ -59,7 +58,7 @@ export default function Navigator() {
           </div>
         </div>
       </nav>
-      <div className="left-4 top-[38px] absolute" ref={navOpenButton}>
+      <div className="left-4 top-5 absolute" ref={navOpenButton}>
         <div>
           <div className="drawer-content">
             <button

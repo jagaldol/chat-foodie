@@ -15,7 +15,7 @@ function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: Forwa
       className={`${message.isFromChatbot ? "bg-gray-100 " : ""}pt-10 pb-14 flex justify-center items-center w-full`}
     >
       <div className="w-[50%] max-lg:w-[70%] max-md:w-[90%] flex">
-        <div className={`${message.isFromChatbot ? "bg-white " : ""} min-w-[30px] mr-10 h-fit`}>
+        <div className={`${message.isFromChatbot ? "bg-white " : ""} min-w-[30px] mr-10 max-md:mr-5 h-fit`}>
           <Image
             src={`${message.isFromChatbot ? "/svg/logo.svg" : "/svg/user.svg"}`}
             alt="icon"
@@ -24,7 +24,7 @@ function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: Forwa
             style={{ height: "30px" }}
           />
         </div>
-        <p className="break-all whitespace-pre-line">{message.content}</p>
+        <p className="break-all whitespace-pre-line max-md:text-sm">{message.content}</p>
       </div>
     </div>
   )
