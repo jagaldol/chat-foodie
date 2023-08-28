@@ -175,7 +175,7 @@ export default function MessageInputContainer({
 
   return (
     <div className="flex flex-col items-center">
-      {messages.length === 0 && (
+      {isLoad && messages.length === 0 && (
         <div
           className={`justify-center w-[50%] max-lg:w-[70%] max-md:w-[90%] grid ${
             isMobile ? "grid-cols-1" : "grid-cols-2"
