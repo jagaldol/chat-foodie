@@ -307,7 +307,7 @@ export default function EditProfileModal({ onClickClose }: { onClickClose(): voi
               error={errors.name}
             />
 
-            <label htmlFor="gender" className="block w-80 h-16 mb-3 max-md:w-64">
+            <label htmlFor="gender" className="block w-80 mb-3 max-md:w-64">
               <span className="block text-sm font-medium text-slate-700 max-md:text-xs">성별</span>
               <select
                 name="gender"
@@ -320,7 +320,7 @@ export default function EditProfileModal({ onClickClose }: { onClickClose(): voi
               </select>
             </label>
 
-            <label htmlFor="birthDate" className="block w-80 h-16 mb-3 max-md:w-64">
+            <label htmlFor="birthDate" className="block w-80 mb-3 max-md:w-64">
               <span className="block text-sm font-medium text-slate-700 max-md:text-xs">생년월일</span>
               <div className="flex space-x-2 mt-1">
                 <select
