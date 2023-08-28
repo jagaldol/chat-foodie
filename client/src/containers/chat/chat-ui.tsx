@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
-import { useMediaQuery } from "react-responsive"
 import MessageInputContainer from "@/containers/chat/message-input-container"
 import MessageBoxListContainer from "@/containers/chat/message-box-list-container"
 import { ChatMessage, Cursor } from "@/types/chat"
@@ -13,10 +12,8 @@ import { AuthContext } from "@/contexts/authContextProvider"
 export default function ChatUi() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const messageNextKey = useRef<number>(1)
-  const [isNavigatorOpen, setIsNavigatorOpen] = useState(true)
 
   const getMessagesLength = 20
-  const isMobile = useMediaQuery({ maxWidth: 768 })
 
   // const [cursor, setCursor] = useState<Cursor>({ size: getMessagesLength })
 

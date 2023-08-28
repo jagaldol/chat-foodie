@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import { useMediaQuery } from "react-responsive"
 import NavigatorBox from "@/containers/home/navigatorBox"
@@ -10,23 +10,20 @@ import DeleteAllChatroomButton from "@/containers/home/deleteAllChatroomButton"
 import Drawer from "@/containers/home/drawer"
 
 export default function Navigator() {
-  const [isNavigatorOpen, setIsNavigatorOpen] = useState(true)
+  const [isNavigatorOpen, setIsNavigatorOpen] = useState(false)
 
   const navbarRef = useRef<HTMLDivElement | null>(null)
   const navOpenButton = useRef<HTMLDivElement | null>(null)
-  const toggleNavigator = () => {
-    setIsNavigatorOpen((prev) => {
-      if (prev) {
-        setTimeout(() => navOpenButton.current?.classList.remove("hidden"), 300)
-      } else {
-        navOpenButton.current?.classList.add("hidden")
-      }
 
-      return !prev
-    })
-  }
+  const isTablet = useMediaQuery({ maxWidth: 1024 })
 
-  const isMobile = useMediaQuery({ maxWidth: 768 })
+  useEffect(() => {
+    if (isTablet) {
+      setIsNavigatorOpen(false)
+    } else {
+      setIsNavigatorOpen(true)
+    }
+  }, [isTablet])
 
   return (
     <>
@@ -40,7 +37,7 @@ export default function Navigator() {
         <div className="h-full flex flex-col">
           <div className="mb-8 h-11 flex flex-row items-center justify-center gap-2">
             <CreateChatRoomButton />
-            <Drawer onClick={toggleNavigator} />
+            <Drawer onClick={() => setIsNavigatorOpen(false)} />
           </div>
           <div className="grow flex">
             <NavigatorBox />
@@ -51,8 +48,8 @@ export default function Navigator() {
           </div>
         </div>
       </nav>
-      <div className="left-2 top-[38px] absolute hidden" ref={navOpenButton}>
-        <Drawer onClick={toggleNavigator} />
+      <div className="left-2 top-[38px] absolute" ref={navOpenButton}>
+        <Drawer onClick={() => setIsNavigatorOpen(true)} />
       </div>
     </>
   )
