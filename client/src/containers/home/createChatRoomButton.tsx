@@ -25,7 +25,7 @@ export default function CreateChatRoomButton() {
   return (
     <button
       type="button"
-      className="h-full w-[80%] flex items-center"
+      className="h-full border-solid border grow border-gray-300 rounded hover:bg-gray-100 transition flex items-center"
       onClick={() => {
         if (userId !== 0) createNewChatroom().then()
         else window.location.href = "/"
