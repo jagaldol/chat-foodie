@@ -25,7 +25,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ko">
       <AuthProvider>
         <ChatroomProvider>
-          <body className={`${notoSans.className} flex box-border min-h-screen`}>
+          <body
+            className={`${notoSans.className} flex box-border`}
+            style={{
+              minHeight: "calc(var(--vh, 1vh) * 100)",
+            }}
+          >
             <Navigator />
             <main className="flex grow flex-col py-7 max-md:py-3">
               <Header />

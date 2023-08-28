@@ -25,6 +25,16 @@ export default function Navigator() {
     }
   }, [isTablet])
 
+  useEffect(() => {
+    const setScreenSize = () => {
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty("--vh", `${vh}px`)
+    }
+    window.addEventListener("resize", setScreenSize)
+    setScreenSize()
+    return () => window.removeEventListener("resize", setScreenSize)
+  }, [])
+
   return (
     <>
       <nav
