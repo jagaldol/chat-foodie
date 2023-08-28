@@ -76,7 +76,11 @@ export default function MessageBoxList({
   // }, [prevScrollHeight, chatroomId, cursor, getMessages])
 
   return (
-    <div className="w-full overflow-y-scroll custom-scroll-bar-10px h-full" id="chat-main" ref={chatBox}>
+    <div
+      className="w-full overflow-y-scroll max-md:custom-scroll-bar-6px custom-scroll-bar-10px h-full"
+      id="chat-main"
+      ref={chatBox}
+    >
       {messages.map((message) => {
         return <MessageBox message={message} key={message.key} chatBox={chatBox} />
       })}

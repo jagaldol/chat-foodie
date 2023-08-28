@@ -29,7 +29,7 @@ export default function DropDown({
   }, [isOpened, setIsOpened])
   return (
     <div
-      className={`absolute top-14 right-9 max-md: w-[180px] max-lg:w-[160px] z-20 py-2 rounded bg-gray-200 transition-all duration-300 ${
+      className={`absolute top-12 right-9 max-md:right-2 max-md: w-[180px] max-lg:w-[160px] z-20 py-2 rounded bg-gray-200 transition-all duration-300 ${
         isOpened ? "opacity-100 visible" : "opacity-0 invisible -translate-y-[4%]"
       }`}
       ref={dropDownRef}
