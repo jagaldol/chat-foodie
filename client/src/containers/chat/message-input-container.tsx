@@ -187,13 +187,20 @@ export default function MessageInputContainer({
       <div className="flex justify-center items-center mt-3 mb-6 max-md:mb-2 w-[50%] max-lg:w-[70%] max-md:w-[90%] border-2 border-solid border-gray-400 rounded py-3 max-md:py-2 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
         <button
           type="button"
-          className={`w-[10rem] border bg-white border-gray-400 rounded flex justify-center items-center h-9 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${
+          className={`px-8 border bg-white border-gray-400 rounded flex justify-center items-center py-1.5 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${
             messages.length !== 0 && !isGenerating ? "" : " invisible"
           }`}
           onClick={onRegenerateClick}
         >
-          <Image src="/svg/refresh.svg" alt="" width="16" height="16" style={{ height: "16px" }} />
-          <p className="ml-2 text-sm">답변 재생성</p>
+          <Image
+            src="/svg/refresh.svg"
+            alt=""
+            width="16"
+            height="16"
+            style={{ height: "16px" }}
+            className="max-md:h-3.5 max-md:w-3.5"
+          />
+          <p className="ml-2 text-sm max-md:text-xs">답변 재생성</p>
         </button>
         <textarea
           className="w-full focus:outline-none pl-5 mr-5 custom-scroll-bar-4px overflow-y scroll resize-none h-6 max-md:text-sm max-md:h-5"
