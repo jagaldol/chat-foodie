@@ -10,6 +10,7 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedFoods, setSelectedFoods] = useState<number[]>([])
   const [tooltipFoodId, setTooltipFoodId] = useState<number | null>(null)
+  const [isHover, setIsHover] = useState(false)
 
   const foodsPerPage = 6
 
@@ -62,13 +63,16 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
             })
             .map((food) => {
               return (
-                <button type="button" onClick={() => handleFoodClick(food.id)} key={food.id}>
+                <button className=" mb-9" type="button" onClick={() => handleFoodClick(food.id)} key={food.id}>
                   <div
                     className={`${
                       selectedFoods.includes(food.id) ? "ring-4 ring-orange-500 " : ""
-                    } mb-9 rounded-md overflow-hidden`}
+                    } rounded-md overflow-hidden relative`}
+                    onMouseEnter={() => setIsHover(true)}
+                    onMouseLeave={() => setIsHover(false)}
                   >
                     <Image
+                      className={`${isHover && tooltipFoodId === food.id ? "opacity-30" : "opacity-100"}`}
                       src={food.imageUrl}
                       alt={food.name}
                       width={150}
@@ -77,8 +81,11 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
                       onMouseEnter={() => setTooltipFoodId(food.id)}
                       onMouseLeave={() => setTooltipFoodId(null)}
                     />
-                    {tooltipFoodId === food.id && (
-                      <div className="absolute bg-white p-2 rounded-md shadow-md">
+                    {isHover && tooltipFoodId === food.id && (
+                      <div
+                        className="absolute bg-inherit rounded text-center opacity-100 inset-0 m-auto w-fit h-fit font-bold"
+                        onMouseEnter={() => setTooltipFoodId(food.id)}
+                      >
                         {food.name} {/* 원하는 음식 정보 표시 */}
                       </div>
                     )}
