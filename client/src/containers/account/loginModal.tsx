@@ -56,7 +56,7 @@ export default function LoginModal({ onClickClose }: { onClickClose(): void }) {
             />
             <div className="flex justify-center">
               <button
-                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12"
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold py-2 px-4 rounded w-80 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
                 type="submit"
               >
                 로그인

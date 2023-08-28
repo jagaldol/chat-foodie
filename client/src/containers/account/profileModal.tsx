@@ -56,7 +56,7 @@ export default function ProfileModal({
 
   return (
     <Modal onClickClose={onClickClose} description="">
-      <div className="p-4 relative h-full flex flex-col mt-6">
+      <div className="p-4 relative h-full flex flex-col mt-6 max-md:text-sm max-md:p-3 max-md:mt-0">
         <div className="grow">
           <ProfileItem label="아이디" value={profile.loginId} />
           <ProfileItem label="이름" value={profile.name} />
@@ -68,7 +68,7 @@ export default function ProfileModal({
         <div className="flex justify-end">
           <button
             type="button"
-            className="bg-orange-400 hover:bg-main-theme text-white font-semibold rounded p-2 mr-5 h-12"
+            className="bg-orange-400 hover:bg-main-theme text-white font-semibold rounded p-2 mr-5 h-12 max-md:h-10 max-md:font-normal"
             onClick={() => {
               onClickEditEmail()
               onClickClose()
@@ -78,7 +78,7 @@ export default function ProfileModal({
           </button>
           <button
             type="button"
-            className="bg-orange-400 hover:bg-main-theme text-white font-semibold rounded p-2 h-12"
+            className="bg-orange-400 hover:bg-main-theme text-white font-semibold rounded p-2 h-12 max-md:h-10 max-md:font-normal"
             onClick={() => {
               onClickEditProfile()
               onClickClose()

@@ -228,8 +228,11 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
   }
   return (
     <Modal onClickClose={onClickClose}>
-      <div className="p-5 h-0 grow">
-        <form className="overflow-y-scroll custom-scroll-bar-10px max-h-full -mr-[10px]" onSubmit={handleSubmit}>
+      <div className="p-5 h-0 grow max-md:p-3">
+        <form
+          className="overflow-y-scroll custom-scroll-bar-10px max-h-full -mr-[10px] max-md:custom-scroll-bar-4px max-md:-mr-[4px]"
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-col items-center">
             <TextField
               label="아이디"
@@ -300,33 +303,33 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               error={errors.name}
             />
 
-            <label htmlFor="gender" className="block w-80 h-16 mb-3">
-              <span className="block text-sm font-medium text-slate-700">성별</span>
+            <label htmlFor="gender" className="block w-80 h-16 mb-3 max-md:w-64">
+              <span className="block text-sm font-medium text-slate-700 max-md:text-xs">성별</span>
               <select
                 name="gender"
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md sm:text-sm focus:ring-1"
+                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md focus:ring-1 max-md:text-sm max-md:px-2 max-md:py-1.5"
               >
                 <option value="false">남성</option>
                 <option value="true">여성</option>
               </select>
             </label>
 
-            <label htmlFor="birthDate" className="block w-80 h-16 mb-3">
-              <span className="block text-sm font-medium text-slate-700">생년월일</span>
+            <label htmlFor="birthDate" className="block w-80 h-16 mb-3 max-md:w-64">
+              <span className="block text-sm font-medium text-slate-700 max-md:text-xs">생년월일</span>
               <div className="flex space-x-2 mt-1">
                 <select
                   name="birthYear"
-                  className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-51 rounded-md sm:text-sm focus:ring-1"
+                  className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block rounded-md focus:ring-1 max-md:text-sm max-md:h-9 max-md:px-2 max-md:py-1.5"
                   placeholder="년도"
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
                 >
                   {generateYearOptions()}
                 </select>
-                <p className=" py-2 ">년</p>
+                <p className=" py-2 max-md:text-sm ">년</p>
                 <select
                   name="birthMonth"
-                  className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-1/3 rounded-md sm:text-sm focus:ring-1"
+                  className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-1/3 rounded-md focus:ring-1 max-md:text-sm max-md:h-9 max-md:px-2 max-md:py-1.5"
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(parseInt(e.target.value, 10))}
                 >
@@ -343,19 +346,19 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
                   <option value="11">11</option>
                   <option value="12">12</option>
                 </select>
-                <p className=" py-2 ">월</p>
+                <p className=" py-2 max-md:text-sm ">월</p>
                 <select
                   name="birthDay"
-                  className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-1/3 rounded-md sm:text-sm focus:ring-1"
+                  className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-1/3 rounded-md focus:ring-1 max-md:text-sm max-md:h-9 max-md:px-2 max-md:py-1.5"
                 >
                   {generateDayOptions(selectedYear, selectedMonth)}
                 </select>
-                <p className=" py-2 ">일</p>
+                <p className=" py-2 max-md:text-sm ">일</p>
               </div>
             </label>
 
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12"
+              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
               type="submit"
             >
               회원가입
