@@ -45,14 +45,14 @@ export default function Account() {
   }, [isLoad, userId, userRole])
 
   return (
-    <div className="flex flex-wrap justify-end items-center h-min">
+    <div className="flex flex-wrap justify-end items-center h-min relative">
       {(() => {
         if (!isLoad) return null
         if (userId !== 0) {
           return (
             <>
               <button
-                className={`flex flex-row gap-3 items-center justify-center w-[180px] p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 hover:cursor-pointer transition-colors duration-300 ${
+                className={`flex flex-row gap-3 max-md:gap-0 items-center h-11 w-[180px] max-lg:w-[160px] max-md:w-11 p-2 mr-9 rounded overflow-hidden hover:bg-gray-200 transition-all duration-300 ${
                   dropDownOpened ? "bg-gray-200" : ""
                 }`}
                 onClick={() => {
@@ -62,9 +62,17 @@ export default function Account() {
               >
                 <Image className="shrink-0 rounded-sm" src="/svg/user.svg" alt="user" width={28} height={28} />
 
-                <div className="grow text-left font-bold">{userName}</div>
+                <p className="text-left font-bold w-[calc(100%-68px)] overflow-hidden max-md:invisible max-md:w-0 break-keep">
+                  {userName}
+                </p>
 
-                <Image className="shrink-0" src="/svg/dots.svg" alt="dots" width={24} height={24} />
+                <Image
+                  className="shrink-0 max-md:w-0 max-md:invisible"
+                  src="/svg/dots.svg"
+                  alt="dots"
+                  width={24}
+                  height={24}
+                />
               </button>
 
               {profileModalOpened ? (
