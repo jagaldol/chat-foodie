@@ -1,13 +1,5 @@
-import "@/styles/globals.css"
-import type { Metadata } from "next"
-import { Noto_Sans_KR } from "next/font/google"
 import { ReactNode } from "react"
-import Head from "next/head"
-import Header from "@/containers/home/header"
-import Footer from "@/containers/home/footer"
-import Navigator from "@/containers/home/navigator"
-import AuthProvider from "@/contexts/authContextProvider"
-import ChatroomProvider from "@/contexts/chatroomContextProvider"
+import { Noto_Sans_KR } from "next/font/google"
 
 const notoSans = Noto_Sans_KR({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -31,23 +23,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <title>Chat Foodie</title>
         <meta name="description" content="음식 추천의 전문가 푸디와 채팅을 해보세요!" />
       </head>
-      <AuthProvider>
-        <ChatroomProvider>
-          <body
-            className={`${notoSans.className} flex box-border`}
-            style={{
-              minHeight: "calc(var(--vh, 1vh) * 100)",
-            }}
-          >
-            <Navigator />
-            <main className="flex grow flex-col py-7 max-md:py-3">
-              <Header />
-              <section className="grow">{children}</section>
-              <Footer />
-            </main>
-          </body>
-        </ChatroomProvider>
-      </AuthProvider>
+      <body
+        className={`${notoSans.className} flex box-border`}
+        style={{
+          minHeight: "calc(var(--vh, 1vh) * 100)",
+        }}
+      >
+        {children}
+      </body>
     </html>
   )
 }

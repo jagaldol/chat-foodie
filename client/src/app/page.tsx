@@ -1,5 +1,8 @@
-import ChatUi from "@/containers/chat/chat-ui"
-
 export default function Home() {
-  return <ChatUi />
+  return (
+    <div>
+      <p> 홈화면</p>
+      <a href="/chat">채팅하기</a>
+    </div>
+  )
 }
