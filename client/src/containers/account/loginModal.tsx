@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
 import { saveJwt } from "@/utils/jwtDecoder"
@@ -10,48 +10,95 @@ import { limitInputNumber } from "@/utils/utils"
 
 export default function LoginModal({ onClickClose, onClickJoin }: { onClickClose(): void; onClickJoin(): void }) {
   const { needUpdate } = useContext(AuthContext)
+  const [formData, setFormData] = useState({
+    loginId: "",
+    password: "",
+  })
+  const [error, setError] = useState("")
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  const validateLoginId = () => {
+    let isValid = true
+    if (formData.loginId.trim() === "") {
+      setError("아이디를 입력해주세요.")
+      isValid = false
+    }
+
+    return isValid
+  }
+
+  const validatePassword = () => {
+    let isValid = true
+
+    if (formData.password === "") {
+      setError("비밀번호를 입력해주세요.")
+      isValid = false
+    }
+
+    return isValid
+  }
+
+  const validateForm = async () => {
+    if (!validateLoginId()) return false
+    if (!validatePassword()) return false
+
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!(await validateForm())) {
+      return
+    }
+
+    proxy
+      .post("/login", {
+        loginId: formData.loginId,
+        password: formData.password,
+      })
+      .then((res) => {
+        const jwt = res.headers.authorization
+        saveJwt(jwt)
+        needUpdate()
+        onClickClose()
+      })
+      .catch(() => {
+        setError("아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.")
+      })
+  }
 
   return (
     <Modal onClickClose={onClickClose}>
       <div className="p-5 h-0 grow">
-        <form
-          className="max-h-full"
-          onSubmit={(e) => {
-            e.preventDefault()
-            const idInput = e.currentTarget.querySelector<HTMLInputElement>("[name='loginId']")
-            const id = idInput!.value
-            const passwordInput = e.currentTarget.querySelector<HTMLInputElement>("[name='password']")
-            const password = passwordInput!.value
-            proxy
-              .post("/login", {
-                loginId: id,
-                password,
-              })
-              .then((res) => {
-                const jwt = res.headers.authorization
-                saveJwt(jwt)
-                needUpdate()
-                onClickClose()
-              })
-              .catch((res) => {
-                alert(res.response.data.errorMessage)
-              })
-          }}
-        >
+        <form className="max-h-full" onSubmit={handleSubmit}>
           <div className="flex flex-col items-center">
             <TextField
               label="아이디"
               type="text"
               name="loginId"
               placeholder="아이디를 입력하세요"
-              onChange={(e) => limitInputNumber(e, 40)}
+              onChange={(e) => {
+                limitInputNumber(e, 40)
+                handleChange(e)
+              }}
             />
             <TextField
               label="비밀번호"
               type="password"
               name="password"
               placeholder="비밀번호를 입력하세요"
-              onChange={(e) => limitInputNumber(e, 64)}
+              onChange={(e) => {
+                limitInputNumber(e, 64)
+                handleChange(e)
+              }}
+              error={error}
             />
             <div className="flex justify-center">
               <button
