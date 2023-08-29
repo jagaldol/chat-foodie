@@ -1,15 +1,12 @@
 import Image from "next/image"
-import { ForwardedRef, useContext, useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { ChatMessage } from "@/types/chat"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 
-function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: ForwardedRef<HTMLDivElement> }) {
+function MessageBox({ message }: { message: ChatMessage }) {
   useEffect(() => {
-    if (typeof chatBox !== "function" && chatBox?.current) {
-      const instance = chatBox.current
-      instance.scrollTop = instance.scrollHeight
-    }
-  }, [chatBox])
+    window.scrollTo(0, document.body.scrollHeight)
+  }, [])
 
   return (
     <div
@@ -41,14 +38,9 @@ export default function MessageBoxList({
   // const [prevScrollHeight, setPrevScrollHeight] = useState(0)
 
   const { chatroomId } = useContext(ChatroomContext)
-
-  const chatBox = useRef<HTMLDivElement>(null)
-
   const scrollTraceDownChatBox = () => {
-    if (chatBox.current) {
-      if (chatBox.current.scrollHeight - (chatBox.current.scrollTop + chatBox.current.clientHeight) <= 30) {
-        chatBox.current.scrollTop = chatBox.current.scrollHeight
-      }
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 30) {
+      window.scrollTo(0, document.body.scrollHeight)
     }
   }
 
@@ -58,7 +50,6 @@ export default function MessageBoxList({
 
   useEffect(() => {
     scrollTraceDownChatBox()
-    console.log("ddd")
   }, [chatroomId])
 
   // useEffect(() => {
@@ -82,13 +73,9 @@ export default function MessageBoxList({
   // }, [prevScrollHeight, chatroomId, cursor, getMessages])
 
   return (
-    <div
-      className="w-full overflow-y-scroll max-md:custom-scroll-bar-6px custom-scroll-bar-10px h-full"
-      id="chat-main"
-      ref={chatBox}
-    >
+    <div className="w-full h-full" id="chat-main">
       {messages.map((message) => {
-        return <MessageBox message={message} key={message.key} chatBox={chatBox} />
+        return <MessageBox message={message} key={message.key} />
       })}
     </div>
   )
