@@ -83,7 +83,7 @@ export default function Account() {
                 />
               ) : null}
               {editProfileModalOpened ? (
-                <EditProfileModal onClickClose={() => setEditProfileModalOpened(false)} />
+                <EditProfileModal onClickClose={() => setEditProfileModalOpened(false)} setUserName={setUserName} />
               ) : null}
               {emailVerificationModalOpened ? (
                 <EmailVerificationModal onClickClose={() => setEmailVerificationModalOpened(false)} />
