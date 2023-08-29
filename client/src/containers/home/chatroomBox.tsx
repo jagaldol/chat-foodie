@@ -70,12 +70,14 @@ export default function ChatroomBox({
               pressEnter(e, () => handleEditChatRoomTitle())
             }}
             onBlur={handleEditChatRoomTitle}
-            className="pl-[7px] my-[3px] py-2 rounded-md border border-gray-300 text-left"
+            className="pl-[7px] my-[3px] py-2 rounded-md border border-gray-300 text-left outline-none focus-within:border-main-theme"
             style={{
               maxWidth: "150px",
               overflow: "hidden", // 일정 길이 이상일 때 숨김
               whiteSpace: "nowrap", // 줄 바꿈 방지
             }}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
           />
         ) : (
           <button

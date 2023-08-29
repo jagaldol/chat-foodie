@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, Dispatch, SetStateAction } from "react"
 import Modal from "@/components/modal"
 import TextField from "@/components/textField"
 import proxy from "@/utils/proxy"
@@ -8,7 +8,13 @@ import { generateDayOptions, generateYearOptions, limitInputNumber } from "@/uti
 import { AuthContext } from "@/contexts/authContextProvider"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 
-export default function EditProfileModal({ onClickClose }: { onClickClose(): void }) {
+export default function EditProfileModal({
+  onClickClose,
+  setUserName,
+}: {
+  onClickClose(): void
+  setUserName: Dispatch<SetStateAction<string>>
+}) {
   const { userId, needUpdate } = useContext(AuthContext)
   const [selectedYear, setSelectedYear] = useState(2000)
   const [selectedMonth, setSelectedMonth] = useState(1)
@@ -204,6 +210,9 @@ export default function EditProfileModal({ onClickClose }: { onClickClose(): voi
           alert("수정이 완료되었습니다")
           onClickClose()
           needUpdate()
+          proxy.get(`/users/${userId}`, { headers }).then((res) => {
+            setUserName(res.data.response.name)
+          })
         })
         .catch((res) => {
           alert(res.response.data.errorMessage)

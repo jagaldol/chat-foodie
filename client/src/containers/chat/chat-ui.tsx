@@ -133,7 +133,6 @@ export default function ChatUi() {
         // cursor={cursor}
         // getMessages={getMessages}
       />
-
       <MessageInputContainer
         messages={messages}
         handleStreamMessage={handleStreamMessage}
