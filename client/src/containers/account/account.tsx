@@ -62,7 +62,7 @@ export default function Account() {
               >
                 <Image className="shrink-0 rounded-sm" src="/svg/user.svg" alt="user" width={28} height={28} />
 
-                <p className="text-left font-semibold w-[calc(100%-68px)] overflow-hidden max-md:invisible max-md:w-0 break-keep">
+                <p className="text-left font-semibold w-[calc(100%-68px)] h-full overflow-hidden max-md:invisible max-md:w-0">
                   {userName}
                 </p>
 
