@@ -7,7 +7,7 @@ export default function Header() {
     <header className="z-10 sticky top-0 pt-5 bg-white flex items-center">
       <div className="basis-1/3" />
       <div className="basis-1/3 flex flex-col justify-center">
-        <a className="flex items-center justify-center" href="/">
+        <a className="flex items-center justify-center" href="/chat">
           <div className="mt-1 min-w-fit">
             <Image src="/svg/logo.svg" alt="logo" width={36} height={36} className="max-md:h-6 max-md:w-6" />
           </div>
