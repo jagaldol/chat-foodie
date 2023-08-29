@@ -4,7 +4,7 @@ import Account from "@/containers/account/account"
 
 export default function Header() {
   return (
-    <header className="flex items-center">
+    <header className="sticky top-0 pt-5 bg-white flex items-center">
       <div className="basis-1/3" />
       <div className="basis-1/3 flex flex-col justify-center">
         <a className="flex items-center justify-center" href="/">
