@@ -1,6 +1,7 @@
 import Image from "next/image"
-import { ForwardedRef, useEffect, useRef } from "react"
+import { ForwardedRef, useContext, useEffect, useRef } from "react"
 import { ChatMessage } from "@/types/chat"
+import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 
 function MessageBox({ message, chatBox }: { message: ChatMessage; chatBox: ForwardedRef<HTMLDivElement> }) {
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function MessageBoxList({
 }) {
   // const [prevScrollHeight, setPrevScrollHeight] = useState(0)
 
-  // const { chatroomId } = useContext(ChatroomContext)
+  const { chatroomId } = useContext(ChatroomContext)
 
   const chatBox = useRef<HTMLDivElement>(null)
 
@@ -54,6 +55,11 @@ export default function MessageBoxList({
   useEffect(() => {
     scrollTraceDownChatBox()
   }, [messages])
+
+  useEffect(() => {
+    scrollTraceDownChatBox()
+    console.log("ddd")
+  }, [chatroomId])
 
   // useEffect(() => {
   //   const instance = chatBox.current!

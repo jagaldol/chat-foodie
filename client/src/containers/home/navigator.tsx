@@ -53,7 +53,7 @@ export default function Navigator() {
     <>
       <nav
         ref={navbarRef}
-        className={`absolute h-full z-10 flex flex-col min-w-[288px] py-9 max-md:pb-5 px-2.5 border-r-gray-200 border-r border-solid transition-all ease-in-out duration-300 bg-white ${
+        className={`fixed left-0 h-full z-10 flex flex-col min-w-[288px] max-md:pb-5 py-9 px-2.5 border-r-gray-200 border-r border-solid transition-all ease-in-out duration-300 bg-white ${
           isNavigatorOpen ? "translate-x-0" : "-translate-x-full -mr-[288px]"
         }
       `}
@@ -78,7 +78,7 @@ export default function Navigator() {
           </div>
         </div>
       </nav>
-      <div className="left-4 top-5 absolute" ref={navOpenButton}>
+      <div className="fixed left-4 top-5" ref={navOpenButton}>
         <button
           type="button"
           className="drawer-close-button border border-gray-300 rounded h-11 w-11 max-md:h-7 max-md:w-7 hover:bg-gray-100 transition flex items-center justify-center"

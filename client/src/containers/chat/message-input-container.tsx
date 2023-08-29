@@ -174,7 +174,7 @@ export default function MessageInputContainer({
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="sticky bottom-5 flex flex-col items-center">
       {isLoad && messages.length === 0 && (
         <div
           className={`justify-center w-[50%] max-lg:w-[70%] max-md:w-[90%] grid ${
@@ -184,7 +184,7 @@ export default function MessageInputContainer({
           {renderExampleButtons()}
         </div>
       )}
-      <div className="flex justify-center items-center mt-3 mb-6 max-md:mb-2 w-[50%] max-lg:w-[70%] max-md:w-[90%] border-2 border-solid border-gray-400 rounded py-3 max-md:py-2 box-content relative focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
+      <div className="flex justify-center items-center mt-3 mb-6 max-md:mb-2 w-[50%] max-lg:w-[70%] max-md:w-[90%] border-2 border-solid border-gray-400 rounded py-3 max-md:py-2 box-content focus-within:shadow-[0_0_4px_4px_rgba(0,0,0,0.1)]">
         <button
           type="button"
           className={`px-8 border bg-white border-gray-400 rounded flex justify-center items-center py-1.5 mb-4 absolute -top-14 opacity-70 hover:opacity-100 transition${

@@ -30,7 +30,7 @@ export default function MessageBoxListContainer({
   }
 
   return (
-    <div className="grow flex justify-center items-center h-0">
+    <div className="grow flex justify-center items-center h-auto">
       {messages.length === 0 && chatroomId === 0 ? (
         <MessageBoxList messages={[exampleUserMessage, exampleChatbotMessage]} />
       ) : (
