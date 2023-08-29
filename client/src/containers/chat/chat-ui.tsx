@@ -133,14 +133,12 @@ export default function ChatUi() {
         // cursor={cursor}
         // getMessages={getMessages}
       />
-      <div className="sticky bottom-5 bg-white w-full">
-        <MessageInputContainer
-          messages={messages}
-          handleStreamMessage={handleStreamMessage}
-          addUserMessage={(message: string) => addMessage(message, false)}
-          prepareRegenerate={prepareRegenerate}
-        />
-      </div>
+      <MessageInputContainer
+        messages={messages}
+        handleStreamMessage={handleStreamMessage}
+        addUserMessage={(message: string) => addMessage(message, false)}
+        prepareRegenerate={prepareRegenerate}
+      />
     </div>
   )
 }
