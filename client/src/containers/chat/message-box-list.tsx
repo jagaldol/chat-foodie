@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { useContext, useEffect, useRef } from "react"
+import { useContext, useEffect } from "react"
 import { ChatMessage } from "@/types/chat"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 
