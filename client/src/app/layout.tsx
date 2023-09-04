@@ -1,3 +1,4 @@
+import "@/styles/globals.css"
 import { ReactNode } from "react"
 import { Noto_Sans_KR } from "next/font/google"
 
