@@ -5,15 +5,9 @@ import titleFont from "@/styles/TitleFont"
 export default function Home() {
   return (
     <div className="bg-[#D3D9DD] w-full flex flex-col justify-center relative">
-      <div className="flex flex-col items-center justify-center h-screen w-full">
-        <Image
-          src="/svg/first.svg"
-          width={100}
-          height={100}
-          alt=""
-          className="w-full h-auto relative z-0 object-cover"
-        />
-        <div className="absolute flex flex-col justify-center items-center">
+      <div className="absolute top-0 left-0 w-full h-screen bg-gradient-to-b from-transparent to-[#D3D9DD] z-10" />
+      <div className="flex flex-col items-center justify-center h-screen w-full bg-[url('/assets/first.png')] bg-cover bg-center">
+        <div className="absolute flex flex-col justify-center items-center z-20">
           <div className="flex items-center drop-shadow-[3px_3px_2px_rgba(0,0,0,0.5)]">
             <Image src="/svg/logo.svg" alt="logo" width={65} height={65} className="max-md:h-6 max-md:w-6" />
             <h1 className={`font-bold ${titleFont.className} text-6xl text-main-theme`}>Chatfoodie</h1>
