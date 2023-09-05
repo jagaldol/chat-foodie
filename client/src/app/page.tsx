@@ -52,7 +52,7 @@ export default function Home() {
                 <b>QLoRA 기법</b>을 이용하여 Colab 무료 버전으로 학습을 진행하였습니다.
               </p>
             </div>
-            <Image src="/svg/trainingLoss.svg" alt="loss" width={400} height={316} />
+            <Image src="/assets/train-loss-5epoch.png" alt="loss" width={400} height={316} />
           </div>
         </ParagraphBox>
         <ParagraphBox title="개발 팀">
