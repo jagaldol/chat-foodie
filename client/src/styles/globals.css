@@ -145,5 +145,32 @@
             transform: scale(1, 1);
         }
     }
-    
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes moveUp {
+        0% {
+            transform: translateY(20px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    .move-up {
+        animation: moveUp 1s ease-in-out forwards;
+    }
 }

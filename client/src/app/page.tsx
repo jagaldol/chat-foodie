@@ -25,9 +25,14 @@ function ImageBox({ src, caption }: { src: string; caption: string }) {
 export default function Home() {
   return (
     <div className="bg-[#D3D9DD] w-full flex flex-col justify-center items-center relative">
-      <div className="absolute top-0 left-0 w-full h-screen bg-gradient-to-b from-transparent to-[#D3D9DD] z-10" />
-      <div className="flex flex-col items-center justify-center h-screen w-full bg-[url('/assets/first.png')] bg-cover bg-center">
-        <div className="absolute flex flex-col justify-center items-center z-20">
+      <div className=" absolute top-0 left-0 w-full h-[calc(100vh+20px)] bg-gradient-to-b from-transparent to-[#D3D9DD] z-20" />
+      <div
+        className={
+          "fade-in absolute -top-5 left-0 w-full h-[calc(100vh+20px)] bg-[url('/assets/first.png')] bg-cover bg-center z-10"
+        }
+      />
+      <div className="fade-in flex flex-col items-center justify-center h-screen w-full z-30">
+        <div className="absolute flex flex-col justify-center items-center">
           <div className="flex items-center drop-shadow-[3px_3px_2px_rgba(0,0,0,0.5)]">
             <Image src="/svg/logo.svg" alt="logo" width={65} height={65} className="max-sm:h-10 max-sm:w-10" />
             <h1 className={`font-bold ${titleFont.className} text-6xl max-sm:text-4xl text-main-theme`}>Chatfoodie</h1>
