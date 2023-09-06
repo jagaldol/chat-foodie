@@ -1,4 +1,3 @@
-import "@/styles/globals.css"
 import { ReactNode } from "react"
 import Header from "@/containers/home/header"
 import Footer from "@/containers/home/footer"

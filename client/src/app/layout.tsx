@@ -1,3 +1,4 @@
+import "@/styles/globals.css"
 import { ReactNode } from "react"
 import { Noto_Sans_KR } from "next/font/google"
 
@@ -27,6 +28,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${notoSans.className} flex box-border`}
         style={{
           minHeight: "calc(var(--vh, 1vh) * 100)",
+          margin: 0,
+          padding: 0,
         }}
       >
         {children}
