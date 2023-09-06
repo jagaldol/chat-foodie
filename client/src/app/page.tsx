@@ -4,7 +4,7 @@ import titleFont from "@/styles/TitleFont"
 
 function ParagraphBox({ children, title }: { children: ReactNode; title: string }) {
   return (
-    <div className="pt-32">
+    <div className="py-16 w-[800px] max-lg:w-[700px] max-md:w-full max-md:px-10 max-sm:px-5">
       <h2 className="text-3xl font-semibold max-md:text-xl">{title}</h2>
       <div className="leading-10 mt-10 max-md:text-sm max-md:leading-8 max-sm:text-xs max-sm:leading-7">{children}</div>
     </div>
@@ -15,7 +15,7 @@ function ImageBox({ src, caption }: { src: string; caption: string }) {
   return (
     <figure>
       <div className="relative w-[300px] h-[225px] max-md:w-64 max-md:h-48">
-        <Image src={src} alt="loss" fill />
+        <Image src={src} alt="" fill />
       </div>
       <figcaption className="text-center text-sm leading-8 max-sm:text-xs max-sm:leading-7">{caption}</figcaption>
     </figure>
@@ -24,7 +24,7 @@ function ImageBox({ src, caption }: { src: string; caption: string }) {
 
 export default function Home() {
   return (
-    <div className="bg-[#D3D9DD] w-full flex flex-col justify-center items-center relative">
+    <div className="bg-[#D3D9DD] w-full flex flex-col justify-center items-center relative overflow-hidden">
       <div className=" absolute top-0 left-0 w-full h-[calc(100vh+20px)] bg-gradient-to-b from-transparent to-[#D3D9DD] z-20" />
       <div
         className={
@@ -46,7 +46,7 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <div className="my-20 w-[800px] max-lg:w-[700px] max-md:w-full max-md:px-10 max-sm:px-5">
+      <div className="mt-52 w-full flex flex-col items-center">
         <ParagraphBox title="Chatfoodie는...">
           <p>
             LLM(Large Language Model)을 파인튜닝한 <b>음식 추천을 위한 챗봇 서비스</b>입니다.
@@ -58,6 +58,11 @@ export default function Home() {
             특성에 착안하여 대화를 통해 편리하게 원하는 음식을 추천 받을 수 있는 음식 추천 챗봇을 개발하였습니다.
           </p>
         </ParagraphBox>
+      </div>
+
+      <div className="w-0 h-0 mt-32 border-y-[32px] border-x-[50vw] border-t-transparent border-r-transparent border-[#444654]" />
+
+      <div className="w-full bg-[#444654] flex flex-col items-center text-white">
         <ParagraphBox title="AI 언어 모델">
           <p>
             저희 <b>푸디 AI</b>는 <b>KoAlpaca-polyglot-5.8B</b>의 베이스 모델 위에서 fine-tuning(LoRA)을 거쳐
@@ -92,7 +97,7 @@ export default function Home() {
         </ParagraphBox>
         <ParagraphBox title="시스템 구조">
           <figure className="flex flex-col items-center">
-            <div className="relative w-[600px] h-[450px] max-sm:w-64 max-sm:h-48 bg-gray-50 rounded-3xl">
+            <div className="relative w-[600px] h-[450px] max-sm:w-64 max-sm:h-48 bg-gray-50 rounded-xl max-sm:rounded">
               <Image src="/assets/system-blueprint.png" alt="loss" fill className="object-scale-down p-5 max-sm:p-1" />
             </div>
             <figcaption className="text-center text-sm leading-8 max-sm:text-xs max-sm:leading-7">
@@ -114,7 +119,7 @@ export default function Home() {
             <li className="my-5">
               <a
                 href="https://github.com/jagaldol/chat-foodie-chatbot-server"
-                className="flex items-baseline gap-1 w-fit h-fit hover:underline"
+                className="flex items-baseline gap-1 w-fit hover:underline"
               >
                 <p>- AI 챗봇 웹소켓 API 서버</p>
                 <Image src="/svg/github.svg" alt="" height="16" width="16" style={{ height: "16px" }} />
@@ -123,7 +128,7 @@ export default function Home() {
             <li className="my-5">
               <a
                 href="https://huggingface.co/datasets/jagaldol/chat-foodie"
-                className="flex items-baseline gap-1 hover:underline"
+                className="flex items-baseline gap-1 w-fit hover:underline"
               >
                 <p>- 챗봇 학습 데이터 세트 8,000개</p>
                 <Image src="/svg/hf-logo.svg" alt="" height="16" width="16" style={{ height: "16px" }} />
@@ -132,7 +137,7 @@ export default function Home() {
             <li className="my-5">
               <a
                 href="https://huggingface.co/sm136599/chatfoodie-koalpaca-polyglot-5_8b-5150step-8batch_5epoch"
-                className="flex items-baseline gap-1 hover:underline"
+                className="flex items-baseline gap-1 w-fit hover:underline"
               >
                 <p>- 챗봇 LoRA 모델</p>
                 <Image src="/svg/hf-logo.svg" alt="" height="16" width="16" style={{ height: "16px" }} />
@@ -141,7 +146,7 @@ export default function Home() {
             <li className="my-5">
               <a
                 href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb"
-                className="flex items-baseline gap-1 hover:underline"
+                className="flex items-baseline gap-1 w-fit hover:underline"
               >
                 <p>- 푸디 AI QLoRA 파인튜닝 예제</p>
                 <Image src="/svg/colab.svg" alt="" height="16" width="16" style={{ height: "16px" }} />
@@ -150,7 +155,7 @@ export default function Home() {
             <li className="my-5">
               <a
                 href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb"
-                className="flex items-baseline gap-1 hover:underline"
+                className="flex items-baseline gap-1 w-fit hover:underline"
               >
                 <p>- 코랩을 사용한 챗봇 websocket api 배포 예제</p>
                 <Image src="/svg/colab.svg" alt="" height="16" width="16" style={{ height: "16px" }} />
@@ -158,36 +163,40 @@ export default function Home() {
             </li>
           </ul>
         </ParagraphBox>
-        <ParagraphBox title="개발 팀">
-          <p>
-            2023년 부산대학교 정보컴퓨터공학부 졸업과제 - <b className="whitespace-nowrap">팀 쩝쩝학사</b>
-          </p>
-          <ul className="mt-2 pl-5">
-            <li>
-              🚩
-              <a href="https://github.com/jagaldol" className="hover:underline">
-                안혜준(팀장)
-              </a>
-            </li>
-            <li>
-              💻
-              <a href="https://github.com/sm136599" className="hover:underline">
-                박성민
-              </a>
-            </li>
-            <li>
-              💻
-              <a href="https://github.com/icarus012832" className="hover:underline">
-                박진영
-              </a>
-            </li>
-          </ul>
-        </ParagraphBox>
+        <div className="w-0 h-0 mt-16 border-y-[32px] border-x-[50vw] border-t-transparent border-l-transparent border-[#202123]" />
+
+        <div className="w-full bg-[#202123] flex flex-col items-center text-white">
+          <ParagraphBox title="개발 팀">
+            <p>
+              2023년 부산대학교 정보컴퓨터공학부 졸업과제 - <b className="whitespace-nowrap">팀 쩝쩝학사</b>
+            </p>
+            <ul className="mt-2 pl-5">
+              <li>
+                🚩
+                <a href="https://github.com/jagaldol" className="hover:underline">
+                  안혜준(팀장)
+                </a>
+              </li>
+              <li>
+                💻
+                <a href="https://github.com/sm136599" className="hover:underline">
+                  박성민
+                </a>
+              </li>
+              <li>
+                💻
+                <a href="https://github.com/icarus012832" className="hover:underline">
+                  박진영
+                </a>
+              </li>
+            </ul>
+          </ParagraphBox>
+          <footer className="flex max-md:flex-col justify-center text-center text-xs text-white mb-5">
+            <p>&copy; Chatfoodie. All right reserved.</p>
+            <p>food recommendation chatbot with LLM.</p>
+          </footer>
+        </div>
       </div>
-      <footer className="flex max-md:flex-col justify-center text-center text-xs text-[#444654] mt-10 mb-5">
-        <p>&copy; Chatfoodie. All right reserved.</p>
-        <p>food recommendation chatbot with LLM.</p>
-      </footer>
     </div>
   )
 }
