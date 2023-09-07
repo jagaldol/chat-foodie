@@ -5,3 +5,5 @@ mail:
   password:
 chatbot:
   url: wss://rat-rolled-payments-metallica.trycloudflare.com/api/v1/chat-stream
+ chat-foodie:
+   secret: your_password
