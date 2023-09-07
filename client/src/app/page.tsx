@@ -46,7 +46,7 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <div className="mt-52 w-full flex flex-col items-center">
+      <div className="mt-12 w-full flex flex-col items-center">
         <ParagraphBox title="Chatfoodie는...">
           <p>
             LLM(Large Language Model)을 파인튜닝한 <b>음식 추천을 위한 챗봇 서비스</b>입니다.
