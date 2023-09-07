@@ -10,7 +10,7 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
     <AuthProvider>
       <ChatroomProvider>
         <Navigator />
-        <main className="flex grow flex-col py-7 max-md:py-3">
+        <main className="flex grow flex-col">
           <Header />
           <section className="grow">{children}</section>
           <Footer />
