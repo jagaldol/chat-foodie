@@ -13,4 +13,5 @@ public interface ChatroomRepository extends JpaRepository<Chatroom, Long> {
     @Query("SELECT c FROM Chatroom c JOIN FETCH c.user u WHERE c.id=:id")
     Optional<Chatroom> findByIdJoinUser(Long id);
 
+    List<Chatroom> findAllByUserId(Long id);
 }

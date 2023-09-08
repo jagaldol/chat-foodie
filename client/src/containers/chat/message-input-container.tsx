@@ -197,7 +197,7 @@ export default function MessageInputContainer({
             alt=""
             width="16"
             height="16"
-            style={{ height: "16px" }}
+            style={{ width: "16px", height: "16px" }}
             className="max-md:h-3.5 max-md:w-3.5"
           />
           <p className="ml-2 text-sm max-md:text-xs">답변 재생성</p>

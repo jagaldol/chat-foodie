@@ -88,6 +88,7 @@ export default function LoginModal({ onClickClose, onClickJoin }: { onClickClose
                 limitInputNumber(e, 40)
                 handleChange(e)
               }}
+              autoComplete="username"
             />
             <TextField
               label="비밀번호"
@@ -99,6 +100,7 @@ export default function LoginModal({ onClickClose, onClickJoin }: { onClickClose
                 handleChange(e)
               }}
               error={error}
+              autoComplete="current-password"
             />
             <div className="flex justify-center">
               <button

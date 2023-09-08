@@ -246,6 +246,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               onBlur={() => validateLoginId()}
               required
               error={errors.loginId}
+              autoComplete="username"
             />
 
             <TextField
@@ -260,6 +261,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               }}
               onBlur={() => validatePassword()}
               error={errors.password}
+              autoComplete="current-password"
             />
 
             <TextField
@@ -288,6 +290,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               }}
               onBlur={() => validateEmail()}
               error={errors.email}
+              autoComplete="email"
             />
 
             <TextField
@@ -301,11 +304,13 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               }}
               onBlur={() => validateName()}
               error={errors.name}
+              autoComplete="name"
             />
 
             <label htmlFor="gender" className="block w-80 mb-3 max-md:w-64">
               <span className="block text-sm font-medium text-slate-700 max-md:text-xs">성별</span>
               <select
+                id="gender"
                 name="gender"
                 className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-full rounded-md focus:ring-1 max-md:text-sm max-md:px-2 max-md:py-1.5"
               >
@@ -314,10 +319,11 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
               </select>
             </label>
 
-            <label htmlFor="birthDate" className="block w-80 mb-3 max-md:w-64">
+            <label htmlFor="birthDay" className="block w-80 mb-3 max-md:w-64">
               <span className="block text-sm font-medium text-slate-700 max-md:text-xs">생년월일</span>
               <div className="flex space-x-2 mt-1">
                 <select
+                  id="birthYear"
                   name="birthYear"
                   className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block rounded-md focus:ring-1 max-md:text-sm max-md:h-9 max-md:px-2 max-md:py-1.5"
                   placeholder="년도"
@@ -328,6 +334,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
                 </select>
                 <p className=" py-2 max-md:text-sm ">년</p>
                 <select
+                  id="birthMonth"
                   name="birthMonth"
                   className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-1/3 rounded-md focus:ring-1 max-md:text-sm max-md:h-9 max-md:px-2 max-md:py-1.5"
                   value={selectedMonth}
@@ -348,6 +355,7 @@ export default function JoinModal({ onClickClose }: { onClickClose(): void }) {
                 </select>
                 <p className=" py-2 max-md:text-sm ">월</p>
                 <select
+                  id="birthDay"
                   name="birthDay"
                   className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-main-theme focus:ring-main-theme block w-1/3 rounded-md focus:ring-1 max-md:text-sm max-md:h-9 max-md:px-2 max-md:py-1.5"
                 >
