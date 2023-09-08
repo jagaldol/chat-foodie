@@ -68,6 +68,17 @@ public class UserController {
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (!Objects.equals(userDetails.getId(), id)) {
+            throw new Exception403("권한이 없습니다.");
+        }
+
+        userService.deleteUser(id);
+        ApiUtils.Response<?> response = ApiUtils.success();
+        return ResponseEntity.ok().body(response);
+    }
     @PostMapping("/validate/loginId")
     public ResponseEntity<?> validateLoginId(@RequestBody @Valid UserRequest.ValidateLoginIdDto requestDto,
                                              Errors errors) {

@@ -6,6 +6,10 @@ import net.chatfoodie.server._core.errors.exception.*;
 import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.Utils;
+import net.chatfoodie.server.chatroom.Chatroom;
+import net.chatfoodie.server.chatroom.message.repository.MessageRepository;
+import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
+import net.chatfoodie.server.chatroom.service.ChatroomService;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.user.Role;
@@ -32,6 +36,10 @@ public class UserService {
 
     final private FavorRepository favorRepository;
 
+    final private ChatroomRepository chatroomRepository;
+
+    final private MessageRepository messageRepository;
+
     final private PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -40,7 +48,7 @@ public class UserService {
         if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
             throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
         }
-        
+
         if (userRepository.findByLoginId(requestDto.loginId()).isPresent()) {
             throw new LoginIdAlreadyExistException("이미 존재하는 아이디입니다");
         }
@@ -69,7 +77,7 @@ public class UserService {
         }
         return JwtProvider.create(user);
     }
-    
+
     public UserResponse.GetUserDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
 
@@ -117,6 +125,18 @@ public class UserService {
             user.updateRole(Role.ROLE_PENDING);
         }
         return JwtProvider.create(user);
+    }
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
+        List<Chatroom> chatrooms = chatroomRepository.findAllByUserId(id);
+
+        favorRepository.deleteAllByUserId(id);
+        for (Chatroom chatroom : chatrooms) {
+            messageRepository.deleteAllByChatroomId(chatroom.getId());
+            chatroomRepository.deleteById(chatroom.getId());
+        }
+        userRepository.delete(user);
     }
 
     public void validateLoginId(UserRequest.ValidateLoginIdDto requestDto) {
