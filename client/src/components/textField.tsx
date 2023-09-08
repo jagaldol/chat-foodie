@@ -12,6 +12,7 @@ export default function TextField({
   disabled = undefined,
   onChange = undefined,
   onBlur = undefined,
+  autoComplete = undefined,
 }: {
   label: string
   type: string
@@ -24,6 +25,7 @@ export default function TextField({
   disabled?: boolean
   onChange?: React.ChangeEventHandler<HTMLInputElement>
   onBlur?: React.FocusEventHandler<HTMLInputElement>
+  autoComplete?: string
 }) {
   const requiredClass = `block text-sm font-medium text-slate-700 max-md:text-xs ${
     required ? "after:content-['*'] after:ml-0.5 after:text-red-500" : ""
@@ -32,6 +34,7 @@ export default function TextField({
     <label htmlFor={name} className="flex flex-col w-80 max-md:w-64 mb-3">
       <span className={requiredClass}>{label}</span>
       <input
+        id={name}
         type={type}
         name={name}
         value={value}
@@ -40,6 +43,7 @@ export default function TextField({
         onBlur={onBlur}
         onChange={onChange}
         disabled={disabled}
+        autoComplete={autoComplete}
       />
       {message && <p className="block text-xs text-slate-700 mt-1">{message}</p>}
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
