@@ -8,7 +8,17 @@ import { AuthContext } from "@/contexts/authContextProvider"
 import TextField from "@/components/textField"
 import { limitInputNumber } from "@/utils/utils"
 
-export default function LoginModal({ onClickClose, onClickJoin }: { onClickClose(): void; onClickJoin(): void }) {
+export default function LoginModal({
+  onClickClose,
+  onClickJoin,
+  onClickFindId,
+  onClickFindPassword,
+}: {
+  onClickClose(): void
+  onClickJoin(): void
+  onClickFindId(): void
+  onClickFindPassword(): void
+}) {
   const { needUpdate } = useContext(AuthContext)
   const [formData, setFormData] = useState({
     loginId: "",
@@ -115,6 +125,16 @@ export default function LoginModal({ onClickClose, onClickJoin }: { onClickClose
                 <p className="max-md:text-xs mr-2">계정이 없으신가요?</p>
                 <button type="button" onClick={onClickJoin}>
                   <p className="max-md:text-xs underline">회원가입하기</p>
+                </button>
+              </div>
+            </div>
+            <div>
+              <div className="flex mt-3 gap-2">
+                <button type="button" onClick={onClickFindId}>
+                  <p className="max-md:text-xs underline">아이디 찾기 </p>
+                </button>
+                <button type="button" onClick={onClickFindPassword}>
+                  <p className="max-md:text-xs underline">비밀번호 찾기</p>
                 </button>
               </div>
             </div>
