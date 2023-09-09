@@ -74,4 +74,7 @@ public class UserRequest {
             String email
     ) {}
 
+    public record FindUserIdDto(
+            String email
+    ) {}
 }

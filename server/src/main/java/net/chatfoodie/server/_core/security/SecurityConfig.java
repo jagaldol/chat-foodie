@@ -80,7 +80,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize ->
                         authorize.requestMatchers("/api/chatrooms/**").hasRole("USER")
                                 .requestMatchers("/api/email-verifications/**", "/api/users/**").hasAnyRole("PENDING", "USER")
-                                .requestMatchers("/api/validate/**").permitAll()
+                                .requestMatchers("/api/validate/**", "/api/help/**").permitAll()
                                 .anyRequest().permitAll()
         );
 

@@ -79,6 +79,13 @@ public class UserController {
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
+
+    @PostMapping("/help/loginId")
+    public ResponseEntity<?> findUserId(@RequestBody @Valid UserRequest.FindUserIdDto requestDto) {
+        UserResponse.FindUserIdDto responseDto = userService.findUserId(requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success(responseDto);
+        return ResponseEntity.ok().body(response);
+    }
     @PostMapping("/validate/loginId")
     public ResponseEntity<?> validateLoginId(@RequestBody @Valid UserRequest.ValidateLoginIdDto requestDto,
                                              Errors errors) {

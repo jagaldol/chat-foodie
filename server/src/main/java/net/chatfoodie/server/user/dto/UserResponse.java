@@ -39,4 +39,10 @@ public class UserResponse {
         }
     }
 
+    public record FindUserIdDto(
+            String loginId
+    ) {
+
+    }
+
 }
