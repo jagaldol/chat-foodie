@@ -31,9 +31,12 @@ export default function Account() {
       }
       proxy.get(`/users/${userId}`, { headers }).then((res) => {
         setUserName(res.data.response.name)
+        if (userRole === "ROLE_USER" && res.data.response.favors.length === 0) {
+          setPreferenceModalOpened(true)
+        }
       })
     }
-  }, [userId])
+  }, [userId, userRole])
   useEffect(() => {
     if (isLoad) {
       if (userId !== 0 && userRole === "ROLE_PENDING") {
