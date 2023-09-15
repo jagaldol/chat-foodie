@@ -133,7 +133,13 @@ export default function Account() {
               />
             ) : null}
             {joinModalOpened ? <JoinModal onClickClose={() => setJoinModalOpened(false)} /> : null}
-            {findUserIdModalOpened ? <FindUserIdModal onClickClose={() => setFindUserIdModalOpened(false)} /> : null}
+            {findUserIdModalOpened ? (
+              <FindUserIdModal
+                setFindUserPasswordModalOpened={setFindUserPasswordModalOpened}
+                setLoginModalOpened={setLoginModalOpened}
+                onClickClose={() => setFindUserIdModalOpened(false)}
+              />
+            ) : null}
             {findUserPasswordModalOpened ? (
               <FindUserPasswordModal onClickClose={() => setFindUserPasswordModalOpened(false)} />
             ) : null}

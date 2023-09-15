@@ -6,7 +6,15 @@ import proxy from "@/utils/proxy"
 import TextField from "@/components/textField"
 import { limitInputNumber } from "@/utils/utils"
 
-export default function FindUserIdModal({ onClickClose }: { onClickClose(): void }) {
+export default function FindUserIdModal({
+  onClickClose,
+  setFindUserPasswordModalOpened,
+  setLoginModalOpened,
+}: {
+  onClickClose(): void
+  setFindUserPasswordModalOpened: React.Dispatch<React.SetStateAction<boolean>>
+  setLoginModalOpened: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [formData, setFormData] = useState({
     email: "",
   })
@@ -15,6 +23,7 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
   })
   const [message, setMessage] = useState("")
   const [disable, setDisable] = useState(false)
+  const [nextButtons, setNextButtons] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -66,6 +75,7 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
       .then((res) => {
         setMessage(`회원님의 아이디는 '${res.data.response.loginId}' 입니다.`)
         setDisable(true)
+        setNextButtons(true)
       })
       .catch((err) => {
         alert(err.response.data.errorMessage)
@@ -97,11 +107,35 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
             />
 
             <button
-              className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
+              className={`${
+                disable ? "invisible h-0 p-0 " : "visible h-12 p-2 max-md:h-10"
+              } bg-orange-400 hover:bg-main-theme text-white font-semibold rounded w-80 max-md:w-64 max-md:font-normal`}
               type="submit"
             >
               아이디 찾기
             </button>
+            <div className={`${nextButtons ? "visble" : "invisible"} flex gap-2 max-md:flex-col`}>
+              <button
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-40 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
+                type="button"
+                onClick={() => {
+                  setLoginModalOpened(true)
+                  onClickClose()
+                }}
+              >
+                로그인 하기
+              </button>
+              <button
+                className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-40 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
+                type="button"
+                onClick={() => {
+                  setFindUserPasswordModalOpened(true)
+                  onClickClose()
+                }}
+              >
+                비밀번호 초기화
+              </button>
+            </div>
           </div>
         </form>
       </div>
