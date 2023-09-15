@@ -42,6 +42,9 @@ public class UserResponse {
     public record FindUserIdDto(
             String loginId
     ) {
+        public FindUserIdDto(String loginId) {
+            this.loginId = loginId.substring(0,2) + "***" + loginId.substring(loginId.length()-1, loginId.length());
+        }
 
     }
 

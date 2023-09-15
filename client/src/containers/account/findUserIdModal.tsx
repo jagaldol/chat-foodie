@@ -14,6 +14,7 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
     email: "",
   })
   const [message, setMessage] = useState("")
+  const [disable, setDisable] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -50,13 +51,12 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
     return isValid
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!validateForm()) {
+    if (!(await validateForm())) {
       alert("입력하신 정보를 확인해주세요")
       return
     }
-
     const requestData = {
       email: formData.email,
     }
@@ -64,12 +64,10 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
     proxy
       .post(`/help/loginId`, requestData)
       .then((res) => {
-        console.log(res.data.response.loginId)
         setMessage(`회원님의 아이디는 '${res.data.response.loginId}' 입니다.`)
-        alert(`회원님의 아이디는 ${res.data.response.loginId} 입니다.`)
+        setDisable(true)
       })
       .catch((err) => {
-        console.log(err.response.data.errorMessage)
         alert(err.response.data.errorMessage)
       })
   }
@@ -95,6 +93,7 @@ export default function FindUserIdModal({ onClickClose }: { onClickClose(): void
               error={errors.email}
               autoComplete="email"
               message={message}
+              disabled={disable}
             />
 
             <button
