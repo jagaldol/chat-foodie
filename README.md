@@ -39,6 +39,6 @@ Work In Progress
 
 팀 **쩝쩝학사**
 
-| [[팀장] 안혜준](https://github.com/)                     | [박성민](https://github.com/sm136599)                   | [박진영](https://github.com/icarus012832)                    |
+| [[팀장] 안혜준](https://github.com/jagaldol)                     | [박성민](https://github.com/sm136599)                   | [박진영](https://github.com/icarus012832)                    |
 |:-------------------------------------------------------:|:-------------------------------------------------------:|:-----------------------------------------------------------:|
 | <img src="https://github.com/jagaldol.png" width="100"> | <img src="https://github.com/sm136599.png" width="100"> | <img src="https://github.com/icarus012832.png" width="100"> |
