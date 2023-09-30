@@ -8,9 +8,11 @@ import TextField from "@/components/textField"
 
 export default function FindUserPasswordModal({ onClickClose }: { onClickClose(): void }) {
   const [formData, setFormData] = useState({
+    loginId: "",
     email: "",
   })
   const [errors, setErrors] = useState({
+    loginId: "",
     email: "",
   })
   const [message, setMessage] = useState("")
@@ -21,6 +23,19 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
       ...prevData,
       [name]: value,
     }))
+  }
+
+  const validateLoginId = async () => {
+    const newErrors = { ...errors }
+    let isValid = true
+
+    if (formData.loginId.trim() === "") {
+      newErrors.loginId = "아이디를 입력해주세요."
+      isValid = false
+    }
+
+    setErrors((prev) => ({ ...prev, loginId: newErrors.loginId }))
+    return isValid
   }
 
   const validateEmail = async () => {
@@ -46,22 +61,24 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
   const validateForm = async () => {
     let isValid = true
     isValid = (await validateEmail()) && isValid
+    isValid = (await validateLoginId()) && isValid
 
     return isValid
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!validateForm()) {
+    if (!(await validateForm())) {
       alert("입력하신 정보를 확인해주세요")
       return
     }
 
     const requestData = {
+      loginId: formData.loginId,
       email: formData.email,
     }
 
-    proxy.post(`/help/loginId`, requestData).then((res) => {
+    proxy.post(`/help/password`, requestData).then((res) => {
       console.log(res.data.response.loginId)
       setMessage(`회원님의 아이디는 '${res.data.response.loginId}' 입니다.`)
       alert(`회원님의 아이디는 ${res.data.response.loginId} 입니다.`)
@@ -76,6 +93,20 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
         >
           <div className="flex flex-col items-center">
             <TextField
+              label="아이디"
+              type="text"
+              name="loginId"
+              placeholder="아이디를 입력하세요"
+              required
+              onChange={(e) => {
+                limitInputNumber(e, 40)
+                handleChange(e)
+              }}
+              onBlur={() => validateLoginId()}
+              error={errors.loginId}
+              autoComplete="username"
+            />
+            <TextField
               label="이메일"
               type="text"
               name="email"
@@ -88,14 +119,13 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
               onBlur={() => validateEmail()}
               error={errors.email}
               autoComplete="email"
-              message={message}
             />
 
             <button
               className="bg-orange-400 hover:bg-main-theme text-white font-semibold p-2 rounded w-80 h-12 max-md:w-64 max-md:h-10 max-md:font-normal"
               type="submit"
             >
-              아이디 찾기
+              비밀번호 초기화
             </button>
           </div>
         </form>
