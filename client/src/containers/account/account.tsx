@@ -141,7 +141,10 @@ export default function Account() {
               />
             ) : null}
             {findUserPasswordModalOpened ? (
-              <FindUserPasswordModal onClickClose={() => setFindUserPasswordModalOpened(false)} />
+              <FindUserPasswordModal
+                setLoginModalOpened={setLoginModalOpened}
+                onClickClose={() => setFindUserPasswordModalOpened(false)}
+              />
             ) : null}
           </>
         )

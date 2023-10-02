@@ -6,7 +6,13 @@ import proxy from "@/utils/proxy"
 import { limitInputNumber } from "@/utils/utils"
 import TextField from "@/components/textField"
 
-export default function FindUserPasswordModal({ onClickClose }: { onClickClose(): void }) {
+export default function FindUserPasswordModal({
+  onClickClose,
+  setLoginModalOpened,
+}: {
+  onClickClose(): void
+  setLoginModalOpened: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [formData, setFormData] = useState({
     loginId: "",
     email: "",
@@ -15,7 +21,6 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
     loginId: "",
     email: "",
   })
-  const [message, setMessage] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -32,6 +37,8 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
     if (formData.loginId.trim() === "") {
       newErrors.loginId = "아이디를 입력해주세요."
       isValid = false
+    } else {
+      newErrors.loginId = ""
     }
 
     setErrors((prev) => ({ ...prev, loginId: newErrors.loginId }))
@@ -78,11 +85,24 @@ export default function FindUserPasswordModal({ onClickClose }: { onClickClose()
       email: formData.email,
     }
 
-    proxy.post(`/help/password`, requestData).then((res) => {
-      console.log(res.data.response.loginId)
-      setMessage(`회원님의 아이디는 '${res.data.response.loginId}' 입니다.`)
-      alert(`회원님의 아이디는 ${res.data.response.loginId} 입니다.`)
-    })
+    if (
+      confirm(
+        "비밀번호를 초기화 하시겠습니까?" +
+          "\n초기화된 비밀번호는 아이디와 연동된 이메일로 전송됩니다." +
+          "\n전송된 비밀번호로 로그인 후 비밀번호를 변경해주세요.",
+      )
+    ) {
+      proxy
+        .post(`/help/password`, requestData, undefined)
+        .then(() => {
+          alert("비밀번호가 초기화 되었습니다.\n이메일을 확인해주세요.")
+          onClickClose()
+          setLoginModalOpened(true)
+        })
+        .catch(() => {
+          alert("입력하신 정보를 확인해주세요")
+        })
+    }
   }
   return (
     <Modal onClickClose={onClickClose}>

@@ -134,7 +134,7 @@ export default function LoginModal({
                   <p className="max-md:text-xs underline">아이디 찾기 </p>
                 </button>
                 <button type="button" onClick={onClickFindPassword}>
-                  <p className="max-md:text-xs underline">비밀번호 찾기</p>
+                  <p className="max-md:text-xs underline">비밀번호 초기화</p>
                 </button>
               </div>
             </div>
