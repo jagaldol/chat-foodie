@@ -81,9 +81,16 @@ public class UserController {
     }
 
     @PostMapping("/help/loginId")
-    public ResponseEntity<?> findUserId(@RequestBody @Valid UserRequest.FindUserIdDto requestDto) {
+    public ResponseEntity<?> findUserId(@RequestBody @Valid UserRequest.FindUserIdDto requestDto, Errors errors) {
         UserResponse.FindUserIdDto responseDto = userService.findUserId(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success(responseDto);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/help/password")
+    public ResponseEntity<?> resetPassword(@RequestBody @Valid UserRequest.ResetPasswordDto requestDto, Errors errors) {
+        userService.resetPassword(requestDto);
+        ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
     @PostMapping("/validate/loginId")

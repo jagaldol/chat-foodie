@@ -77,4 +77,9 @@ public class UserRequest {
     public record FindUserIdDto(
             String email
     ) {}
+
+    public record ResetPasswordDto(
+            String loginId,
+            String email
+    ) {}
 }

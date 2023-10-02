@@ -15,6 +15,7 @@ import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
 import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.repository.UserRepository;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,8 @@ public class UserService {
     final private MessageRepository messageRepository;
 
     final private PasswordEncoder passwordEncoder;
+
+    final private JavaMailSender javaMailSender;
 
     @Transactional
     public String join(UserRequest.JoinDto requestDto) {
@@ -152,5 +155,28 @@ public class UserService {
         User user = userRepository.findByEmail(requestDto.email()).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
 
         return new UserResponse.FindUserIdDto(user.getLoginId());
+    }
+
+    @Transactional
+    public void resetPassword(UserRequest.ResetPasswordDto requestDto) {
+        User user = userRepository.findByLoginId(requestDto.loginId()).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
+
+        if (!Objects.equals(user.getEmail(), requestDto.email())) {
+            throw new Exception400("아이디와 이메일이 일치하지 않습니다.");
+        }
+
+        String randomPassword = Utils.generateRandomPassword();
+        String encodedPassword = passwordEncoder.encode(randomPassword);
+        log.info("임시 비밀번호: {}", randomPassword);
+        user.updatePassword(encodedPassword);
+
+        sendEmail(user.getEmail(), randomPassword);
+    }
+
+    private void sendEmail(String email, String password) {
+        String subject = "chatfoodie 임시 비밀번호입니다.";
+        String text = "임시 비밀번호는 " + password + "입니다. </br>";
+
+        Utils.sendEmail(javaMailSender, email, subject, text);
     }
 }
