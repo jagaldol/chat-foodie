@@ -98,22 +98,6 @@ client
     └── utils           # util functions
 ```
 
-## DEMO PAGE
-
-### [Introduction Page](https://chatfoodie.net/)
-
-![introdcution page](/docs/main-page.png)
-
-You can see our introduction of chatfoodie in this page.
-
-### [Chat Page](https://chatfoodie.net/chat)
-
-![chat page](/docs/chat-page.png)
-
-You can chat with foodie in this page.
-
-It's Design is ChatGPT-like style thia intuitviely indicates that it's an AI chat.
-
 ## Collaboratory
 
 2023 전기 부산대학교 정보컴퓨터공학부 졸업과제
