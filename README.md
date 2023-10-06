@@ -45,7 +45,56 @@ You can view a list of all APIs and their documents at [server's README](https:/
 
 ## Front
 
-Work In Progress
+webpage implementation of chatFoodie.
+
+### language / library
+
+- typescript
+- Next.js 13
+- tailwindcss
+- axios
+
+### Directory Structure
+
+```
+client
+├─── public             # Images, svg, logo...
+|
+└─── src
+    │
+    ├── app             # Page routing, only have layout.tsx/page.tsx
+    │
+    │
+    ├── components      # Components recycled on multiple pages
+    │
+    │
+    ├── containers      # UI components that are not recycled on multiple pages
+    │
+    │
+    ├── styles          # CSS(tailwind) files and other styles file
+    │
+    │
+    ├── types           # types used global
+    │
+    │
+    └── utils           # util functions
+```
+
+## DEMO PAGE
+
+### [Introduction Page](https://chatfoodie.net/)
+
+![introdcution page](/docs/main-page.png)
+
+You can see our introduction of chatfoodie in this page.
+
+### [Chat Page](https://chatfoodie.net/chat)
+
+![chat page](/docs/chat-page.png)
+
+You can chat with foodie in this page.
+
+It's Design is ChatGPT-like style thia intuitviely indicates that it's an AI chat.
 
 ## Collaboratory
 
