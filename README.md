@@ -8,6 +8,24 @@ food recommendation chatbot with LLM fine tuning.
 
 > 2023 graduation project from Pusan Nat'l Univ.
 
+## DEMO PAGE
+
+### [Introduction Page](https://chatfoodie.net/)
+
+![introdcution page](/docs/main-page.png)
+
+You can see our introduction of chatfoodie in this page.
+
+### [Chat Page](https://chatfoodie.net/chat)
+
+![chat page](/docs/chat-page.png)
+
+You can chat with foodie in this page.
+
+It's Design is **ChatGPT-like style** that intuitviely indicates that it's an AI chat.
+
+> If you are a **non-member, you can chat 20 times a day**. If you want more than that, sign up and log in to enjoy all the features!
+
 ## [Chatbot](https://github.com/jagaldol/chat-foodie/tree/dev/chatbot)
 
 ### ChatFoodie(ChatFoodie KoAlpaca Polyglot-ko-5.8B-v1.0) Model
