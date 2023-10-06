@@ -23,6 +23,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta name="theme-color" content="#ffffff" />
         <title>Chat Foodie</title>
         <meta name="description" content="음식 추천의 전문가 푸디와 채팅을 해보세요!" />
+        <meta name="google-site-verification" content="_zlrUaOkEzsPvjsjSNobRlNAgF7AiOGLTd3BxabFeYw" />
+        <meta name="naver-site-verification" content="aa155d77ad39e4ba129761f1094b41555998d860" />
       </head>
       <body
         className={`${notoSans.className} flex box-border`}

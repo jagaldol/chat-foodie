@@ -21,6 +21,8 @@ spring:
     init:
       mode: never
       encoding: utf-8
+  jackson:
+    time-zone: Asia/Seoul
 
 logging:
   level:
