@@ -131,6 +131,91 @@ server of chatFoodie.
     "errorMessage": null
   }
   ```
+  
+#### POST /api/help/loginId
+
+아이디 찾기
+
+- Request Body
+  ```json
+  {
+    "email": "test@test.com"
+  }
+  ```
+
+찾은 아이디는 앞 두 자리, 뒤 한 자리를 제외하고 `***`로 표시
+
+- Response Body
+  ```json
+  {
+    "status": 200,
+    "response": {
+      "loginId": "te***t"
+    },
+    "errorMessage": null
+  }
+  ```
+
+#### POST /api/help/password
+
+비밀번호 찾기
+
+- Request Body
+  ```json
+  {
+    "loginId": "test",
+    "email": "test@test.com"
+  }
+  ```
+
+초기화된 비밀번호는 이메일로 전송됨  
+
+- Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+
+#### POST /api/validate/loginId
+
+아이디 중복 검사
+- Request Body
+  ```json
+  {
+    "loginId": "test1212"
+  }
+  ```
+  
+- Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
+
+#### POST /api/validate/email
+
+이메일 중복 검사
+- Request Body
+  ```json
+  {
+    "email": "test@gmail.com"
+  }
+  ```
+
+- Response Body
+  ```json
+  {
+    "status": 200,
+    "response": null,
+    "errorMessage": null
+  }
+  ```
 
 ### Food
 
