@@ -12,6 +12,8 @@ import proxy from "@/utils/proxy"
 import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import EditProfileModal from "@/containers/account/editProfileModal"
 import PreferenceModal from "./preferenceModal"
+import FindUserIdModal from "./findUserIdModal"
+import FindUserPasswordModal from "./findUserPasswordModal"
 
 export default function Account() {
   const { userId, isLoad, userRole } = useContext(AuthContext)
@@ -23,6 +25,8 @@ export default function Account() {
   const [preferenceModalOpened, setPreferenceModalOpened] = useState(false)
   const [editProfileModalOpened, setEditProfileModalOpened] = useState(false)
   const [userName, setUserName] = useState("")
+  const [findUserIdModalOpened, setFindUserIdModalOpened] = useState(false)
+  const [findUserPasswordModalOpened, setFindUserPasswordModalOpened] = useState(false)
 
   useEffect(() => {
     if (userId !== 0) {
@@ -31,9 +35,12 @@ export default function Account() {
       }
       proxy.get(`/users/${userId}`, { headers }).then((res) => {
         setUserName(res.data.response.name)
+        if (userRole === "ROLE_USER" && res.data.response.favors.length === 0) {
+          setPreferenceModalOpened(true)
+        }
       })
     }
-  }, [userId])
+  }, [userId, userRole])
   useEffect(() => {
     if (isLoad) {
       if (userId !== 0 && userRole === "ROLE_PENDING") {
@@ -115,9 +122,30 @@ export default function Account() {
                   setLoginModalOpened(false)
                   setJoinModalOpened(true)
                 }}
+                onClickFindId={() => {
+                  setLoginModalOpened(false)
+                  setFindUserIdModalOpened(true)
+                }}
+                onClickFindPassword={() => {
+                  setLoginModalOpened(false)
+                  setFindUserPasswordModalOpened(true)
+                }}
               />
             ) : null}
             {joinModalOpened ? <JoinModal onClickClose={() => setJoinModalOpened(false)} /> : null}
+            {findUserIdModalOpened ? (
+              <FindUserIdModal
+                setFindUserPasswordModalOpened={setFindUserPasswordModalOpened}
+                setLoginModalOpened={setLoginModalOpened}
+                onClickClose={() => setFindUserIdModalOpened(false)}
+              />
+            ) : null}
+            {findUserPasswordModalOpened ? (
+              <FindUserPasswordModal
+                setLoginModalOpened={setLoginModalOpened}
+                onClickClose={() => setFindUserPasswordModalOpened(false)}
+              />
+            ) : null}
           </>
         )
       })()}
