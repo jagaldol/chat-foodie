@@ -1,6 +1,5 @@
 package net.chatfoodie.server._core.security;
 
-import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
@@ -8,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,8 +35,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         try {
             DecodedJWT decodedJWT = JwtProvider.verify(jwt);
             Long id = decodedJWT.getClaim("id").asLong();
+            Role role = decodedJWT.getClaim("role").as(Role.class);
             User user = User.builder()
                     .id(id)
+                    .role(role)
                     .build();
             CustomUserDetails userDetails = new CustomUserDetails(user);
             Authentication authentication =
@@ -47,14 +49,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug("인증 객체 생성됨");
-        } catch (SignatureVerificationException e) {
-            log.error("토큰 검증 실패");
         } catch (TokenExpiredException e) {
             log.error("토큰 만료");
+        } catch (Exception e) {
+            log.error("토큰 검증 실패");
         } finally {
             chain.doFilter(request, response);
         }
     }
-
-
 }

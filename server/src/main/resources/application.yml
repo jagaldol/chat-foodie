@@ -2,6 +2,8 @@ spring:
   profiles:
     active:
       - local
+      - private
 
 file:
   path: ./images/
+

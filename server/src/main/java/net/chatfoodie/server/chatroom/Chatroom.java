@@ -1,22 +1,47 @@
 package net.chatfoodie.server.chatroom;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.chatfoodie.server.user.User;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "chatroom_tb",
+        indexes = {
+                @Index(name = "chatroom_user_id_idx", columnList = "user_id")
+        })
 public class Chatroom {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long user_id;
+    @Column(length = 50, nullable = false)
+    private String title;
 
-    private LocalDateTime created_at;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @ColumnDefault("now()")
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Chatroom(Long id, String title, User user, LocalDateTime createdAt) {
+        this.id = id;
+        this.title = title;
+        this.user = user;
+        this.createdAt = createdAt;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }

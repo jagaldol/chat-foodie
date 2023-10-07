@@ -1,10 +1,7 @@
 package net.chatfoodie.server.user;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -15,7 +12,11 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_tb")
+@Table(name = "user_tb",
+        indexes = {
+                @Index(name = "user_loginId_idx", columnList = "loginId"),
+                @Index(name = "user_email_idx", columnList = "email")
+        })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +40,16 @@ public class User {
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ROLE_PENDING'")
+    @Column(length = 50)
+    private Role role;
+
     @ColumnDefault("now()")
     private LocalDateTime createdAt;
 
     @Builder
-    public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, LocalDateTime created_at) {
+    public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, Role role, LocalDateTime created_at) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
@@ -51,6 +57,27 @@ public class User {
         this.gender = gender;
         this.birth = birth;
         this.email = email;
+        this.role = role;
         this.createdAt = created_at;
     }
+
+    public void updateLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+    public void updateName(String name) {
+        this.name = name;
+    }
+    public void updateGender(Boolean gender) {
+        this.gender = gender;
+    }
+    public void updateBirth(LocalDate birth) {
+        this.birth = birth;
+    }
+    public void updateRole(Role role) {
+        this.role = role;
+    }
+    public void updateEmail(String email) {this.email = email;}
 }

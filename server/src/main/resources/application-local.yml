@@ -16,15 +16,24 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
+        highlight_sql: true
       default_batch_fetch_size: 100
     open-in-view: false
     defer-datasource-initialization: true
+  sql:
+    init:
+      encoding: utf-8
+  jackson:
+    time-zone: Asia/Seoul
 
 logging:
   level:
-    '[net.chatfoodie.server]': DEBUG
-    '[org.hibernate.type]': TRACE
+    net.chatfoodie.server: DEBUG
+    org.hibernate:
+      SQL: DEBUG
+      orm.jdbc:
+        extract: TRACE
+        bind: TRACE

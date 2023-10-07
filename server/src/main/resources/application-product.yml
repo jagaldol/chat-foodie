@@ -5,9 +5,6 @@ server:
       force: true
   port: 8080
 spring:
-  profiles:
-    active:
-      - settings
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -15,7 +12,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -24,8 +20,10 @@ spring:
   sql:
     init:
       mode: never
+      encoding: utf-8
+  jackson:
+    time-zone: Asia/Seoul
 
 logging:
   level:
-    '[net.chatfoodie.server]': INFO
-    '[org.hibernate.type]': TRACE
+    net.chatfoodie.server: INFO
