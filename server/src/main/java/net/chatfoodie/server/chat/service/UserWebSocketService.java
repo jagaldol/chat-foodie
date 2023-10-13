@@ -1,17 +1,14 @@
 package net.chatfoodie.server.chat.service;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
-import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
 import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
@@ -26,11 +23,9 @@ import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.food.Food;
-import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
@@ -80,22 +75,21 @@ public class UserWebSocketService {
                 Message oldMessage = messageRepository.findTop1ByChatroomIdOrderByIdDesc(chatroomId).orElse(null);
                 if (oldMessage != null && oldMessage.isFromChatbot()) {
                     oldMessage.updateContent(message);
-                    messageRepository.save(oldMessage);
-                    return;
+                    return messageRepository.save(oldMessage).getId();
                 }
                 Message chatbotMessage = Message.builder()
                         .chatroom(chatroom)
                         .isFromChatbot(true)
                         .content(message)
                         .build();
-                messageRepository.save(chatbotMessage);
+                return messageRepository.save(chatbotMessage).getId();
             } : message -> {
                 Message chatbotMessage = Message.builder()
                         .chatroom(chatroom)
                         .isFromChatbot(true)
                         .content(message)
                         .build();
-                messageRepository.save(chatbotMessage);
+            return messageRepository.save(chatbotMessage).getId();
             }
         );
     }
@@ -117,6 +111,7 @@ public class UserWebSocketService {
                     .build();
             chatPublicLogRepository.save(chatLog);
             log.debug("public api 마지막 전달 완료!!\n" + message);
+            return 0L;
         });
     }
 
