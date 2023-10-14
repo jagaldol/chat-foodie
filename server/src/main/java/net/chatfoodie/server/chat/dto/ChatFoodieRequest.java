@@ -18,7 +18,8 @@ public class ChatFoodieRequest {
                     "\n###",
                     "\n답변:",
                     "\n고객",
-                    "\n회원"
+                    "\n회원",
+                    ":"
             )
     );
 
