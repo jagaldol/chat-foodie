@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception500;
-import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieResponse;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
 import net.chatfoodie.server.chat.handler.FoodieWebSocketHandler;
@@ -55,8 +54,8 @@ public class FoodieWebSocketService {
                         var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
 
                         if (isStreamEndEvent(foodieMessageDto)) {
-                            var resultId = function.apply(finalResponse);
-                            var endMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto.event(), resultId.toString());
+                            var messageIds = function.apply(finalResponse);
+                            var endMessageDto = new ChatUserResponse.MessageEndDto(messageIds.userMessageId(), messageIds.chatbotMessageId());
                             TextMessage textMessage = new TextMessage(om.writeValueAsString(endMessageDto));
 
                             user.sendMessage(textMessage);

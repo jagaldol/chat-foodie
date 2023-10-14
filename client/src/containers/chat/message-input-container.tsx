@@ -19,7 +19,7 @@ export default function MessageInputContainer({
   handleStreamMessage: (message: string) => void
   addUserMessage: (message: string) => void
   prepareRegenerate: () => void
-  handleStreamEndWhichCaseUser: (id: number, regenerate: boolean) => void
+  handleStreamEndWhichCaseUser: (userMessageId: number, chatbotMessageId: number, regenerate: boolean) => void
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -113,7 +113,11 @@ export default function MessageInputContainer({
         }
         case "stream_end":
           if (userId !== 0) {
-            handleStreamEndWhichCaseUser(Number(res.response), regenerate)
+            handleStreamEndWhichCaseUser(
+              Number(res.response.userMessageId),
+              Number(res.response.chatbotMessageId),
+              regenerate,
+            )
           }
           break
         case "error":

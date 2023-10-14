@@ -55,15 +55,15 @@ export default function ChatUi() {
     })
   }
 
-  const handleStreamEndWhichCaseUser = (id: number, regenerate: boolean) => {
+  const handleStreamEndWhichCaseUser = (userMessageId: number, chatbotMessageId: number, regenerate: boolean) => {
     setMessages((prevState) => {
       const chatbotMessage = prevState[prevState.length - 1]
-      chatbotMessage.id = id
+      chatbotMessage.id = chatbotMessageId
       if (regenerate) {
         return [...prevState.slice(0, -1), chatbotMessage]
       }
       const userMessage = prevState[prevState.length - 2]
-      userMessage.id = id
+      userMessage.id = userMessageId
       return [...prevState.slice(0, -2), userMessage, chatbotMessage]
     })
   }

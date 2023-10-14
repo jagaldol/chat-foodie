@@ -10,10 +10,10 @@ import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
 import net.chatfoodie.server._core.security.JwtProvider;
-import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
+import net.chatfoodie.server.chat.dto.MessageIds;
 import net.chatfoodie.server.chat.publiclog.ChatPublicLog;
 import net.chatfoodie.server.chat.publiclog.repository.ChatPublicLogRepository;
 import net.chatfoodie.server.chatroom.Chatroom;
@@ -59,37 +59,39 @@ public class UserWebSocketService {
     public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) throws IOException {
         // 메시지를 보내고 응답을 받습니다.
         var chatroom = chatroomRepository.findById(chatroomId).orElseThrow();
-        Long userId = getUserId(user);
-        if (!foodieMessageDto.regenerate()) {
-            var userMessage = Message.builder()
-                    .chatroom(chatroom)
-                    .isFromChatbot(false)
-                    .content(foodieMessageDto.user_input())
-                    .build();
-
-            messageRepository.save(userMessage);
-        }
 
         sendMessageToFoodie(foodieMessageDto, user, foodieMessageDto.regenerate() ?
             message -> {
                 Message oldMessage = messageRepository.findTop1ByChatroomIdOrderByIdDesc(chatroomId).orElse(null);
                 if (oldMessage != null && oldMessage.isFromChatbot()) {
                     oldMessage.updateContent(message);
-                    return messageRepository.save(oldMessage).getId();
+                    var chatbotMessageId = messageRepository.save(oldMessage).getId();
+                    return new MessageIds(null, chatbotMessageId);
                 }
                 Message chatbotMessage = Message.builder()
                         .chatroom(chatroom)
                         .isFromChatbot(true)
                         .content(message)
                         .build();
-                return messageRepository.save(chatbotMessage).getId();
+                var chatbotMessageId = messageRepository.save(chatbotMessage).getId();
+                return new MessageIds(null, chatbotMessageId);
             } : message -> {
-                Message chatbotMessage = Message.builder()
-                        .chatroom(chatroom)
-                        .isFromChatbot(true)
-                        .content(message)
-                        .build();
-            return messageRepository.save(chatbotMessage).getId();
+            var userMessage = Message.builder()
+                    .chatroom(chatroom)
+                    .isFromChatbot(false)
+                    .content(foodieMessageDto.user_input())
+                    .build();
+
+            var userMessageId = messageRepository.save(userMessage).getId();
+
+            Message chatbotMessage = Message.builder()
+                    .chatroom(chatroom)
+                    .isFromChatbot(true)
+                    .content(message)
+                    .build();
+
+            var chatbotMessageId = messageRepository.save(chatbotMessage).getId();
+            return new MessageIds(userMessageId, chatbotMessageId);
             }
         );
     }
@@ -111,7 +113,7 @@ public class UserWebSocketService {
                     .build();
             chatPublicLogRepository.save(chatLog);
             log.debug("public api 마지막 전달 완료!!\n" + message);
-            return 0L;
+            return new MessageIds(null, null);
         });
     }
 
