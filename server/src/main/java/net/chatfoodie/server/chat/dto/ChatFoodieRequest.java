@@ -17,7 +17,7 @@ public class ChatFoodieRequest {
             List.of(
                     "\n###",
                     "\n답변:",
-                    "\n고객:"
+                    "\n고객"
             )
     );
 
