@@ -1,12 +1,13 @@
 # Fine-tuning Model Training
 
-The ChatFoodie model was fine-tuned using the QLoRA method on the KoAlpaca-Polyglot-ko 5.8B model with 4-bit precision. 
+The ChatFoodie model was fine-tuned using the QLoRA method on the KoAlpaca-Polyglot-ko 5.8B model with 4-bit precision.
 
-<a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+<a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/main/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-The model was trained with 8200 samples. 
+The model was trained with 8200 samples.
 
 ## Examples of generated result
+
 ```
 ### 질문: 매운 음식 추천해줘
 
