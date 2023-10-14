@@ -2,6 +2,7 @@ package net.chatfoodie.server.chat.dto;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ChatFoodieRequest {
 
@@ -16,10 +17,11 @@ public class ChatFoodieRequest {
     private static final List<String> STOPPING_STRINGS = Collections.unmodifiableList(
             List.of(
                     "\n###",
-                    "\n답변:",
+                    "\n답변",
                     "\n고객",
                     "\n회원",
-                    ":"
+                    ":",
+                    "\n푸디"
             )
     );
 
@@ -71,7 +73,7 @@ public class ChatFoodieRequest {
                     REPETITION_PENALTY,
                     TOP_K,
                     EARLY_STOPPING,
-                    STOPPING_STRINGS
+                    Stream.concat(STOPPING_STRINGS.stream(), Stream.of("\n" + userName)).toList()
             );
         }
 
