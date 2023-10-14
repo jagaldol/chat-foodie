@@ -39,43 +39,33 @@ export default function ChatUi() {
     })
   }
 
-  const handleStreamMessage = async (message: string, chatroomIdToSend: number) => {
-    const finishStreaming = message === ""
+  const handleStreamMessage = async (message: string) => {
+    setMessages((prevState) => {
+      const lastMessage = prevState[prevState.length - 1]
+      if (lastMessage && lastMessage.isFromChatbot) {
+        lastMessage.content = message
+        return [...prevState.slice(0, -1), lastMessage]
+      }
+      const chatMessage: ChatMessage = {
+        key: 0,
+        content: message,
+        isFromChatbot: true,
+      }
+      return [...prevState, ...toChatMessageFormat([chatMessage])]
+    })
+  }
 
-    if (!finishStreaming) {
-      setMessages((prevState) => {
-        const lastMessage = prevState[prevState.length - 1]
-        if (lastMessage && lastMessage.isFromChatbot) {
-          lastMessage.content = message
-          return [...prevState.slice(0, -1), lastMessage]
-        }
-        const chatMessage: ChatMessage = {
-          key: 0,
-          content: message,
-          isFromChatbot: true,
-        }
-        return [...prevState, ...toChatMessageFormat([chatMessage])]
-      })
-    } else if (userId !== 0) {
-      const headers = { Authorization: getJwtTokenFromStorage() }
-      const params = { size: 2 }
-      const res = await proxy.get(`/chatrooms/${chatroomIdToSend}/messages`, { headers, params })
-
-      const newMessages: ChatMessage[] = res.data.response.body.messages
-
-      setMessages((prevState) => {
-        const keyOfNeedToSync = prevState.filter((m) => m.id === undefined).map((m) => m.key)
-
-        const messagesToAdd = newMessages
-          .filter((m) => !prevState.map((prev) => prev.id).includes(m.id))
-          .map((m, index) => {
-            const ret = m
-            ret.key = keyOfNeedToSync[index]
-            return ret
-          })
-        return [...prevState.filter((m) => m.id), ...messagesToAdd]
-      })
-    }
+  const handleStreamEndWhichCaseUser = (userMessageId: number, chatbotMessageId: number, regenerate: boolean) => {
+    setMessages((prevState) => {
+      const chatbotMessage = prevState[prevState.length - 1]
+      chatbotMessage.id = chatbotMessageId
+      if (regenerate) {
+        return [...prevState.slice(0, -1), chatbotMessage]
+      }
+      const userMessage = prevState[prevState.length - 2]
+      userMessage.id = userMessageId
+      return [...prevState.slice(0, -2), userMessage, chatbotMessage]
+    })
   }
 
   const prepareRegenerate = () => {
@@ -136,6 +126,7 @@ export default function ChatUi() {
       <MessageInputContainer
         messages={messages}
         handleStreamMessage={handleStreamMessage}
+        handleStreamEndWhichCaseUser={handleStreamEndWhichCaseUser}
         addUserMessage={(message: string) => addMessage(message, false)}
         prepareRegenerate={prepareRegenerate}
       />

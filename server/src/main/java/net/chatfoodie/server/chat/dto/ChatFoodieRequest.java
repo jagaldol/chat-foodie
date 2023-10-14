@@ -1,5 +1,6 @@
 package net.chatfoodie.server.chat.dto;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ChatFoodieRequest {
@@ -12,6 +13,13 @@ public class ChatFoodieRequest {
     private static final Float REPETITION_PENALTY = 1.15f;
     private static final Float TOP_K = 20.0f;
     private static final Boolean EARLY_STOPPING = false;
+    private static final List<String> STOPPING_STRINGS = Collections.unmodifiableList(
+            List.of(
+                    "\n###",
+                    "\n답변:",
+                    "\n고객:"
+            )
+    );
 
     public record MessageDto(
             String user_input,
@@ -25,7 +33,8 @@ public class ChatFoodieRequest {
             Float top_p,
             Float repetition_penalty,
             Float top_k,
-            Boolean early_stopping
+            Boolean early_stopping,
+            List<String> stopping_strings
     ) {
 
         public MessageDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
@@ -41,7 +50,8 @@ public class ChatFoodieRequest {
                     TOP_P,
                     REPETITION_PENALTY,
                     TOP_K,
-                    EARLY_STOPPING
+                    EARLY_STOPPING,
+                    STOPPING_STRINGS
             );
         }
 
@@ -58,7 +68,8 @@ public class ChatFoodieRequest {
                     TOP_P,
                     REPETITION_PENALTY,
                     TOP_K,
-                    EARLY_STOPPING
+                    EARLY_STOPPING,
+                    STOPPING_STRINGS
             );
         }
 

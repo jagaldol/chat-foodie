@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception500;
-import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieResponse;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
 import net.chatfoodie.server.chat.handler.FoodieWebSocketHandler;
@@ -54,14 +53,18 @@ public class FoodieWebSocketService {
 
                         var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
 
+                        if (isStreamEndEvent(foodieMessageDto)) {
+                            var messageIds = function.apply(finalResponse);
+                            var endMessageDto = new ChatUserResponse.MessageEndDto(messageIds.userMessageId(), messageIds.chatbotMessageId());
+                            TextMessage textMessage = new TextMessage(om.writeValueAsString(endMessageDto));
+
+                            user.sendMessage(textMessage);
+                            break;
+                        }
                         TextMessage textMessage = new TextMessage(om.writeValueAsString(userMessageDto));
 
                         user.sendMessage(textMessage);
 
-                        if (isStreamEndEvent(foodieMessageDto)) {
-                            function.apply(finalResponse);
-                            break;
-                        }
                         finalResponse = userMessageDto.response();
                     } catch (InterruptedException e) {
                         throw new Exception500("챗봇의 응답을 듣는 중 에러가 발생했습니다.");

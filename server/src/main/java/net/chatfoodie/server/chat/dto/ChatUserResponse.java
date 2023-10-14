@@ -18,4 +18,23 @@ public class ChatUserResponse {
             );
         }
     }
+
+    public record MessageEndDto(
+            String event,
+            ResponseDto response
+    ) {
+
+        public MessageEndDto(Long userMessageId, Long chatbotMessageId) {
+            this(
+                    "stream_end",
+                    new ResponseDto(userMessageId, chatbotMessageId)
+            );
+        }
+
+        public record ResponseDto(
+                Long userMessageId,
+                Long chatbotMessageId
+        ) {
+        }
+    }
 }
