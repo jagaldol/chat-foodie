@@ -57,11 +57,11 @@ public class ChatFoodieRequest {
             );
         }
 
-        public MessageDto(ChatUserRequest.MessageDto userMessageDto, List<List<String>> history, String userName) {
+        public MessageDto(String input, Boolean regenerate, List<List<String>> history, String userName) {
             this(
-                    userMessageDto.input(),
+                    input,
                     new HistoryDto(history),
-                    userMessageDto.regenerate() != null && userMessageDto.regenerate(),
+                    regenerate,
                     MAX_NEW_TOKEN,
                     CHARACTER,
                     INSTRUCTION_TEMPLATE,

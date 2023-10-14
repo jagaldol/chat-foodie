@@ -134,9 +134,21 @@ public class UserWebSocketService {
 
         var messages = messageRepository.findTop38ByChatroomIdOrderByIdDesc(userMessageDto.chatroomId());
 
-        var favorMessages = makeFavorMessages(userId);
-        var history = makeHistoryFromMessages(messages, favorMessages);
-        return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
+        List<List<String>> history = makeHistoryFromMessages(messages);
+        var favorString = makeFavorString(userId);
+        var processedUserInput = new StringBuilder(userMessageDto.input());
+
+        if (userMessageDto.regenerate()) {
+            if (!history.isEmpty()) {
+                var originalMessageList = new ArrayList<>(history.get(history.size() - 1));
+
+                originalMessageList.set(0, favorString + originalMessageList.get(0));
+                history.set(history.size() - 1, originalMessageList);
+            }
+        } else {
+            processedUserInput.insert(0, favorString);
+        }
+        return new ChatFoodieRequest.MessageDto(processedUserInput.toString(), userMessageDto.regenerate(), history, chatroom.getUser().getName());
     }
 
     private String getClientIp(WebSocketSession session) {
@@ -160,6 +172,16 @@ public class UserWebSocketService {
             throw new Exception500("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
         }
         foodieWebSocketService.listenForMessages(user, function);
+    }
+
+    private String makeFavorString(Long userId) {
+        var favors = favorRepository.findByUserId(userId);
+        StringBuilder result = new StringBuilder("나는 ");
+        for (var favor : favors) {
+            result.append(favor.getFood().getName()).append(",");
+        }
+        result.append("를 좋아해 이를 바탕으로 음식을 추천해줘.\n");
+        return result.toString();
     }
 
     private List<String> makeFavorMessages(Long userId) {
@@ -249,7 +271,7 @@ public class UserWebSocketService {
         };
     }
 
-    private List<List<String>> makeHistoryFromMessages(List<Message> messages, List<String> favorMessages) {
+    private List<List<String>> makeHistoryFromMessages(List<Message> messages) {
         List<String> reversedMessages = new ArrayList<>();
 
         for (Message message : messages) {
@@ -272,8 +294,6 @@ public class UserWebSocketService {
             reversedMessages.remove(reversedMessages.size() - 1);
 
         List<List<String>> history = new ArrayList<>();
-        if (!favorMessages.isEmpty())
-            history.add(favorMessages);
 
         for(int i = reversedMessages.size() - 1; i >= 0; i -= 2) {
             history.add(List.of(reversedMessages.get(i), reversedMessages.get(i - 1)));
