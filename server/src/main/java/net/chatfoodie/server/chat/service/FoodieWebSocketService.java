@@ -13,6 +13,8 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -54,6 +56,21 @@ public class FoodieWebSocketService {
                         var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
 
                         if (isStreamEndEvent(foodieMessageDto)) {
+                            List<Integer> endIndexes = List.of(
+                                    finalResponse.indexOf(".\n"),
+                                    finalResponse.indexOf("?\n"),
+                                    finalResponse.indexOf("!\n"),
+                                    finalResponse.indexOf("~\n"));
+
+                            var endIndex = Collections.max(endIndexes);
+
+                            if (endIndex != -1) {
+                                finalResponse = finalResponse.substring(0, endIndex + 1);
+                                var lastMessageDto = ChatUserResponse.MessageDto.createStreamMessage(finalResponse);
+                                TextMessage textMessage = new TextMessage(om.writeValueAsString(lastMessageDto));
+                                user.sendMessage(textMessage);
+                            }
+
                             var messageIds = function.apply(finalResponse);
                             var endMessageDto = new ChatUserResponse.MessageEndDto(messageIds.userMessageId(), messageIds.chatbotMessageId());
                             TextMessage textMessage = new TextMessage(om.writeValueAsString(endMessageDto));

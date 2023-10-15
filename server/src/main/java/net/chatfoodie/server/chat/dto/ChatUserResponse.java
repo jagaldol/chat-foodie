@@ -17,6 +17,10 @@ public class ChatUserResponse {
                             .get(1)
             );
         }
+
+        public static MessageDto createStreamMessage(String response) {
+            return new MessageDto("text_stream", response);
+        }
     }
 
     public record MessageEndDto(
