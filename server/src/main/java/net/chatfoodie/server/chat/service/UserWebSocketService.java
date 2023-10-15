@@ -176,10 +176,26 @@ public class UserWebSocketService {
 
     private String makeFavorString(Long userId) {
         var favors = favorRepository.findByUserId(userId);
+
+        var favorFoodNames = favors.stream()
+                .map(favor -> favor.getFood().getName())
+                .toList();
+
         StringBuilder result = new StringBuilder("나는 ");
-        for (var favor : favors) {
-            result.append(favor.getFood().getName()).append(",");
+
+        List<String> randomFoods = new ArrayList<>();
+
+        if (favors.size() > 5) {
+            List<String> shuffledFoods = new ArrayList<>(favorFoodNames);
+            Collections.shuffle(shuffledFoods);
+            randomFoods = shuffledFoods.subList(0, 5);
+        } else {
+            randomFoods = favorFoodNames;
         }
+        for (var food : randomFoods) {
+            result.append(food).append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
         result.append("를 좋아해 이를 바탕으로 음식을 추천해줘.\n");
         return result.toString();
     }
