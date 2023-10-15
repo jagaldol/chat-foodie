@@ -1,6 +1,8 @@
 package net.chatfoodie.server.chat.dto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ChatFoodieRequest {
 
@@ -12,6 +14,16 @@ public class ChatFoodieRequest {
     private static final Float REPETITION_PENALTY = 1.15f;
     private static final Float TOP_K = 20.0f;
     private static final Boolean EARLY_STOPPING = false;
+    private static final List<String> STOPPING_STRINGS = Collections.unmodifiableList(
+            List.of(
+                    "\n###",
+                    "\n답변",
+                    "\n고객",
+                    "\n회원",
+                    ":",
+                    "\n푸디"
+            )
+    );
 
     public record MessageDto(
             String user_input,
@@ -25,7 +37,9 @@ public class ChatFoodieRequest {
             Float top_p,
             Float repetition_penalty,
             Float top_k,
-            Boolean early_stopping
+            Boolean early_stopping,
+            List<String> stopping_strings,
+            Boolean is_favor_chat
     ) {
 
         public MessageDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
@@ -41,15 +55,17 @@ public class ChatFoodieRequest {
                     TOP_P,
                     REPETITION_PENALTY,
                     TOP_K,
-                    EARLY_STOPPING
+                    EARLY_STOPPING,
+                    STOPPING_STRINGS,
+                    false
             );
         }
 
-        public MessageDto(ChatUserRequest.MessageDto userMessageDto, List<List<String>> history, String userName) {
+        public MessageDto(String input, Boolean regenerate, List<List<String>> history, String userName, Boolean isFavorChat) {
             this(
-                    userMessageDto.input(),
+                    input,
                     new HistoryDto(history),
-                    userMessageDto.regenerate() != null && userMessageDto.regenerate(),
+                    regenerate,
                     MAX_NEW_TOKEN,
                     CHARACTER,
                     INSTRUCTION_TEMPLATE,
@@ -58,7 +74,9 @@ public class ChatFoodieRequest {
                     TOP_P,
                     REPETITION_PENALTY,
                     TOP_K,
-                    EARLY_STOPPING
+                    EARLY_STOPPING,
+                    Stream.concat(STOPPING_STRINGS.stream(), Stream.of("\n" + userName)).toList(),
+                    isFavorChat
             );
         }
 

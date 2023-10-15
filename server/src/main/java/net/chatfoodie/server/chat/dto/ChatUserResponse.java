@@ -17,5 +17,28 @@ public class ChatUserResponse {
                             .get(1)
             );
         }
+
+        public static MessageDto createStreamMessage(String response) {
+            return new MessageDto("text_stream", response);
+        }
+    }
+
+    public record MessageEndDto(
+            String event,
+            ResponseDto response
+    ) {
+
+        public MessageEndDto(Long userMessageId, Long chatbotMessageId) {
+            this(
+                    "stream_end",
+                    new ResponseDto(userMessageId, chatbotMessageId)
+            );
+        }
+
+        public record ResponseDto(
+                Long userMessageId,
+                Long chatbotMessageId
+        ) {
+        }
     }
 }

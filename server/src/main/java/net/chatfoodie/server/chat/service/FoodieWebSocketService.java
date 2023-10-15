@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception500;
-import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieResponse;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
 import net.chatfoodie.server.chat.handler.FoodieWebSocketHandler;
@@ -14,6 +13,8 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -54,14 +55,33 @@ public class FoodieWebSocketService {
 
                         var userMessageDto = new ChatUserResponse.MessageDto(foodieMessageDto);
 
+                        if (isStreamEndEvent(foodieMessageDto)) {
+                            List<Integer> endIndexes = List.of(
+                                    finalResponse.indexOf(".\n"),
+                                    finalResponse.indexOf("?\n"),
+                                    finalResponse.indexOf("!\n"),
+                                    finalResponse.indexOf("~\n"));
+
+                            var endIndex = Collections.max(endIndexes);
+
+                            if (endIndex != -1) {
+                                finalResponse = finalResponse.substring(0, endIndex + 1);
+                                var lastMessageDto = ChatUserResponse.MessageDto.createStreamMessage(finalResponse);
+                                TextMessage textMessage = new TextMessage(om.writeValueAsString(lastMessageDto));
+                                user.sendMessage(textMessage);
+                            }
+
+                            var messageIds = function.apply(finalResponse);
+                            var endMessageDto = new ChatUserResponse.MessageEndDto(messageIds.userMessageId(), messageIds.chatbotMessageId());
+                            TextMessage textMessage = new TextMessage(om.writeValueAsString(endMessageDto));
+
+                            user.sendMessage(textMessage);
+                            break;
+                        }
                         TextMessage textMessage = new TextMessage(om.writeValueAsString(userMessageDto));
 
                         user.sendMessage(textMessage);
 
-                        if (isStreamEndEvent(foodieMessageDto)) {
-                            function.apply(finalResponse);
-                            break;
-                        }
                         finalResponse = userMessageDto.response();
                     } catch (InterruptedException e) {
                         throw new Exception500("챗봇의 응답을 듣는 중 에러가 발생했습니다.");

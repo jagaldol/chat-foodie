@@ -1,22 +1,19 @@
 package net.chatfoodie.server.chat.service;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
 import net.chatfoodie.server._core.errors.exception.Exception403;
 import net.chatfoodie.server._core.errors.exception.Exception404;
 import net.chatfoodie.server._core.errors.exception.Exception500;
-import net.chatfoodie.server._core.security.CustomUserDetails;
 import net.chatfoodie.server._core.security.JwtProvider;
-import net.chatfoodie.server._core.utils.MyFunction;
 import net.chatfoodie.server.chat.dto.ChatFoodieRequest;
 import net.chatfoodie.server.chat.dto.ChatUserRequest;
 import net.chatfoodie.server.chat.dto.ChatUserResponse;
+import net.chatfoodie.server.chat.dto.MessageIds;
 import net.chatfoodie.server.chat.publiclog.ChatPublicLog;
 import net.chatfoodie.server.chat.publiclog.repository.ChatPublicLogRepository;
 import net.chatfoodie.server.chatroom.Chatroom;
@@ -26,11 +23,9 @@ import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.food.Food;
-import net.chatfoodie.server.user.Role;
 import net.chatfoodie.server.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
@@ -64,38 +59,46 @@ public class UserWebSocketService {
     public void requestToFoodie(ChatFoodieRequest.MessageDto foodieMessageDto, WebSocketSession user, Long chatroomId) throws IOException {
         // 메시지를 보내고 응답을 받습니다.
         var chatroom = chatroomRepository.findById(chatroomId).orElseThrow();
-        Long userId = getUserId(user);
-        if (!foodieMessageDto.regenerate()) {
-            var userMessage = Message.builder()
-                    .chatroom(chatroom)
-                    .isFromChatbot(false)
-                    .content(foodieMessageDto.user_input())
-                    .build();
-
-            messageRepository.save(userMessage);
-        }
 
         sendMessageToFoodie(foodieMessageDto, user, foodieMessageDto.regenerate() ?
             message -> {
                 Message oldMessage = messageRepository.findTop1ByChatroomIdOrderByIdDesc(chatroomId).orElse(null);
                 if (oldMessage != null && oldMessage.isFromChatbot()) {
                     oldMessage.updateContent(message);
-                    messageRepository.save(oldMessage);
-                    return;
+                    var chatbotMessageId = messageRepository.save(oldMessage).getId();
+                    return new MessageIds(null, chatbotMessageId);
                 }
                 Message chatbotMessage = Message.builder()
                         .chatroom(chatroom)
                         .isFromChatbot(true)
                         .content(message)
                         .build();
-                messageRepository.save(chatbotMessage);
+                var chatbotMessageId = messageRepository.save(chatbotMessage).getId();
+                return new MessageIds(null, chatbotMessageId);
             } : message -> {
-                Message chatbotMessage = Message.builder()
-                        .chatroom(chatroom)
-                        .isFromChatbot(true)
-                        .content(message)
-                        .build();
-                messageRepository.save(chatbotMessage);
+            String userInput = foodieMessageDto.user_input();
+            if (foodieMessageDto.is_favor_chat()) {
+                int startIndex = foodieMessageDto.user_input().indexOf(".");
+                if (startIndex != -1) {
+                    userInput = foodieMessageDto.user_input().substring(startIndex + 1);
+                }
+            }
+            var userMessage = Message.builder()
+                    .chatroom(chatroom)
+                    .isFromChatbot(false)
+                    .content(userInput)
+                    .build();
+
+            var userMessageId = messageRepository.save(userMessage).getId();
+
+            Message chatbotMessage = Message.builder()
+                    .chatroom(chatroom)
+                    .isFromChatbot(true)
+                    .content(message)
+                    .build();
+
+            var chatbotMessageId = messageRepository.save(chatbotMessage).getId();
+            return new MessageIds(userMessageId, chatbotMessageId);
             }
         );
     }
@@ -117,6 +120,7 @@ public class UserWebSocketService {
                     .build();
             chatPublicLogRepository.save(chatLog);
             log.debug("public api 마지막 전달 완료!!\n" + message);
+            return new MessageIds(null, null);
         });
     }
 
@@ -137,9 +141,26 @@ public class UserWebSocketService {
 
         var messages = messageRepository.findTop38ByChatroomIdOrderByIdDesc(userMessageDto.chatroomId());
 
-        var favorMessages = makeFavorMessages(userId);
-        var history = makeHistoryFromMessages(messages, favorMessages);
-        return new ChatFoodieRequest.MessageDto(userMessageDto, history, chatroom.getUser().getName());
+        List<List<String>> history = makeHistoryFromMessages(messages);
+        var favorString = makeFavorString(userId);
+        var processedUserInput = new StringBuilder(userMessageDto.input());
+
+        if (userMessageDto.regenerate()) {
+            if (!history.isEmpty()) {
+                var originalMessageList = new ArrayList<>(history.get(history.size() - 1));
+
+                originalMessageList.set(0, favorString + originalMessageList.get(0));
+                history.set(history.size() - 1, originalMessageList);
+            }
+        } else {
+            processedUserInput.insert(0, favorString);
+        }
+        return new ChatFoodieRequest.MessageDto(
+                processedUserInput.toString(),
+                userMessageDto.regenerate(),
+                history,
+                chatroom.getUser().getName(),
+                !favorString.isEmpty());
     }
 
     private String getClientIp(WebSocketSession session) {
@@ -163,6 +184,36 @@ public class UserWebSocketService {
             throw new Exception500("챗봇으로 메시지 전송 중 오류가 발생했습니다.");
         }
         foodieWebSocketService.listenForMessages(user, function);
+    }
+
+    private String makeFavorString(Long userId) {
+        var favors = favorRepository.findByUserId(userId);
+
+        if (favors.isEmpty()) {
+            return "";
+        }
+
+        var favorFoodNames = favors.stream()
+                .map(favor -> favor.getFood().getName())
+                .toList();
+
+        StringBuilder result = new StringBuilder("나는 ");
+
+        List<String> randomFoods = new ArrayList<>();
+
+        if (favors.size() > 5) {
+            List<String> shuffledFoods = new ArrayList<>(favorFoodNames);
+            Collections.shuffle(shuffledFoods);
+            randomFoods = shuffledFoods.subList(0, 5);
+        } else {
+            randomFoods = favorFoodNames;
+        }
+        for (var food : randomFoods) {
+            result.append(food).append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.append("를 좋아해 이를 바탕으로 음식을 추천해줘.");
+        return result.toString();
     }
 
     private List<String> makeFavorMessages(Long userId) {
@@ -252,7 +303,7 @@ public class UserWebSocketService {
         };
     }
 
-    private List<List<String>> makeHistoryFromMessages(List<Message> messages, List<String> favorMessages) {
+    private List<List<String>> makeHistoryFromMessages(List<Message> messages) {
         List<String> reversedMessages = new ArrayList<>();
 
         for (Message message : messages) {
@@ -275,8 +326,6 @@ public class UserWebSocketService {
             reversedMessages.remove(reversedMessages.size() - 1);
 
         List<List<String>> history = new ArrayList<>();
-        if (!favorMessages.isEmpty())
-            history.add(favorMessages);
 
         for(int i = reversedMessages.size() - 1; i >= 0; i -= 2) {
             history.add(List.of(reversedMessages.get(i), reversedMessages.get(i - 1)));

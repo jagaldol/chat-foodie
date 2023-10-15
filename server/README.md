@@ -1,5 +1,6 @@
 # server
 
+bash
 server of chatFoodie.
 
 ## dependency
@@ -7,6 +8,76 @@ server of chatFoodie.
 - java version: [JAVA 17.0.2](https://jdk.java.net/archive/)
 - spring boot version: 3.1.0
 - mysql version : 8.0.34
+
+## How To Start
+
+### Create Env file
+
+```bash
+cp application-private.yml.example application-private.yml
+cp application-mysql.yml.example application-mysql.yml
+```
+
+Copy example file, and modify according to your environment.
+
+#### application-private.yml
+
+```yml
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username:
+  password:
+chatbot:
+  url: wss://rat-rolled-payments-metallica.trycloudflare.com/api/v1/chat-stream
+chat-foodie:
+  secret: your_password
+```
+
+If you want to use mail authentication api, you need to put your gmail application password.
+
+type your gmail in `mail.username`, and type your google application password in `mail.password`.
+
+In `chatbot.url`, you must enter your chatbot websocket api address. This can be created simply using the [colab tutorial](https://colab.research.google.com/github/jagaldol/chat-foodie/blob/main/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb).
+
+#### application-mysql.yml
+
+If you use mysql instead of h2 in-memory db, you should setup mysql settings.
+
+```yml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/chatfoodie_db?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username:
+    password:
+```
+
+you should create database of `chatfoodie_db` in your local mysql. then, you sholud create tables with `src/main/resources/ddl.sql`.
+
+also type your mysql `username` and `password`.
+
+```yml
+spring:
+  profiles:
+    active:
+      - product
+      - mysql
+      - private
+
+file:
+  path: ./images/
+```
+
+Second, modify `spring.profiles.active` in `application.yml`. then, you can use mysql!
+
+### Run Server
+
+run the development server:
+
+```sh
+$ ./gradlew clean build
+$ java -jar build/libs/server-1.0.0.java
+```
 
 ## API
 
@@ -131,7 +202,7 @@ server of chatFoodie.
     "errorMessage": null
   }
   ```
-  
+
 #### POST /api/help/loginId
 
 아이디 찾기
@@ -168,7 +239,7 @@ server of chatFoodie.
   }
   ```
 
-초기화된 비밀번호는 이메일로 전송됨  
+초기화된 비밀번호는 이메일로 전송됨
 
 - Response Body
   ```json
@@ -182,13 +253,13 @@ server of chatFoodie.
 #### POST /api/validate/loginId
 
 아이디 중복 검사
+
 - Request Body
   ```json
   {
     "loginId": "test1212"
   }
   ```
-  
 - Response Body
   ```json
   {
@@ -201,7 +272,9 @@ server of chatFoodie.
 #### POST /api/validate/email
 
 이메일 중복 검사
+
 - Request Body
+
   ```json
   {
     "email": "test@gmail.com"

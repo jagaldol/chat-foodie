@@ -26,7 +26,13 @@ It's Design is **ChatGPT-like style** that intuitviely indicates that it's an AI
 
 > If you are a **non-member, you can chat 20 times a day**. If you want more than that, sign up and log in to enjoy all the features!
 
-## [Chatbot](https://github.com/jagaldol/chat-foodie/tree/dev/chatbot)
+## How To Start
+
+- [Chatbot - websocket server for chatbot ai](https://github.com/jagaldol/chat-foodie/tree/dev/chatbot#websocket-server-for-chatbot-ai)
+- [Start chatfoodie server](https://github.com/jagaldol/chat-foodie/tree/main/server#how-to-start)
+- [Start chatfoodie front page](https://github.com/jagaldol/chat-foodie/tree/main/client#how-to-start)
+
+## [Chatbot](https://github.com/jagaldol/chat-foodie/tree/main/chatbot)
 
 ### ChatFoodie(ChatFoodie KoAlpaca Polyglot-ko-5.8B-v1.0) Model
 
@@ -41,7 +47,7 @@ model that trained QLoRA with 8,000 self-instruct datasets.
 
 you can try Deploy Websocket API in Google Colab.
 
-- [Deploy_chatbot_server_as_public_with_colab.ipynb](https://github.com/jagaldol/chat-foodie/blob/dev/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb) <a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/dev/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+- [Deploy_chatbot_server_as_public_with_colab.ipynb](https://github.com/jagaldol/chat-foodie/blob/main/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb) <a href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/main/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 ## Server(Spring boot)
 
@@ -59,7 +65,7 @@ you can try Deploy Websocket API in Google Colab.
 
 ### API documentation
 
-You can view a list of all APIs and their documents at [server's README](https://github.com/jagaldol/chat-foodie/tree/dev/server)
+You can view a list of all APIs and their documents at [server's README](https://github.com/jagaldol/chat-foodie/tree/main/server)
 
 ## Front
 
@@ -103,6 +109,16 @@ client
 2023 전기 부산대학교 정보컴퓨터공학부 졸업과제
 
 팀 **쩝쩝학사**
+
+- [안혜준](https://github.com/jagaldol)
+  - contact: [jagaldol.dev@gmail.com](mailto:jagaldol.dev@gmail.com)
+  - 시스템 설계, 백엔드 및 프론트 개발
+- [박성민](https://github.com/sm136599)
+  - contact: [sm136599@gmail.com](mailto:sm136599@gmail.com)
+  - AI 모델 학습, 백엔드 및 프론트 개발
+- [박진영](https://github.com/icarus012832)
+  - contact: [icarus012832@gmail.com](mailto:icarus012832@gmail.com)
+  - 서비스 UI 디자인, 백엔드 및 프론트 개발
 
 |      [[팀장] 안혜준](https://github.com/jagaldol)       |          [박성민](https://github.com/sm136599)          |          [박진영](https://github.com/icarus012832)          |
 | :-----------------------------------------------------: | :-----------------------------------------------------: | :---------------------------------------------------------: |

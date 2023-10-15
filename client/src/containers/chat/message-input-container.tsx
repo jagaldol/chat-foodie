@@ -13,11 +13,13 @@ export default function MessageInputContainer({
   handleStreamMessage,
   addUserMessage,
   prepareRegenerate,
+  handleStreamEndWhichCaseUser,
 }: {
   messages: ChatMessage[]
-  handleStreamMessage: (message: string, chatroomIdToSend: number) => void
+  handleStreamMessage: (message: string) => void
   addUserMessage: (message: string) => void
   prepareRegenerate: () => void
+  handleStreamEndWhichCaseUser: (userMessageId: number, chatbotMessageId: number, regenerate: boolean) => void
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -106,11 +108,17 @@ export default function MessageInputContainer({
       const res = JSON.parse(event.data)
       switch (res.event) {
         case "text_stream": {
-          handleStreamMessage(res.response, chatroomIdToSend)
+          handleStreamMessage(res.response)
           return
         }
         case "stream_end":
-          handleStreamMessage("", chatroomIdToSend)
+          if (userId !== 0) {
+            handleStreamEndWhichCaseUser(
+              Number(res.response.userMessageId),
+              Number(res.response.chatbotMessageId),
+              regenerate,
+            )
+          }
           break
         case "error":
           alert(res.response)
