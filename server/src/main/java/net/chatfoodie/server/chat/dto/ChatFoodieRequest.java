@@ -38,7 +38,8 @@ public class ChatFoodieRequest {
             Float repetition_penalty,
             Float top_k,
             Boolean early_stopping,
-            List<String> stopping_strings
+            List<String> stopping_strings,
+            Boolean is_favor_chat
     ) {
 
         public MessageDto(ChatUserRequest.PublicMessageDto userPublicMessageDto) {
@@ -55,11 +56,12 @@ public class ChatFoodieRequest {
                     REPETITION_PENALTY,
                     TOP_K,
                     EARLY_STOPPING,
-                    STOPPING_STRINGS
+                    STOPPING_STRINGS,
+                    false
             );
         }
 
-        public MessageDto(String input, Boolean regenerate, List<List<String>> history, String userName) {
+        public MessageDto(String input, Boolean regenerate, List<List<String>> history, String userName, Boolean isFavorChat) {
             this(
                     input,
                     new HistoryDto(history),
@@ -73,7 +75,8 @@ public class ChatFoodieRequest {
                     REPETITION_PENALTY,
                     TOP_K,
                     EARLY_STOPPING,
-                    Stream.concat(STOPPING_STRINGS.stream(), Stream.of("\n" + userName)).toList()
+                    Stream.concat(STOPPING_STRINGS.stream(), Stream.of("\n" + userName)).toList(),
+                    isFavorChat
             );
         }
 

@@ -76,10 +76,17 @@ public class UserWebSocketService {
                 var chatbotMessageId = messageRepository.save(chatbotMessage).getId();
                 return new MessageIds(null, chatbotMessageId);
             } : message -> {
+            String userInput = foodieMessageDto.user_input();
+            if (foodieMessageDto.is_favor_chat()) {
+                int startIndex = foodieMessageDto.user_input().indexOf(".\n");
+                if (startIndex != -1) {
+                    userInput = foodieMessageDto.user_input().substring(startIndex + 2);
+                }
+            }
             var userMessage = Message.builder()
                     .chatroom(chatroom)
                     .isFromChatbot(false)
-                    .content(foodieMessageDto.user_input())
+                    .content(userInput)
                     .build();
 
             var userMessageId = messageRepository.save(userMessage).getId();
@@ -148,7 +155,12 @@ public class UserWebSocketService {
         } else {
             processedUserInput.insert(0, favorString);
         }
-        return new ChatFoodieRequest.MessageDto(processedUserInput.toString(), userMessageDto.regenerate(), history, chatroom.getUser().getName());
+        return new ChatFoodieRequest.MessageDto(
+                processedUserInput.toString(),
+                userMessageDto.regenerate(),
+                history,
+                chatroom.getUser().getName(),
+                !favorString.isEmpty());
     }
 
     private String getClientIp(WebSocketSession session) {
