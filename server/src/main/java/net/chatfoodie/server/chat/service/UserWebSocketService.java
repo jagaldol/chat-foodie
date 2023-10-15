@@ -177,6 +177,10 @@ public class UserWebSocketService {
     private String makeFavorString(Long userId) {
         var favors = favorRepository.findByUserId(userId);
 
+        if (favors.isEmpty()) {
+            return "";
+        }
+
         var favorFoodNames = favors.stream()
                 .map(favor -> favor.getFood().getName())
                 .toList();
