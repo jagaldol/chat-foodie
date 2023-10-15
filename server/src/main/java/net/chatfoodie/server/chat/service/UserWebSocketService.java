@@ -78,9 +78,9 @@ public class UserWebSocketService {
             } : message -> {
             String userInput = foodieMessageDto.user_input();
             if (foodieMessageDto.is_favor_chat()) {
-                int startIndex = foodieMessageDto.user_input().indexOf(".\n");
+                int startIndex = foodieMessageDto.user_input().indexOf(".");
                 if (startIndex != -1) {
-                    userInput = foodieMessageDto.user_input().substring(startIndex + 2);
+                    userInput = foodieMessageDto.user_input().substring(startIndex + 1);
                 }
             }
             var userMessage = Message.builder()
@@ -212,7 +212,7 @@ public class UserWebSocketService {
             result.append(food).append(",");
         }
         result.deleteCharAt(result.length() - 1);
-        result.append("를 좋아해 이를 바탕으로 음식을 추천해줘.\n");
+        result.append("를 좋아해 이를 바탕으로 음식을 추천해줘.");
         return result.toString();
     }
 
