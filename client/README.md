@@ -20,9 +20,19 @@ You can chat with foodie in this page.
 
 It's Design is ChatGPT-like style that intuitviely indicates that it's an AI chat.
 
-## Getting Started
+## How To Start
 
-First, run the development server:
+### Create Env file
+
+```bash
+cp .env.local.example .env.local
+```
+
+Copy example file, and modify according to your environment.
+
+### Run Server
+
+run the development server:
 
 ```bash
 npm install
@@ -38,7 +48,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Directory Structure
+## Directory Structure
 
 ```
 client
