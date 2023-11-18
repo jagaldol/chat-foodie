@@ -104,6 +104,10 @@ client
     └── utils           # util functions
 ```
 
+## System Sturcture
+
+![system sturcture](/docs/system-structure.png)
+
 ## Collaboratory
 
 2023 전기 부산대학교 정보컴퓨터공학부 졸업과제
