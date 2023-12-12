@@ -197,4 +197,18 @@ public class UserService {
 
         Utils.sendEmail(javaMailSender, email, subject, text);
     }
+
+    public UserResponse.TokensDto reIssueTokens(String refreshToken) {
+        var decodedRefreshToken = JwtProvider.verify(refreshToken);
+
+        if (!Objects.equals(redisTemplate.opsForValue().get(decodedRefreshToken.getClaim("id").asLong().toString()), refreshToken))
+            throw new Exception401("유효하지 않은 refresh 토큰입니다.");
+
+        var user = userRepository.findById(decodedRefreshToken.getClaim("id").asLong()).orElseThrow(() ->
+                new Exception500("재발급 과정에서 오류가 발생했습니다."));
+
+        log.debug(user.getId().toString());
+
+        return issueTokens(user);
+    }
 }

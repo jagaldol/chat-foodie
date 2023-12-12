@@ -59,6 +59,20 @@ public class UserController {
                 .body(response);
     }
 
+    @PostMapping("/authentication")
+    public ResponseEntity<?> reIssueTokens(@CookieValue("refreshToken") String refreshToken) {
+
+
+        var tokensDto = userService.reIssueTokens(refreshToken);
+
+        var responseCookie = createRefreshTokenCookie(tokensDto.refresh());
+
+        var response = ApiUtils.success();
+        return ResponseEntity.ok().header(JwtProvider.HEADER, tokensDto.access())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(response);
+    }
+
     private static ResponseCookie createRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true) // javascript 접근 방지
