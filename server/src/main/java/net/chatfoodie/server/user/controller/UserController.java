@@ -51,7 +51,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto requestDto, Errors errors) {
         var tokensDto = userService.issueJwtByLogin(requestDto);
 
-        var responseCookie = createRefreshTokenCookie(tokensDto.refresh());
+        var responseCookie = createRefreshTokenCookie(tokensDto.refresh(), JwtProvider.REFRESH_EXP_SEC);
 
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().header(JwtProvider.HEADER, tokensDto.access())
@@ -61,11 +61,9 @@ public class UserController {
 
     @PostMapping("/authentication")
     public ResponseEntity<?> reIssueTokens(@CookieValue("refreshToken") String refreshToken) {
-
-
         var tokensDto = userService.reIssueTokens(refreshToken);
 
-        var responseCookie = createRefreshTokenCookie(tokensDto.refresh());
+        var responseCookie = createRefreshTokenCookie(tokensDto.refresh(), JwtProvider.REFRESH_EXP_SEC);
 
         var response = ApiUtils.success();
         return ResponseEntity.ok().header(JwtProvider.HEADER, tokensDto.access())
@@ -73,12 +71,23 @@ public class UserController {
                 .body(response);
     }
 
-    private static ResponseCookie createRefreshTokenCookie(String refreshToken) {
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.logout(userDetails.getId());
+
+        var responseCookie = createRefreshTokenCookie("", 0);
+
+        var response = ApiUtils.success();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(response);
+    }
+
+    private static ResponseCookie createRefreshTokenCookie(String refreshToken, int maxAge) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true) // javascript 접근 방지
                 .secure(true) // https 통신 강제
                 .sameSite("None")
-                .maxAge(JwtProvider.REFRESH_EXP_SEC)
+                .maxAge(maxAge)
                 .build();
     }
 

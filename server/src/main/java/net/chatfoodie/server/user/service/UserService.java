@@ -211,4 +211,8 @@ public class UserService {
 
         return issueTokens(user);
     }
+
+    public void logout(Long id) {
+        redisTemplate.delete(id.toString());
+    }
 }
