@@ -7,14 +7,14 @@ import java.util.List;
 
 public class UserResponse {
     public record GetUserDto(
-        Long id,
-        String loginId,
-        String name,
-        Boolean gender,
-        String birth,
-        String email,
-        List<FavorDto> favors
-    ){
+            Long id,
+            String loginId,
+            String name,
+            Boolean gender,
+            String birth,
+            String email,
+            List<FavorDto> favors
+    ) {
         public GetUserDto(User user, List<Favor> favors) {
             this(
                     user.getId(),
@@ -43,9 +43,14 @@ public class UserResponse {
             String loginId
     ) {
         public FindUserIdDto(String loginId) {
-            this.loginId = loginId.substring(0,2) + "***" + loginId.substring(loginId.length()-1, loginId.length());
+            this.loginId = loginId.substring(0, 2) + "***" + loginId.substring(loginId.length() - 1, loginId.length());
         }
 
     }
 
+    public record TokensDto(
+            String access,
+            String refresh
+    ) {
+    }
 }

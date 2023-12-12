@@ -11,6 +11,8 @@ import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.service.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -47,9 +49,23 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto requestDto, Errors errors) {
-        String jwt = userService.issueJwtByLogin(requestDto);
+        var tokensDto = userService.issueJwtByLogin(requestDto);
+
+        var responseCookie = createRefreshTokenCookie(tokensDto.refresh());
+
         ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
+        return ResponseEntity.ok().header(JwtProvider.HEADER, tokensDto.access())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(response);
+    }
+
+    private static ResponseCookie createRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true) // javascript 접근 방지
+                .secure(true) // https 통신 강제
+                .sameSite("None")
+                .maxAge(JwtProvider.REFRESH_EXP_SEC)
+                .build();
     }
 
     @PutMapping("/users/{id}")
@@ -93,6 +109,7 @@ public class UserController {
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/validate/loginId")
     public ResponseEntity<?> validateLoginId(@RequestBody @Valid UserRequest.ValidateLoginIdDto requestDto,
                                              Errors errors) {
@@ -103,7 +120,7 @@ public class UserController {
 
     @PostMapping("/validate/email")
     public ResponseEntity<?> validateEmail(@RequestBody @Valid UserRequest.ValidateEmailDto requestDto,
-                                             Errors errors) {
+                                           Errors errors) {
         userService.validateEmail(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok(response);

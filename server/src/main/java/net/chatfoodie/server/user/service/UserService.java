@@ -11,18 +11,19 @@ import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.user.Role;
-import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
+import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.repository.UserRepository;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -30,17 +31,19 @@ import java.util.List;
 @Service
 public class UserService {
 
-    final private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    final private FavorRepository favorRepository;
+    private final FavorRepository favorRepository;
 
-    final private ChatroomRepository chatroomRepository;
+    private final ChatroomRepository chatroomRepository;
 
-    final private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
 
-    final private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    final private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public String join(UserRequest.JoinDto requestDto) {
@@ -62,20 +65,34 @@ public class UserService {
         var user = requestDto.createUser(encodedPassword);
 
         try {
-            return JwtProvider.create(userRepository.save(user));
+            return JwtProvider.createAccess(userRepository.save(user));
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
     }
 
-    public String issueJwtByLogin(UserRequest.LoginDto requestDto) {
+    public UserResponse.TokensDto issueJwtByLogin(UserRequest.LoginDto requestDto) {
         User user = userRepository.findByLoginId(requestDto.loginId()).orElseThrow(() ->
                 new Exception400("아이디 혹은 비밀번호가 틀렸습니다."));
 
         if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
             throw new Exception400("아이디 혹은 비밀번호가 틀렸습니다.");
         }
-        return JwtProvider.create(user);
+        return issueTokens(user);
+    }
+
+    private UserResponse.TokensDto issueTokens(User user) {
+        var access = JwtProvider.createAccess(user);
+        var refresh = JwtProvider.createRefresh(user);
+
+        redisTemplate.opsForValue().set(
+                user.getId().toString(),
+                refresh,
+                JwtProvider.REFRESH_EXP_SEC,
+                TimeUnit.SECONDS
+        );
+
+        return new UserResponse.TokensDto(access, refresh);
     }
 
     public UserResponse.GetUserDto getUser(Long id) {
@@ -124,8 +141,9 @@ public class UserService {
             user.updateEmail(requestDto.email());
             user.updateRole(Role.ROLE_PENDING);
         }
-        return JwtProvider.create(user);
+        return JwtProvider.createAccess(user);
     }
+
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
