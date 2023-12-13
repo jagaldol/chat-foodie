@@ -46,7 +46,7 @@ public class UserService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public String join(UserRequest.JoinDto requestDto) {
+    public UserResponse.TokensDto join(UserRequest.JoinDto requestDto) {
 
         if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
             throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
@@ -65,7 +65,8 @@ public class UserService {
         var user = requestDto.createUser(encodedPassword);
 
         try {
-            return JwtProvider.createAccess(userRepository.save(user));
+            var savedUser = userRepository.save(user);
+            return  issueTokens(savedUser);
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }

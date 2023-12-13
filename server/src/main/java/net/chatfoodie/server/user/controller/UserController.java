@@ -42,9 +42,14 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDto requestDto, Errors errors) {
         validateBirthForm(requestDto.birth());
-        String jwt = userService.join(requestDto);
-        ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
+        var responseDto = userService.join(requestDto);
+
+        var responseCookie = createRefreshTokenCookie(responseDto.refresh(), JwtProvider.REFRESH_EXP_SEC);
+
+        return ResponseEntity.ok()
+                .header(JwtProvider.HEADER, responseDto.access())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiUtils.success());
     }
 
     @PostMapping("/login")
