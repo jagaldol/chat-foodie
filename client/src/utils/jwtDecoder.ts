@@ -1,14 +1,14 @@
-const sessionKey = "jwt"
+const tokenKey = "jwt"
 
 export function saveJwt(jwt: string) {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem(sessionKey, jwt)
+    localStorage.setItem(tokenKey, jwt)
   }
 }
 
 export function deleteJwt() {
   if (typeof window !== "undefined") {
-    sessionStorage.removeItem(sessionKey)
+    localStorage.removeItem(tokenKey)
   }
 }
 
@@ -17,7 +17,7 @@ export function getJwtPayload(jwtString?: string) {
   if (jwtString) {
     jwt = jwtString
   } else if (typeof window !== "undefined") {
-    const value = sessionStorage.getItem(sessionKey)
+    const value = localStorage.getItem(tokenKey)
     jwt = value ?? jwt
   }
   if (jwt === null) return null
@@ -48,5 +48,5 @@ export function getJwtTokenFromStorage() {
   if (typeof window === "undefined") {
     return null
   }
-  return sessionStorage.getItem(sessionKey)
+  return localStorage.getItem(tokenKey)
 }
