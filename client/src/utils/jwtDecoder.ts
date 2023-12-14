@@ -18,25 +18,15 @@ export function getJwtPayload(jwtString?: string) {
     jwt = jwtString
   } else if (typeof window !== "undefined") {
     const value = sessionStorage.getItem(sessionKey)
-    jwt = value || jwt
+    jwt = value ?? jwt
   }
   if (jwt === null) return null
   const jwtParts = jwt.split(".")
   if (!jwt.startsWith("Bearer ") || jwtParts.length !== 3) {
-    deleteJwt()
     return null
   }
   const decodedPayload = atob(jwtParts[1])
-  const payload = JSON.parse(decodedPayload)
-
-  const expirationTime = payload.exp * 1000
-  const currentTimestamp = Date.now()
-
-  if (currentTimestamp > expirationTime) {
-    deleteJwt()
-    return null
-  }
-  return payload
+  return JSON.parse(decodedPayload)
 }
 
 export function getJwtExp(jwtString?: string) {

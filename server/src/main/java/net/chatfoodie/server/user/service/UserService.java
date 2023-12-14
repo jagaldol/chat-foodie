@@ -66,7 +66,7 @@ public class UserService {
 
         try {
             var savedUser = userRepository.save(user);
-            return  issueTokens(savedUser);
+            return issueTokens(savedUser);
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
@@ -207,8 +207,6 @@ public class UserService {
 
         var user = userRepository.findById(decodedRefreshToken.getClaim("id").asLong()).orElseThrow(() ->
                 new Exception500("재발급 과정에서 오류가 발생했습니다."));
-
-        log.debug(user.getId().toString());
 
         return issueTokens(user);
     }

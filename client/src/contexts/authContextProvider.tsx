@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, ReactNode, useEffect, useMemo, useState } from "react"
-import { getJwtPayload } from "@/utils/jwtDecoder"
+import { deleteJwt, getJwtPayload } from "@/utils/jwtDecoder"
 
 export const AuthContext = createContext<any>({})
 
@@ -31,6 +31,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     if (payload === null) {
       setUserId(0)
       setUserRole("ROLE_PENDING")
+      deleteJwt()
     } else {
       setUserId(payload.id)
       setUserRole(payload.role)
