@@ -20,15 +20,11 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
   const [verificationCode, setVerificationCode] = useState("")
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
     const requestData = {
       verificationCode: e.currentTarget.querySelector<HTMLInputElement>(`[name='emailVerificationCode']`)!.value,
     }
     proxy
-      .post("/email-verifications/confirm", requestData, { headers })
+      .post("/email-verifications/confirm", requestData)
       .then((res) => {
         const jwt = res.headers.authorization
         saveJwt(jwt)
@@ -44,13 +40,10 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
   }
 
   const sendVerificationCode = () => {
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
     setDisableButton(true)
     setMessage("인증 코드 전송 중")
     proxy
-      .post("/email-verifications", undefined, { headers })
+      .post("/email-verifications")
       .then(() => {
         setDisableButton(false)
         setMessage("인증 코드 전송 완료")
@@ -123,14 +116,10 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
     if (userRole !== "ROLE_PENDING") {
       if (!confirm("이메일 변경하면 인증하기 전까지 로그인할 수 없습니다.\n 변경하시겠습니까?")) return
     }
-
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
     const requestData = {
       email: modifiedEmail,
     }
-    proxy.put(`/users/${userId}`, requestData, { headers }).then((res) => {
+    proxy.put(`/users/${userId}`, requestData).then((res) => {
       setEmail(modifiedEmail)
       setModifyMessage("이메일 변경 완료")
       sendVerificationCode()
@@ -141,10 +130,7 @@ export default function EmailVerificationModal({ onClickClose }: { onClickClose(
   }
 
   useEffect(() => {
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
-    proxy.get(`/users/${userId}`, { headers }).then((res) => {
+    proxy.get(`/users/${userId}`).then((res) => {
       setEmail(res.data.response.email)
       setModifiedEmail(res.data.response.email)
     })

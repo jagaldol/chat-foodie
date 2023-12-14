@@ -23,15 +23,12 @@ export default function PreferenceModal({ onClickClose }: { onClickClose(): void
   }
 
   const handleSendSelection = () => {
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
     const requestData = {
       foodIds: selectedFoods,
     }
 
     proxy
-      .post("/favors", requestData, { headers })
+      .post("/favors", requestData)
       .then(() => {
         alert("선호하는 음식이 저장되었습니다!")
         onClickClose()

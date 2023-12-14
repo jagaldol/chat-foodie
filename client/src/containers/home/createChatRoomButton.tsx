@@ -12,10 +12,7 @@ export default function CreateChatRoomButton({ onClickInnerButton }: { onClickIn
   const { setChatroomId } = useContext(ChatroomContext)
   const createNewChatroom = async () => {
     try {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
-      const response = await proxy.post("/chatrooms", {}, { headers })
+      const response = await proxy.post("/chatrooms")
       // 새로운 채팅방으로 이동
       setChatroomId(response.data.response.chatroomId)
     } catch (error) {

@@ -199,18 +199,14 @@ export default function EditProfileModal({
     }
 
     if (userId !== 0) {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
       const requestData = makeRequestData()
-
       proxy
-        .put(`/users/${userId}`, requestData, { headers })
+        .put(`/users/${userId}`, requestData)
         .then(() => {
           alert("수정이 완료되었습니다")
           onClickClose()
           needUpdate()
-          proxy.get(`/users/${userId}`, { headers }).then((res) => {
+          proxy.get(`/users/${userId}`).then((res) => {
             setUserName(res.data.response.name)
           })
         })
@@ -222,11 +218,7 @@ export default function EditProfileModal({
 
   useEffect(() => {
     if (userId !== 0) {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
-
-      proxy.get(`/users/${userId}`, { headers }).then((res) => {
+      proxy.get(`/users/${userId}`).then((res) => {
         setProfile({
           loginId: res.data.response.loginId,
           password: "",

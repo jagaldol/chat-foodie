@@ -71,10 +71,7 @@ export default function MessageInputContainer({
       url += `/chat?token=${getJwtTokenFromStorage()}`
 
       if (chatroomIdToSend === 0) {
-        const headers = {
-          Authorization: getJwtTokenFromStorage(),
-        }
-        const res = await proxy.post("/chatrooms", undefined, { headers })
+        const res = await proxy.post("/chatrooms")
         chatroomIdToSend = res.data.response.chatroomId
         setChatroomId(chatroomIdToSend)
       }

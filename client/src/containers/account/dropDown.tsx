@@ -20,11 +20,8 @@ export default function DropDown({
 
   const handleWithdraw = () => {
     if (confirm("정말로 탈퇴하시겠습니까? \n탈퇴 시 모든 정보가 삭제됩니다. \n삭제된 정보는 복구할 수 없습니다.")) {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
       proxy
-        .delete(`/users/${userId}`, { headers })
+        .delete(`/users/${userId}`)
         .then(() => {
           deleteJwt()
           needUpdate()

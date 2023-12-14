@@ -35,10 +35,7 @@ export default function ProfileModal({
   })
 
   useEffect(() => {
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
-    proxy.get(`/users/${getJwtId()}`, { headers }).then((res) => {
+    proxy.get(`/users/${getJwtId()}`).then((res) => {
       const { response } = res.data
 
       const favorsString = response.favors.map((favor: { id: number; foodName: string }) => favor.foodName).join(", ")
