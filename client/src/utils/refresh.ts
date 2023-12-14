@@ -1,5 +1,5 @@
 import axios, { InternalAxiosRequestConfig } from "axios"
-import { deleteJwt, getJwtExp, saveJwt } from "@/utils/jwtDecoder"
+import { deleteJwt, getJwtExp, getJwtTokenFromStorage, saveJwt } from "@/utils/jwtDecoder"
 
 type RefreshCallback = (newToken: string) => void
 
@@ -43,6 +43,8 @@ const refresh = async (config: InternalAxiosRequestConfig) => {
         })
       })
     }
+  } else {
+    newConfig.headers.Authorization = getJwtTokenFromStorage()
   }
   return newConfig
 }
