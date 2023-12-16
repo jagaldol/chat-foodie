@@ -1,14 +1,14 @@
-const sessionKey = "jwt"
+const tokenKey = "jwt"
 
 export function saveJwt(jwt: string) {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem(sessionKey, jwt)
+    localStorage.setItem(tokenKey, jwt)
   }
 }
 
 export function deleteJwt() {
   if (typeof window !== "undefined") {
-    sessionStorage.removeItem(sessionKey)
+    localStorage.removeItem(tokenKey)
   }
 }
 
@@ -17,26 +17,16 @@ export function getJwtPayload(jwtString?: string) {
   if (jwtString) {
     jwt = jwtString
   } else if (typeof window !== "undefined") {
-    const value = sessionStorage.getItem(sessionKey)
-    jwt = value || jwt
+    const value = localStorage.getItem(tokenKey)
+    jwt = value ?? jwt
   }
   if (jwt === null) return null
   const jwtParts = jwt.split(".")
   if (!jwt.startsWith("Bearer ") || jwtParts.length !== 3) {
-    deleteJwt()
     return null
   }
   const decodedPayload = atob(jwtParts[1])
-  const payload = JSON.parse(decodedPayload)
-
-  const expirationTime = payload.exp * 1000
-  const currentTimestamp = Date.now()
-
-  if (currentTimestamp > expirationTime) {
-    deleteJwt()
-    return null
-  }
-  return payload
+  return JSON.parse(decodedPayload)
 }
 
 export function getJwtExp(jwtString?: string) {
@@ -58,5 +48,5 @@ export function getJwtTokenFromStorage() {
   if (typeof window === "undefined") {
     return null
   }
-  return sessionStorage.getItem(sessionKey)
+  return localStorage.getItem(tokenKey)
 }

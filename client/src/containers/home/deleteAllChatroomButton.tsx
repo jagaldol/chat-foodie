@@ -15,17 +15,14 @@ export default function DeleteAllChatroomButton() {
   const handleDeleteAllChatRooms = async () => {
     setChatroomId(0)
     try {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
       // Use array iteration to delete each chat room
-      const response = await proxy.get("/chatrooms", { headers })
+      const response = await proxy.get("/chatrooms")
       if (response.data.response.chatrooms === null) return
       const { chatrooms } = response.data.response
 
       await Promise.all(
         chatrooms.map(async (chatRoom: ChatRoom) => {
-          await proxy.delete(`/chatrooms/${chatRoom.id}`, { headers })
+          await proxy.delete(`/chatrooms/${chatRoom.id}`)
         }),
       )
       // Update the chat room list

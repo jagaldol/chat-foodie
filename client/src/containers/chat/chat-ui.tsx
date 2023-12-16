@@ -75,12 +75,11 @@ export default function ChatUi() {
   const getMessages = useCallback(
     (_cursor: Cursor) => {
       if (_cursor.key === -1) return
-      const headers = { Authorization: getJwtTokenFromStorage() }
       const params = {
         // ..._cursor
       }
       proxy
-        .get(`/chatrooms/${chatroomId}/messages`, { headers, params })
+        .get(`/chatrooms/${chatroomId}/messages`, { params })
         .then((res) => {
           const patchedMessages = res.data.response.body.messages
           if (_cursor.key === undefined) {

@@ -11,6 +11,8 @@ import net.chatfoodie.server._core.utils.Utils;
 import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.service.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -40,16 +42,58 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDto requestDto, Errors errors) {
         validateBirthForm(requestDto.birth());
-        String jwt = userService.join(requestDto);
-        ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
+        var responseDto = userService.join(requestDto);
+
+        var responseCookie = createRefreshTokenCookie(responseDto.refresh(), JwtProvider.REFRESH_EXP_SEC);
+
+        return ResponseEntity.ok()
+                .header(JwtProvider.HEADER, responseDto.access())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiUtils.success());
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDto requestDto, Errors errors) {
-        String jwt = userService.issueJwtByLogin(requestDto);
+        var tokensDto = userService.issueJwtByLogin(requestDto);
+
+        var responseCookie = createRefreshTokenCookie(tokensDto.refresh(), JwtProvider.REFRESH_EXP_SEC);
+
         ApiUtils.Response<?> response = ApiUtils.success();
-        return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body(response);
+        return ResponseEntity.ok().header(JwtProvider.HEADER, tokensDto.access())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(response);
+    }
+
+    @PostMapping("/authentication")
+    public ResponseEntity<?> reIssueTokens(@CookieValue("refreshToken") String refreshToken) {
+        var tokensDto = userService.reIssueTokens(refreshToken);
+
+        var responseCookie = createRefreshTokenCookie(tokensDto.refresh(), JwtProvider.REFRESH_EXP_SEC);
+
+        var response = ApiUtils.success();
+        return ResponseEntity.ok().header(JwtProvider.HEADER, tokensDto.access())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.logout(userDetails.getId());
+
+        var responseCookie = createRefreshTokenCookie("", 0);
+
+        var response = ApiUtils.success();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(response);
+    }
+
+    private static ResponseCookie createRefreshTokenCookie(String refreshToken, int maxAge) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true) // javascript 접근 방지
+                .secure(true) // https 통신 강제
+                .sameSite("None")
+                .maxAge(maxAge)
+                .build();
     }
 
     @PutMapping("/users/{id}")
@@ -93,6 +137,7 @@ public class UserController {
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/validate/loginId")
     public ResponseEntity<?> validateLoginId(@RequestBody @Valid UserRequest.ValidateLoginIdDto requestDto,
                                              Errors errors) {
@@ -103,7 +148,7 @@ public class UserController {
 
     @PostMapping("/validate/email")
     public ResponseEntity<?> validateEmail(@RequestBody @Valid UserRequest.ValidateEmailDto requestDto,
-                                             Errors errors) {
+                                           Errors errors) {
         userService.validateEmail(requestDto);
         ApiUtils.Response<?> response = ApiUtils.success();
         return ResponseEntity.ok(response);

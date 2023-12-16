@@ -14,10 +14,7 @@ export default function NavigatorBox({ onClickInnerButton }: { onClickInnerButto
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
 
   const fetchChatRooms = async () => {
-    const headers = {
-      Authorization: getJwtTokenFromStorage(),
-    }
-    const response = await proxy.get("/chatrooms", { headers })
+    const response = await proxy.get("/chatrooms")
     if (response.data.response.chatrooms === null) return
     setChatRooms(response.data.response.chatrooms)
   }
@@ -27,11 +24,8 @@ export default function NavigatorBox({ onClickInnerButton }: { onClickInnerButto
       const requestData = {
         title: newTitle,
       }
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
       fetchChatRooms().then(() => {})
-      await proxy.put(`/chatrooms/${id}`, requestData, { headers })
+      await proxy.put(`/chatrooms/${id}`, requestData)
     } catch (error) {
       alert("채팅방 제목 수정 도중 오류가 발생하였습니다.")
     }
@@ -40,10 +34,7 @@ export default function NavigatorBox({ onClickInnerButton }: { onClickInnerButto
   const handleDeleteChatRoom = async (id: number) => {
     if (id === chatroomId) setChatroomId(0)
     try {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
-      await proxy.delete(`/chatrooms/${id}`, { headers })
+      await proxy.delete(`/chatrooms/${id}`)
     } catch (error) {
       alert("채팅방 삭제 도중 오류가 발생하였습니다.")
     }

@@ -1,7 +1,6 @@
 package net.chatfoodie.server._core.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
 import net.chatfoodie.server._core.config.Configs;
 import net.chatfoodie.server._core.errors.exception.Exception401;
 import net.chatfoodie.server._core.errors.exception.Exception403;
@@ -78,10 +77,10 @@ public class SecurityConfig {
 
         // 10. 인증, 권한 필터 설정
         http.authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/api/chatrooms/**").hasRole("USER")
-                                .requestMatchers("/api/email-verifications/**", "/api/users/**").hasAnyRole("PENDING", "USER")
-                                .requestMatchers("/api/validate/**", "/api/help/**").permitAll()
-                                .anyRequest().permitAll()
+                authorize.requestMatchers("/api/chatrooms/**", "/api/logout").hasRole("USER")
+                        .requestMatchers("/api/email-verifications/**", "/api/users/**").hasAnyRole("PENDING", "USER")
+                        .requestMatchers("/api/validate/**", "/api/help/**").permitAll()
+                        .anyRequest().permitAll()
         );
 
         return http.build();

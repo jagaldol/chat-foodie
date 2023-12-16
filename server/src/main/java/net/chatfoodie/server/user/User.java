@@ -49,7 +49,7 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, Role role, LocalDateTime created_at) {
+    public User(Long id, String loginId, String password, String name, Boolean gender, LocalDate birth, String email, Role role, LocalDateTime createdAt) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
@@ -58,7 +58,7 @@ public class User {
         this.birth = birth;
         this.email = email;
         this.role = role;
-        this.createdAt = created_at;
+        this.createdAt = createdAt;
     }
 
     public void updateLoginId(String loginId) {

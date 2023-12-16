@@ -28,6 +28,10 @@ spring:
       encoding: utf-8
   jackson:
     time-zone: Asia/Seoul
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:

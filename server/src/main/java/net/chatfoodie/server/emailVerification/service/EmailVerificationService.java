@@ -1,6 +1,5 @@
 package net.chatfoodie.server.emailVerification.service;
 
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.chatfoodie.server._core.errors.exception.Exception400;
@@ -33,6 +32,7 @@ public class EmailVerificationService {
     final private UserRepository userRepository;
 
     final private JavaMailSender javaMailSender;
+
     @Transactional
     public void sendVerificationCode(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new Exception404("유저를 찾을 수 없습니다."));
@@ -44,9 +44,9 @@ public class EmailVerificationService {
 
         var verificationCode = makeCode();
         var emailVerification = EmailVerification.builder()
-                                                .email(email)
-                                                .verificationCode(verificationCode)
-                                                .build();
+                .email(email)
+                .verificationCode(verificationCode)
+                .build();
 
         sendEmail(email, verificationCode);
 
@@ -82,6 +82,6 @@ public class EmailVerificationService {
         }
 
         user.updateRole(Role.ROLE_USER);
-        return JwtProvider.create(user);
+        return JwtProvider.createAccess(user);
     }
 }

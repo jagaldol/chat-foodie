@@ -20,11 +20,8 @@ export default function DropDown({
 
   const handleWithdraw = () => {
     if (confirm("정말로 탈퇴하시겠습니까? \n탈퇴 시 모든 정보가 삭제됩니다. \n삭제된 정보는 복구할 수 없습니다.")) {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
       proxy
-        .delete(`/users/${userId}`, { headers })
+        .delete(`/users/${userId}`)
         .then(() => {
           deleteJwt()
           needUpdate()
@@ -88,7 +85,7 @@ export default function DropDown({
           type="button"
           className="flex flex-row gap-4 items-center justify-center text-sm text-center font-bold w-full h-[36px] p-3 min-h-[40px] hover:bg-gray-300 transition-all duration-300"
           onClick={() => {
-            deleteJwt()
+            proxy.post("/logout").then(() => deleteJwt())
             needUpdate()
             setIsOpened(false)
           }}

@@ -11,18 +11,19 @@ import net.chatfoodie.server.chatroom.repository.ChatroomRepository;
 import net.chatfoodie.server.favor.Favor;
 import net.chatfoodie.server.favor.repository.FavorRepository;
 import net.chatfoodie.server.user.Role;
-import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.User;
+import net.chatfoodie.server.user.dto.UserRequest;
 import net.chatfoodie.server.user.dto.UserResponse;
 import net.chatfoodie.server.user.repository.UserRepository;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -30,20 +31,22 @@ import java.util.List;
 @Service
 public class UserService {
 
-    final private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    final private FavorRepository favorRepository;
+    private final FavorRepository favorRepository;
 
-    final private ChatroomRepository chatroomRepository;
+    private final ChatroomRepository chatroomRepository;
 
-    final private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
 
-    final private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    final private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public String join(UserRequest.JoinDto requestDto) {
+    public UserResponse.TokensDto join(UserRequest.JoinDto requestDto) {
 
         if (!Objects.equals(requestDto.password(), requestDto.passwordCheck())) {
             throw new Exception400("비밀번호 확인이 일치하지 않습니다.");
@@ -62,20 +65,35 @@ public class UserService {
         var user = requestDto.createUser(encodedPassword);
 
         try {
-            return JwtProvider.create(userRepository.save(user));
+            var savedUser = userRepository.save(user);
+            return issueTokens(savedUser);
         } catch (Exception e) {
             throw new Exception500("회원가입 중에 오류가 발생했습니다. 다시 시도해주세요.");
         }
     }
 
-    public String issueJwtByLogin(UserRequest.LoginDto requestDto) {
+    public UserResponse.TokensDto issueJwtByLogin(UserRequest.LoginDto requestDto) {
         User user = userRepository.findByLoginId(requestDto.loginId()).orElseThrow(() ->
                 new Exception400("아이디 혹은 비밀번호가 틀렸습니다."));
 
         if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
             throw new Exception400("아이디 혹은 비밀번호가 틀렸습니다.");
         }
-        return JwtProvider.create(user);
+        return issueTokens(user);
+    }
+
+    private UserResponse.TokensDto issueTokens(User user) {
+        var access = JwtProvider.createAccess(user);
+        var refresh = JwtProvider.createRefresh(user);
+
+        redisTemplate.opsForValue().set(
+                user.getId().toString(),
+                refresh,
+                JwtProvider.REFRESH_EXP_SEC,
+                TimeUnit.SECONDS
+        );
+
+        return new UserResponse.TokensDto(access, refresh);
     }
 
     public UserResponse.GetUserDto getUser(Long id) {
@@ -124,8 +142,9 @@ public class UserService {
             user.updateEmail(requestDto.email());
             user.updateRole(Role.ROLE_PENDING);
         }
-        return JwtProvider.create(user);
+        return JwtProvider.createAccess(user);
     }
+
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new Exception404("존재하지 않는 사용자입니다."));
@@ -178,5 +197,21 @@ public class UserService {
         String text = "임시 비밀번호는 " + password + "입니다. </br>";
 
         Utils.sendEmail(javaMailSender, email, subject, text);
+    }
+
+    public UserResponse.TokensDto reIssueTokens(String refreshToken) {
+        var decodedRefreshToken = JwtProvider.verify(refreshToken);
+
+        if (!Objects.equals(redisTemplate.opsForValue().get(decodedRefreshToken.getClaim("id").asLong().toString()), refreshToken))
+            throw new Exception401("유효하지 않은 refresh 토큰입니다.");
+
+        var user = userRepository.findById(decodedRefreshToken.getClaim("id").asLong()).orElseThrow(() ->
+                new Exception500("재발급 과정에서 오류가 발생했습니다."));
+
+        return issueTokens(user);
+    }
+
+    public void logout(Long id) {
+        redisTemplate.delete(id.toString());
     }
 }

@@ -30,10 +30,7 @@ export default function Account() {
 
   useEffect(() => {
     if (userId !== 0) {
-      const headers = {
-        Authorization: getJwtTokenFromStorage(),
-      }
-      proxy.get(`/users/${userId}`, { headers }).then((res) => {
+      proxy.get(`/users/${userId}`).then((res) => {
         setUserName(res.data.response.name)
         if (userRole === "ROLE_USER" && res.data.response.favors.length === 0) {
           setPreferenceModalOpened(true)
