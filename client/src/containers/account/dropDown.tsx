@@ -85,8 +85,11 @@ export default function DropDown({
           type="button"
           className="flex flex-row gap-4 items-center justify-center text-sm text-center font-bold w-full h-[36px] p-3 min-h-[40px] hover:bg-gray-300 transition-all duration-300"
           onClick={() => {
-            proxy.post("/logout").then(() => deleteJwt())
-            needUpdate()
+            proxy.post("/logout").then(() => {
+              deleteJwt()
+              needUpdate()
+            })
+
             setIsOpened(false)
           }}
         >
