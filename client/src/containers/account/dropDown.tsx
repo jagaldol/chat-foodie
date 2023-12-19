@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { Dispatch, SetStateAction, useContext, useEffect, useRef } from "react"
 import { AuthContext } from "@/contexts/authContextProvider"
-import { deleteJwt, getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import { deleteJwt } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 
 export default function DropDown({

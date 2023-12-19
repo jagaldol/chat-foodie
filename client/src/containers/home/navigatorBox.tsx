@@ -3,7 +3,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 import ChatroomBox from "@/containers/home/chatroomBox"
 import { ChatRoom } from "@/types/chatroom"

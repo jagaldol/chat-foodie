@@ -6,7 +6,6 @@ import MessageBoxListContainer from "@/containers/chat/message-box-list-containe
 import { ChatMessage, Cursor } from "@/types/chat"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import proxy from "@/utils/proxy"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import { AuthContext } from "@/contexts/authContextProvider"
 
 export default function ChatUi() {

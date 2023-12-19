@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import React, { useContext } from "react"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import { AuthContext } from "@/contexts/authContextProvider"
