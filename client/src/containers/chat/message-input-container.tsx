@@ -4,7 +4,7 @@ import { ChatMessage } from "@/types/chat"
 import { limitInputNumber, pressEnter } from "@/utils/utils"
 import { AuthContext } from "@/contexts/authContextProvider"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import { getJwtExp, getJwtTokenFromStorage, saveJwt } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 import Mobile from "@/utils/mobile"
 
@@ -68,7 +68,14 @@ export default function MessageInputContainer({
     if (userId === 0) {
       url += "/public-chat"
     } else {
-      url += `/chat?token=${getJwtTokenFromStorage()}`
+      const jwtExp = getJwtExp()
+      let jwt = getJwtTokenFromStorage() ?? ""
+      if (jwtExp != null && jwtExp * 1000 < Date.now()) {
+        const res = await proxy.post("/authentication")
+        jwt = res.headers.authorization
+        saveJwt(jwt)
+      }
+      url += `/chat?token=${jwt}`
 
       if (chatroomIdToSend === 0) {
         const res = await proxy.post("/chatrooms")
