@@ -6,7 +6,6 @@ import TextField from "@/components/textField"
 import proxy from "@/utils/proxy"
 import { generateDayOptions, generateYearOptions, limitInputNumber } from "@/utils/utils"
 import { AuthContext } from "@/contexts/authContextProvider"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 
 export default function EditProfileModal({
   onClickClose,

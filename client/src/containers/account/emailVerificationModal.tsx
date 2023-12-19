@@ -4,7 +4,7 @@ import { useContext, useState, useEffect } from "react"
 import Modal from "@/components/modal"
 import TextField from "@/components/textField"
 import { AuthContext } from "@/contexts/authContextProvider"
-import { deleteJwt, getJwtTokenFromStorage, saveJwt } from "@/utils/jwtDecoder"
+import { deleteJwt, saveJwt } from "@/utils/jwtDecoder"
 import { limitInputNumber } from "@/utils/utils"
 import proxy from "@/utils/proxy"
 

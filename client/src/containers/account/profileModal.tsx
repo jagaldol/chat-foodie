@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
-import { getJwtId, getJwtTokenFromStorage } from "@/utils/jwtDecoder"
+import { getJwtId } from "@/utils/jwtDecoder"
 
 function ProfileItem({ label, value }: { label: string; value: string }) {
   return (

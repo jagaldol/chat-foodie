@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useContext } from "react"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import proxy from "@/utils/proxy"
 import { ChatroomContext } from "@/contexts/chatroomContextProvider"
 import { ChatRoom } from "@/types/chatroom"

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import Modal from "@/components/modal"
 import proxy from "@/utils/proxy"
-import { getJwtTokenFromStorage } from "@/utils/jwtDecoder"
 import { FoodDto } from "@/types/foodpreference"
 
 export default function PreferenceModal({ onClickClose }: { onClickClose(): void }) {
