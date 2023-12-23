@@ -18,6 +18,7 @@ jobs:
       - name: Build with Gradle
         run: |
           cd server
+          export $(cat .env.example | xargs)
           chmod +x gradlew
           ./gradlew build
 
