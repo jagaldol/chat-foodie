@@ -7,6 +7,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chatfoodie_db?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: ${MYSQL_USER_NAME}
+    password: ${MYSQL_USER_PASSWORD}
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -31,3 +34,13 @@ spring:
 logging:
   level:
     net.chatfoodie.server: INFO
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: ${GMAIL_USER_EMAIL}
+  password: ${GMAIL_APP_PASSWORD}
+chatbot:
+  url: ${CHATBOT_WEBSOCKET_URL}
+chat-foodie:
+  secret: ${TOKEN_SECRET}

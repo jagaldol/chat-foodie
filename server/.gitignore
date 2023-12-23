@@ -39,3 +39,4 @@ out/
 ### setting file ###
 application-mysql.yml
 application-private.yml
+.env

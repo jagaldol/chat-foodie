@@ -41,3 +41,13 @@ logging:
       orm.jdbc:
         extract: TRACE
         bind: TRACE
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: ${GMAIL_USER_EMAIL}
+  password: ${GMAIL_APP_PASSWORD}
+chatbot:
+  url: ${CHATBOT_WEBSOCKET_URL}
+chat-foodie:
+  secret: ${TOKEN_SECRET}
