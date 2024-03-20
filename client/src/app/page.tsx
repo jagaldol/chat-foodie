@@ -145,7 +145,7 @@ export default function Home() {
             </li>
             <li className="my-5">
               <a
-                href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/main/chatbot/Deploy_chatbot_server_as_public_with_colab.ipynb"
+                href="https://colab.research.google.com/github/jagaldol/chat-foodie/blob/main/chatbot/fine-tuning/KoAlpaca_QLoRA_ChatFoodie_Model_FineTuning.ipynb"
                 className="flex items-baseline gap-1 w-fit hover:underline"
               >
                 <p>- 푸디 AI QLoRA 파인튜닝 예제</p>
