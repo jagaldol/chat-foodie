@@ -76,7 +76,7 @@ run the development server:
 
 ```sh
 $ ./gradlew clean build
-$ java -jar build/libs/server-1.0.0.java
+$ java -jar build/libs/server-1.0.0.jar
 ```
 
 ## API
