@@ -8,15 +8,17 @@ food recommendation chatbot with LLM fine tuning.
 
 > 2023 graduation project from Pusan Nat'l Univ.
 
-## DEMO PAGE
+## Demo archive
 
-### [Introduction Page](https://chatfoodie.net/)
+> The public service previously hosted at `chatfoodie.net` has been discontinued due to server operating costs. The screenshots below are retained as an archive. See the [project overview](https://jagaldol.com/projects/chat-foodie/) for a current summary.
+
+### Introduction Page
 
 ![introdcution page](/docs/main-page.png)
 
 You can see our introduction of chatfoodie in this page.
 
-### [Chat Page](https://chatfoodie.net/chat)
+### Chat Page
 
 ![chat page](/docs/chat-page.png)
 

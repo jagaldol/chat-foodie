@@ -4,15 +4,17 @@ webpage implementation of chatFoodie.
 
 > This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## DEMO PAGE
+## Demo archive
 
-### [Introduction Page](https://chatfoodie.net/)
+> The public service previously hosted at `chatfoodie.net` has been discontinued. The screenshots below are retained as an archive.
+
+### Introduction Page
 
 ![introdcution page](/docs/main-page.png)
 
 You can see our introduction of chatfoodie in this page.
 
-### [Chat Page](https://chatfoodie.net/chat)
+### Chat Page
 
 ![chat page](/docs/chat-page.png)
 
